@@ -6,38 +6,39 @@ description: Conceito básico de data skew e impacto em processamento distribuí
 
 # Data Skew
 
-**Data skew** acontece quando a distribuição dos dados fica desigual.
+**Data skew** é quando os dados ficam distribuídos de forma desigual.
 
-Na prática, isso quer dizer que algumas chaves, partições ou grupos recebem muito mais dados que os outros. Em processamento distribuído, isso costuma criar gargalo.
+Em vez de todas as partições, chaves ou grupos receberem volumes parecidos, um lado fica muito mais pesado que os outros. Em processamento distribuído, isso vira gargalo.
 
 ---
 
-## Exemplo simples
+## O que acontece
 
 Imagine um job que distribui registros por `cliente_id`.
 
-Se um cliente concentra muitos milhões de registros e os outros têm bem menos, uma partição vai ficar muito mais pesada que as outras.
+Se um único cliente concentra uma quantidade enorme de registros, essa partição fica sobrecarregada.
 
-Resultado:
+Enquanto isso:
 
-* um executor trabalha demais;
-* outros ficam ociosos;
-* o job fica mais lento;
-* pode até falhar por falta de memória.
+* uma parte do cluster trabalha demais;
+* outras partes ficam ociosas;
+* o job demora mais;
+* o consumo de memória sobe;
+* o processamento pode até falhar.
 
 ---
 
 ## Onde isso aparece
 
-Data skew aparece bastante em:
+Data skew aparece muito em:
 
 * Spark;
 * Glue;
 * joins grandes;
-* agregações por chave;
-* partições ruins em data lake.
+* agregações;
+* partições mal desenhadas.
 
-Na AWS, isso é muito relevante quando você usa **AWS Glue** ou **Amazon EMR**.
+Na prática, é um problema de distribuição. O código pode estar certo e ainda assim o job ficar ruim porque os dados não estão equilibrados.
 
 ---
 
@@ -45,22 +46,25 @@ Na AWS, isso é muito relevante quando você usa **AWS Glue** ou **Amazon EMR**.
 
 Alguns sinais comuns:
 
-* um job demora muito mais que o esperado;
-* uma etapa específica fica travada;
-* o uso de recursos fica desigual;
-* joins ou group by começam a sofrer.
+* uma etapa demora muito mais que as outras;
+* um executor fica muito mais carregado que os demais;
+* o uso de CPU e memória fica desigual;
+* joins e group by ficam mais lentos que o esperado;
+* o job parece “preso” em uma parte específica.
 
 ---
 
 ## Como lidar
 
-As soluções mais comuns são:
+As saídas mais comuns são:
 
-* mudar a chave de partição;
+* mudar a chave de particionamento;
 * distribuir melhor os dados;
-* usar broadcast join quando fizer sentido;
 * tratar valores muito concentrados;
-* revisar o desenho das partições.
+* usar broadcast join quando fizer sentido;
+* revisar a forma de agrupar ou ordenar os dados.
+
+Nem sempre existe uma solução única. Às vezes o problema está na modelagem; às vezes está na chave de junção; às vezes está na forma como a base foi particionada.
 
 ---
 
@@ -68,8 +72,6 @@ As soluções mais comuns são:
 
 Data skew é desequilíbrio na distribuição dos dados.
 
-Em prova, pense assim:
+Se uma parte do processamento recebe muito mais volume que as outras, o paralelo deixa de funcionar bem.
 
-* poucos dados em uma parte e muitos em outra = problema de distribuição;
-* isso atrapalha processamento paralelo;
-* Glue e EMR são contextos típicos para lembrar desse tema.
+Em prova, pense nisso como um problema de concentração de dados que atrapalha performance.

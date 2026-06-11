@@ -12,4 +12,5 @@ Material de estudos para a certificação AWS Certified Data Engineer - Associat
 - [Técnicas de Amostragem](fundamentos-engenharia-de-dados/tecnicas-de-amostragem.md)
 - [Data Skew](fundamentos-engenharia-de-dados/data-skew.md)
 - [Validação de Dados](fundamentos-engenharia-de-dados/validacao-de-dados.md)
+- [Revisão SQL](fundamentos-engenharia-de-dados/revisao-sql.md)
 - [Data Mesh](fundamentos-engenharia-de-dados/data-mesh.md)

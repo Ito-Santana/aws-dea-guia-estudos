@@ -6,59 +6,23 @@ description: Conceito básico de ETL e sua relação com pipelines de dados na A
 
 # ETL
 
-**ETL** significa **Extract, Transform, Load**.
+**ETL** quer dizer **Extract, Transform, Load**.
 
-É uma forma bem comum de pensar o fluxo dos dados: primeiro você extrai da origem, depois trata, e por fim carrega para um destino que vai ser usado para análise ou consumo.
+É um jeito de organizar o caminho do dado desde a origem até o destino final. Em quase todo projeto de dados, o dado não chega pronto. Ele vem com campo vazio, formato errado, tipo inconsistente, duplicidade ou alguma regra de negócio que precisa ser aplicada antes do consumo.
 
-Na prática, ETL aparece muito em engenharia de dados porque os dados quase nunca chegam prontos. Sempre tem ajuste de tipo, limpeza, padronização, remoção de duplicidade ou alguma regra de negócio no meio.
+Por isso o ETL é tão comum: ele coloca ordem no fluxo.
 
 ---
 
-## As 3 etapas
+## Como pensar no ETL
 
-### Extract
+O fluxo é simples de entender:
 
-É a parte de pegar os dados da origem.
+1. você tira os dados da origem;
+2. você trata o que precisa ser ajustado;
+3. você grava o resultado em algum lugar pronto para uso.
 
-A origem pode ser:
-
-* banco relacional;
-* API;
-* arquivo em bucket;
-* sistema legado;
-* fila ou evento.
-
-Na AWS, isso pode vir de fontes como **RDS**, **DynamoDB**, **S3** ou uma aplicação externa.
-
-### Transform
-
-É onde o dado é tratado.
-
-Aqui entram tarefas como:
-
-* converter formatos;
-* corrigir tipos;
-* remover registros ruins;
-* aplicar regras de negócio;
-* juntar tabelas;
-* criar colunas novas.
-
-Na AWS, isso costuma ser feito com **AWS Glue**, **Amazon EMR** ou até com SQL em **Redshift** e **Athena**, dependendo do caso.
-
-### Load
-
-É o momento de gravar o dado no destino final.
-
-Esse destino pode ser um:
-
-* data warehouse;
-* data lake;
-* tabela analítica;
-* camada curada de um pipeline.
-
-Em AWS, o destino costuma ser **Amazon S3** ou **Amazon Redshift**.
-
-### Fluxo simples
+### Fluxo
 
 <div class="mermaid">
 flowchart LR
@@ -70,25 +34,85 @@ flowchart LR
 
 ---
 
-## Quando usar
+## Extract
 
-ETL faz sentido quando você quer chegar em dados mais organizados antes de disponibilizar para consumo.
+Aqui você pega os dados da fonte.
 
-É muito usado quando:
+A fonte pode ser:
 
-* o dado de origem vem bagunçado;
-* existe regra de negócio forte;
-* o destino precisa ser mais confiável para BI e análise;
-* você quer controlar melhor o que entra e o que sai.
+* banco relacional;
+* API;
+* arquivo;
+* sistema legado;
+* fila;
+* evento.
+
+Na AWS, isso aparece bastante com **RDS**, **DynamoDB**, **S3** e outras origens externas.
+
+Nessa etapa, o foco não é tratar o dado. É só trazer ele com segurança e consistência.
+
+---
+
+## Transform
+
+Essa é a parte em que o dado ganha forma.
+
+É aqui que entram as tarefas que mais aparecem no dia a dia:
+
+* trocar tipo de coluna;
+* padronizar datas;
+* remover duplicidade;
+* tratar nulos;
+* aplicar regra de negócio;
+* juntar tabelas;
+* criar colunas derivadas;
+* filtrar o que não presta.
+
+Essa etapa costuma ser a mais trabalhosa. É também a parte que mais separa um dado bruto de um dado útil.
+
+Na AWS, a transformação pode acontecer em **AWS Glue**, **Amazon EMR**, **Athena** ou **Redshift**, dependendo da arquitetura.
+
+---
+
+## Load
+
+Depois do tratamento, você carrega o dado no destino.
+
+Esse destino pode ser:
+
+* um data lake;
+* um data warehouse;
+* uma tabela curada;
+* uma camada pronta para consumo analítico.
+
+Na AWS, isso normalmente termina em **S3** ou **Redshift**.
+
+O ponto aqui é simples: o dado sai da origem, passa por tratamento e chega num lugar mais confiável para consulta.
+
+---
+
+## ETL na prática
+
+ETL faz sentido quando você quer entregar dado mais organizado antes do consumo.
+
+Ele é muito útil quando:
+
+* a origem vem despadronizada;
+* existe regra de negócio clara;
+* o destino precisa ser confiável;
+* o time quer controlar melhor o que entra e o que sai;
+* a camada analítica precisa de consistência.
+
+Se eu resumir de forma bem direta:
+
+* **Extract**: pega;
+* **Transform**: trata;
+* **Load**: grava.
 
 ---
 
 ## Resumo rápido
 
-Se eu simplificar:
+ETL é o fluxo básico de dados saindo da origem, sendo tratado e chegando ao destino.
 
-* **Extract**: pega o dado.
-* **Transform**: trata o dado.
-* **Load**: grava o dado no destino.
-
-Na AWS, ETL aparece bastante com **Glue**, **S3**, **Redshift**, **Athena** e **EMR**.
+Na AWS, você vai ver isso muito com **Glue**, **S3**, **Redshift**, **Athena** e **EMR**.

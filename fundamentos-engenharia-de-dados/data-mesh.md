@@ -6,13 +6,16 @@ description: Arquitetura distribuída de dados com foco em domínio, responsabil
 
 # Data Mesh
 
-O **data mesh** entra na conversa quando o time central de dados já não dá conta de tudo sozinho.
+O **data mesh** é uma forma de organizar dados em que cada domínio de negócio assume mais responsabilidade pelos próprios dados.
 
-Isso costuma acontecer em empresas maiores, com várias áreas produzindo e consumindo dados ao mesmo tempo. Nessa fase, tentar centralizar tudo em um único time começa a virar fila, atraso e dependência demais. O data mesh propõe outra ideia: cada domínio de negócio assume mais responsabilidade pelos próprios dados.
+Em vez de deixar tudo concentrado em um time central, a ideia é distribuir essa responsabilidade entre as áreas que realmente conhecem o assunto. Vendas cuida dos dados de vendas, financeiro cuida dos dados financeiros, logística cuida dos dados de logística.
 
-Em vez de pensar só em “um time de dados”, a empresa passa a pensar em **times donos de domínios**. Vendas cuida de vendas, financeiro cuida de financeiro, logística cuida de logística. Cada área conhece melhor os dados que gera e usa no dia a dia.
+Na prática, isso muda duas coisas:
 
-Na AWS, isso normalmente aparece junto de S3, Glue, Athena e Lake Formation. A tecnologia ajuda, mas a mudança mesmo é de organização.
+* quem produz e mantém os dados;
+* como esses dados são publicados para outras áreas.
+
+Na AWS, isso costuma aparecer com S3, Glue, Athena e Lake Formation, mas o ponto principal não é a ferramenta. O ponto principal é a forma de organizar a responsabilidade.
 
 ---
 

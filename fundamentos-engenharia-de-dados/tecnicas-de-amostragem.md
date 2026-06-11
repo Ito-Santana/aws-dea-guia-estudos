@@ -6,51 +6,57 @@ description: Noções básicas de amostragem para engenharia de dados e prova AW
 
 # Técnicas de Amostragem
 
-Amostragem é pegar uma parte do conjunto de dados para analisar sem precisar olhar tudo.
+Amostragem é quando você pega uma parte dos dados para analisar sem precisar olhar a base inteira.
 
-Isso é útil quando o volume é grande, o processamento custa caro ou você só quer validar uma hipótese rápida.
-
----
-
-## Ideia básica
-
-Em vez de trabalhar com a base inteira, você pega uma amostra representativa.
-
-Na AWS, isso pode aparecer em:
-
-* validação de pipeline;
-* testes com dados grandes;
-* exploração inicial;
-* checagem de qualidade;
-* jobs em Spark ou Glue.
+Isso é útil porque nem sempre vale a pena processar tudo logo de cara. Às vezes você quer testar uma hipótese, validar uma regra ou só ter uma noção rápida da distribuição dos dados.
 
 ---
 
-## Tipos comuns
+## Por que amostrar
 
-### Amostragem aleatória
+As razões mais comuns são:
 
-Cada linha tem chance de entrar na amostra.
+* a base é grande demais;
+* o processamento custa caro;
+* o teste completo demoraria muito;
+* você quer explorar os dados antes de rodar algo maior;
+* você só precisa de uma visão representativa.
 
-É a forma mais simples e costuma ser a primeira que vem à mente.
+---
 
-### Amostragem estratificada
+## Amostragem aleatória
 
-Você separa por grupos antes de sortear.
+É o tipo mais simples.
 
-Isso é útil quando você não quer perder a proporção entre categorias importantes.
+Cada linha tem uma chance de entrar na amostra. Isso ajuda quando você quer uma visão geral sem favorecer um grupo específico.
+
+Exemplo mental: pegar 1% dos registros de uma tabela para testar um pipeline.
+
+---
+
+## Amostragem estratificada
+
+Aqui você separa os dados por grupo antes de sortear.
+
+Isso é importante quando os grupos têm peso diferente e você não quer perder essa proporção.
 
 Exemplo:
 
-* clientes por região;
-* transações por tipo;
-* pedidos por status.
+* pedidos por região;
+* clientes por faixa;
+* transações por tipo.
 
-### Amostragem sistemática
+Esse tipo é bom quando o equilíbrio entre categorias importa.
 
-Você escolhe itens em um intervalo fixo.
+---
 
-Exemplo: pegar uma linha a cada 100.
+## Amostragem sistemática
+
+Nesse caso, você pega itens em intervalos fixos.
+
+Exemplo: uma linha a cada 100.
+
+É simples e pode funcionar bem, mas você precisa tomar cuidado para não criar viés se houver algum padrão na ordenação dos dados.
 
 ---
 
@@ -58,17 +64,18 @@ Exemplo: pegar uma linha a cada 100.
 
 Use amostragem quando:
 
-* a base é grande demais para testar tudo;
-* você quer acelerar validações;
-* precisa explorar dados antes de processar em escala;
-* o custo ou o tempo do processamento importam.
+* a base é grande demais para testar inteira;
+* você quer acelerar uma validação;
+* precisa explorar os dados antes de processar em escala;
+* o custo e o tempo importam;
+* você quer checar a qualidade de uma parte representativa.
 
 ---
 
 ## Resumo rápido
 
-* **Aleatória**: simples e comum.
-* **Estratificada**: mantém proporção dos grupos.
+* **Aleatória**: sorteio simples.
+* **Estratificada**: preserva proporções dos grupos.
 * **Sistemática**: pega itens em intervalos.
 
-Na prova, o foco costuma ser entender por que amostrar e qual tipo ajuda a não distorcer o resultado.
+O ponto principal não é decorar o nome. É entender quando uma amostra pode representar bem a base e quando ela pode distorcer a leitura.

@@ -20,6 +20,10 @@
   --brand-text-on-chip: #f8fafc;
 }
 
+:root[data-theme="light"] {
+  color-scheme: light;
+}
+
 * {
   box-sizing: border-box;
 }
@@ -80,17 +84,47 @@ a:hover {
 }
 
 .brand-mark {
+  position: relative;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 58px;
+  min-width: 52px;
   height: 36px;
 }
 
-.brand-logo {
-  display: block;
-  width: 58px;
-  height: auto;
+.brand-aws-word {
+  position: relative;
+  top: -1px;
+  color: var(--text);
+  font-size: 1rem;
+  line-height: 1;
+  font-weight: 700;
+  letter-spacing: -0.04em;
+  text-transform: lowercase;
+}
+
+.brand-aws-smile {
+  position: absolute;
+  left: 10px;
+  bottom: 5px;
+  width: 28px;
+  height: 9px;
+  border-bottom: 3px solid var(--brand-smile);
+  border-radius: 0 0 22px 22px;
+  transform: rotate(-7deg);
+}
+
+.brand-aws-smile::after {
+  content: "";
+  position: absolute;
+  right: -2px;
+  bottom: -4px;
+  width: 0;
+  height: 0;
+  border-left: 6px solid var(--brand-smile);
+  border-top: 4px solid transparent;
+  border-bottom: 4px solid transparent;
+  transform: rotate(-14deg);
 }
 
 .brand-text {
@@ -122,6 +156,23 @@ a:hover {
   padding: 7px 10px;
   font-size: 0.92rem;
   font-weight: 500;
+}
+
+.theme-toggle {
+  appearance: none;
+  border: 1px solid var(--line);
+  background: var(--panel);
+  color: var(--text);
+  border-radius: 10px;
+  padding: 7px 10px;
+  font-size: 0.92rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.theme-toggle:hover {
+  background: rgba(31, 94, 255, 0.06);
+  border-color: rgba(31, 94, 255, 0.18);
 }
 
 .site-nav a:hover {
@@ -253,32 +304,34 @@ a:hover {
 
 .author-hero {
   display: grid;
-  grid-template-columns: 148px minmax(0, 1fr);
-  gap: 22px;
+  grid-template-columns: 168px minmax(0, 1fr);
+  gap: 26px;
   align-items: center;
-  padding: 22px;
+  padding: 26px;
   margin: 18px 0 28px;
   border: 1px solid var(--line);
-  border-radius: 20px;
+  border-radius: 24px;
   background:
     radial-gradient(circle at top left, rgba(255, 153, 0, 0.12), transparent 28%),
     linear-gradient(180deg, var(--panel-soft), var(--panel));
 }
 
 .author-hero-photo {
-  width: 148px;
-  height: 148px;
+  width: 168px;
+  height: 168px;
   object-fit: cover;
-  border-radius: 24px;
-  border: 1px solid var(--line);
-  box-shadow: var(--shadow);
+  object-position: center 20%;
+  border-radius: 999px;
+  border: 4px solid rgba(255, 153, 0, 0.14);
+  box-shadow: 0 16px 34px rgba(15, 23, 42, 0.16);
 }
 
 .author-hero-copy h2 {
   margin: 4px 0 10px;
   padding: 0;
   border: 0;
-  font-size: 1.6rem;
+  font-size: 1.75rem;
+  line-height: 1.15;
 }
 
 .author-hero-copy p {
@@ -440,7 +493,7 @@ a:hover {
 }
 
 @media (prefers-color-scheme: dark) {
-  :root {
+  :root:not([data-theme="light"]) {
     --bg: #0b1118;
     --panel: #101923;
     --panel-soft: #16212d;
@@ -457,19 +510,61 @@ a:hover {
     --header-line: rgba(48, 68, 86, 0.7);
   }
 
-  .content-panel th {
+  :root:not([data-theme="light"]) .content-panel th {
     background: #132030;
   }
 
-  .page-nav-link:hover {
+  :root:not([data-theme="light"]) .page-nav-link:hover {
     background: #182535;
   }
 
-  .author-hero {
+  :root:not([data-theme="light"]) .author-hero {
     background:
       radial-gradient(circle at top left, rgba(255, 153, 0, 0.1), transparent 28%),
       linear-gradient(180deg, #121c28, #101923);
   }
+
+  :root:not([data-theme="light"]) .author-hero-photo {
+    border-color: rgba(255, 153, 0, 0.22);
+    box-shadow: 0 18px 40px rgba(0, 0, 0, 0.34);
+  }
+}
+
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --bg: #0b1118;
+  --panel: #101923;
+  --panel-soft: #16212d;
+  --text: #e6edf5;
+  --muted: #97a7b8;
+  --line: #223243;
+  --line-strong: #304456;
+  --accent: #7cb4ff;
+  --accent-strong: #a7cbff;
+  --sidebar-bg: #0f1720;
+  --code-bg: #0d1520;
+  --shadow: 0 18px 36px rgba(0, 0, 0, 0.28);
+  --header-bg: rgba(11, 17, 24, 0.84);
+  --header-line: rgba(48, 68, 86, 0.7);
+}
+
+:root[data-theme="dark"] .content-panel th {
+  background: #132030;
+}
+
+:root[data-theme="dark"] .page-nav-link:hover {
+  background: #182535;
+}
+
+:root[data-theme="dark"] .author-hero {
+  background:
+    radial-gradient(circle at top left, rgba(255, 153, 0, 0.1), transparent 28%),
+    linear-gradient(180deg, #121c28, #101923);
+}
+
+:root[data-theme="dark"] .author-hero-photo {
+  border-color: rgba(255, 153, 0, 0.22);
+  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.34);
 }
 
 @media (max-width: 1040px) {
@@ -514,8 +609,8 @@ a:hover {
   }
 
   .author-hero-photo {
-    width: 112px;
-    height: 112px;
+    width: 120px;
+    height: 120px;
   }
 
   .page-nav {

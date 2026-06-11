@@ -10,7 +10,7 @@ Este site reúne meu guia de estudos para a certificação `AWS Certified Data E
 A proposta aqui é simples: transformar estudo técnico em uma **trilha de estudo organizada para a prova AWS DEA**, útil para revisão e boa o suficiente para consultar depois sem parecer um monte de anotação solta.
 
 <section class="author-hero">
-  <img class="author-hero-photo" src="https://github.com/Ito-Santana.png" alt="Foto de Ítalo Santana">
+  <img class="author-hero-photo" src="https://github.com/Ito-Santana.png?size=320" alt="Foto de Ítalo Santana">
   <div class="author-hero-copy">
     <p class="author-hero-kicker">Feito por Ítalo Santana</p>
     <h2>Uma trilha de estudo para a AWS DEA-C01, organizada em formato de documentação</h2>

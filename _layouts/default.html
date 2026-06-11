@@ -12,7 +12,8 @@
       <div class="shell header-inner">
         <a class="brand" href="{{ '/' | relative_url }}">
           <span class="brand-mark" aria-hidden="true">
-            <img src="{{ '/assets/aws-logo.svg' | relative_url }}" alt="AWS" class="brand-logo">
+            <span class="brand-aws-word">aws</span>
+            <span class="brand-aws-smile"></span>
           </span>
           <span class="brand-text">
             <strong>{{ site.title }}</strong>
@@ -21,6 +22,9 @@
         </a>
 
         <nav class="site-nav" aria-label="Principal">
+          <button class="theme-toggle" type="button" aria-label="Alternar tema" data-theme-toggle>
+            Escuro
+          </button>
           <a href="{{ '/' | relative_url }}">Docs</a>
           {% if site.repository_url %}
             <a href="{{ site.repository_url }}" target="_blank" rel="noreferrer">Repositório</a>
@@ -165,6 +169,29 @@
     </footer>
     <script type="module">
       import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs";
+
+      const root = document.documentElement;
+      const toggle = document.querySelector("[data-theme-toggle]");
+      const storedTheme = localStorage.getItem("theme");
+
+      const applyTheme = (theme) => {
+        root.setAttribute("data-theme", theme);
+        if (toggle) {
+          toggle.textContent = theme === "dark" ? "Claro" : "Escuro";
+        }
+      };
+
+      if (storedTheme === "dark" || storedTheme === "light") {
+        applyTheme(storedTheme);
+      } else {
+        applyTheme(window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
+      }
+
+      toggle?.addEventListener("click", () => {
+        const nextTheme = root.getAttribute("data-theme") === "dark" ? "light" : "dark";
+        localStorage.setItem("theme", nextTheme);
+        applyTheme(nextTheme);
+      });
 
       document.querySelectorAll("pre code.language-mermaid").forEach((codeBlock) => {
         const pre = codeBlock.parentElement;

@@ -32,7 +32,7 @@
         <aside class="docs-sidebar" aria-label="Navegação lateral">
           <div class="sidebar-section">
             <p class="sidebar-label">Documentação</p>
-            <a class="sidebar-home{% if page.url == '/' %} is-active{% endif %}" href="{{ '/' | relative_url }}">Visão geral</a>
+            <a class="sidebar-home{% if page.url == '/' %} is-active{% endif %}" href="{{ '/' | relative_url }}">Início do site</a>
           </div>
 
           <section class="sidebar-group">
@@ -77,6 +77,11 @@
             {% assign next_title = '' %}
 
             {% case page.url %}
+              {% when '/fundamentos-engenharia-de-dados/' %}
+                {% assign prev_url = '/' %}
+                {% assign prev_title = 'Início do site' %}
+                {% assign next_url = '/fundamentos-engenharia-de-dados/conceitos-basicos.html' %}
+                {% assign next_title = 'Conceitos Básicos' %}
               {% when '/fundamentos-engenharia-de-dados/conceitos-basicos.html' %}
                 {% assign prev_url = '/fundamentos-engenharia-de-dados/' %}
                 {% assign prev_title = 'Guia de fundamentos' %}
@@ -120,6 +125,11 @@
               {% when '/fundamentos-engenharia-de-dados/revisao-sql.html' %}
                 {% assign prev_url = '/fundamentos-engenharia-de-dados/validacao-de-dados.html' %}
                 {% assign prev_title = 'Validação de Dados' %}
+              {% when '/armazenamento/' %}
+                {% assign prev_url = '/' %}
+                {% assign prev_title = 'Início do site' %}
+                {% assign next_url = '/armazenamento/s3-introducao.html' %}
+                {% assign next_title = 'S3 - Introdução' %}
               {% when '/armazenamento/s3-introducao.html' %}
                 {% assign prev_url = '/armazenamento/' %}
                 {% assign prev_title = 'Guia de armazenamento' %}

@@ -144,8 +144,8 @@ a:hover {
   background: var(--sidebar-bg);
   border: 1px solid var(--line);
   border-radius: 18px;
-  min-height: calc(100vh - 108px);
-  height: 100%;
+  max-height: calc(100vh - 108px);
+  overflow-y: auto;
 }
 
 .docs-main {
@@ -396,8 +396,8 @@ a:hover {
 
   .docs-sidebar {
     position: static;
-    min-height: auto;
-    height: auto;
+    max-height: none;
+    overflow-y: visible;
   }
 }
 

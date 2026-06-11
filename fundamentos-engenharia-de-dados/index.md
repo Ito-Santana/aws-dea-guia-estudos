@@ -8,6 +8,12 @@ description: Índice da trilha de fundamentos para a certificação AWS DEA-C01
 
 Essa seção junta a base que costuma fazer diferença no resto do estudo. A ideia aqui é fechar vocabulário, arquitetura básica e alguns conceitos que aparecem o tempo todo nas questões.
 
+## O que é esta página
+
+Esta é a página índice da trilha de fundamentos.
+
+Se você quer a visão geral do site inteiro, volta para a [página inicial](/).
+
 ## Ordem sugerida
 
 1. [Conceitos Básicos](./conceitos-basicos.html)
@@ -32,3 +38,7 @@ Essa seção junta a base que costuma fazer diferença no resto do estudo. A ide
 ## Sugestão de uso
 
 Se você ainda está montando base, segue a ordem da lista. Se já estudou esses temas antes, usa esta página mais como índice rápido para revisar os pontos onde ainda tem mais atrito.
+
+## Outras trilhas
+
+- [Armazenamento](../armazenamento/)

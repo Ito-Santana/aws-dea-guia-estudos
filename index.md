@@ -7,6 +7,12 @@ layout: default
 
 Guia de estudos em formato de documentação, com foco em revisão rápida e aprofundamento prático dos temas mais importantes da certificação `AWS Certified Data Engineer - Associate`.
 
+## O que é esta página
+
+Esta é a página inicial do site.
+
+Ela serve como visão geral do material inteiro. Os links mais detalhados de cada trilha ficam nas páginas índice de cada seção.
+
 ## Como usar este site
 
 - use a navegação lateral para entrar por pasta e assunto;

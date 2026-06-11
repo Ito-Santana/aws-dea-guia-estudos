@@ -1,37 +1,38 @@
 ---
-title: Revisao SQL
-layout: default
-description: Revisao objetiva de SQL para leitura de consultas e cenarios comuns da DEA-C01
----
 
+title: Revisão SQL
+layout: default
+description: Revisão objetiva de SQL para leitura de consultas e cenários comuns da DEA-C01
+---
 # Revisão SQL
 
 ## Visão Geral
 
-A DEA-C01 não é prova de SQL, mas ela assume que você não se perde quando aparece uma consulta, um `JOIN`, um `GROUP BY` ou um filtro um pouco mais chatinho.
+A DEA-C01 não é uma prova de SQL, mas SQL aparece bastante em cenários com `Athena`, `Redshift`, validações de pipeline e leitura de dados no `S3`.
 
-Se SQL ainda está inseguro, vale revisar agora. Senão, o resto do conteúdo começa a parecer mais difícil do que realmente é.
+O objetivo aqui não é decorar tudo. É conseguir olhar para uma consulta e entender o que ela faz.
 
-## O que mais vale revisar
+---
 
-Para esse contexto de prova, eu focaria em:
+## Ordem lógica básica
 
-- `WHERE`;
-- agregações;
-- `GROUP BY`;
-- `ORDER BY`;
-- `JOIN`;
-- noção de pivoting.
+A consulta é escrita em uma ordem, mas a lógica costuma ser entendida assim:
 
-Não precisa transformar isso em curso completo de banco de dados. A ideia é conseguir ler consulta e entender o efeito dela.
+```text
+FROM -> WHERE -> GROUP BY -> HAVING -> SELECT -> ORDER BY
+```
 
-## Filtrar com WHERE
+Isso ajuda a lembrar:
 
-`WHERE` é o filtro.
+* `WHERE` filtra linhas antes do agrupamento;
+* `HAVING` filtra grupos depois do agrupamento;
+* `ORDER BY` só ordena o resultado final.
 
-É ele que corta o universo antes de qualquer agrupamento ou ordenação.
+---
 
-Exemplo:
+## WHERE
+
+`WHERE` filtra linhas.
 
 ```sql
 SELECT *
@@ -39,32 +40,32 @@ FROM pedidos
 WHERE status = 'ENTREGUE';
 ```
 
-Esse tipo de coisa aparece o tempo todo em questões de leitura de consulta.
+Aqui, só entram pedidos com status `ENTREGUE`.
+
+---
 
 ## Agregações
 
-Agregação é quando você deixa de olhar linha por linha e passa a resumir.
+Agregações resumem dados.
 
-Funções mais comuns:
+Funções comuns:
 
-- `COUNT`
-- `SUM`
-- `AVG`
-- `MIN`
-- `MAX`
-
-Exemplo:
+* `COUNT`;
+* `SUM`;
+* `AVG`;
+* `MIN`;
+* `MAX`.
 
 ```sql
 SELECT SUM(valor_total) AS receita_total
 FROM pedidos;
 ```
 
+---
+
 ## GROUP BY
 
-O `GROUP BY` entra quando você quer resumir por grupo.
-
-Exemplo:
+`GROUP BY` agrega por grupo.
 
 ```sql
 SELECT regiao, COUNT(*) AS total_pedidos
@@ -72,115 +73,163 @@ FROM pedidos
 GROUP BY regiao;
 ```
 
-Sem `GROUP BY`, você resume tudo junto. Com `GROUP BY`, você resume por categoria.
+Sem `GROUP BY`, você resume tudo junto.
+Com `GROUP BY`, você resume por categoria.
 
-Essa é uma daquelas coisas que parecem triviais, mas muita gente trava quando a consulta mistura agregação com mais de uma coluna.
+Regra importante: coluna no `SELECT` precisa estar no `GROUP BY` ou dentro de uma agregação.
+
+---
+
+## HAVING
+
+`HAVING` filtra grupos depois da agregação.
+
+```sql
+SELECT cliente_id, COUNT(*) AS total_pedidos
+FROM pedidos
+GROUP BY cliente_id
+HAVING COUNT(*) > 10;
+```
+
+Use `WHERE` para linhas.
+Use `HAVING` para grupos.
+
+---
 
 ## ORDER BY
 
-`ORDER BY` só organiza o resultado final.
-
-Exemplo:
+`ORDER BY` ordena o resultado.
 
 ```sql
-SELECT cliente_id, receita
-FROM vendas
+SELECT cliente_id, SUM(valor_total) AS receita
+FROM pedidos
+GROUP BY cliente_id
 ORDER BY receita DESC;
 ```
 
-Bom para ranking, relatório e leitura de resultado.
+Ele não altera os dados, só a exibição final.
+
+---
 
 ## JOIN
 
-Aqui normalmente mora a parte mais importante.
-
-`JOIN` junta tabelas. Se isso não estiver claro, boa parte das questões com SQL fica confusa.
-
-### INNER JOIN
-
-Traz só o que existe dos dois lados.
-
-### LEFT JOIN
-
-Traz tudo da tabela da esquerda, mesmo quando não há correspondência na direita.
-
-Esse costuma ser o join mais importante para leitura de cenários, porque muita questão quer saber se linhas serão preservadas ou perdidas.
-
-### RIGHT JOIN
-
-É o espelho do `LEFT JOIN`. Aparece menos no dia a dia.
-
-### FULL OUTER JOIN
-
-Traz tudo de ambos os lados, casando o que der e mantendo o que sobrar.
-
-Exemplo:
+`JOIN` junta tabelas.
 
 ```sql
 SELECT p.id_pedido, c.nome
 FROM pedidos p
 LEFT JOIN clientes c
-    ON p.id_cliente = c.id_cliente;
+    ON p.cliente_id = c.cliente_id;
 ```
+
+Principais tipos:
+
+| JOIN              | O que faz                             |
+| ----------------- | ------------------------------------- |
+| `INNER JOIN`      | Mantém só o que existe dos dois lados |
+| `LEFT JOIN`       | Mantém tudo da tabela da esquerda     |
+| `RIGHT JOIN`      | Mantém tudo da tabela da direita      |
+| `FULL OUTER JOIN` | Mantém tudo dos dois lados            |
+
+O `LEFT JOIN` é muito importante porque preserva linhas da tabela principal, mesmo sem correspondência na outra.
+
+---
+
+## Cuidado com JOIN
+
+`JOIN` pode multiplicar linhas.
+
+Se a chave aparece várias vezes nas duas tabelas, o resultado pode crescer sem você perceber.
+
+Exemplo: dois pedidos para o mesmo cliente e dois segmentos para esse cliente podem virar quatro linhas depois do join.
+
+Antes de confiar no resultado, pergunte:
+
+> A chave do join é única em algum dos lados?
+
+---
+
+## DISTINCT
+
+`DISTINCT` remove duplicidades do resultado.
+
+```sql
+SELECT DISTINCT cliente_id
+FROM pedidos;
+```
+
+Mas cuidado: às vezes ele só esconde um `JOIN` mal feito.
+
+---
+
+## CASE WHEN
+
+`CASE WHEN` cria regras condicionais.
+
+```sql
+SELECT
+    id_pedido,
+    CASE
+        WHEN valor_total >= 1000 THEN 'ALTO'
+        ELSE 'NORMAL'
+    END AS faixa_valor
+FROM pedidos;
+```
+
+É útil para flags, categorias e regras simples.
+
+---
 
 ## Pivoting
 
-Pivoting é mais conceito do que comando específico, porque cada engine implementa isso de um jeito.
+Pivoting é transformar linhas em colunas.
 
-A ideia é transformar linhas em colunas.
+Exemplo conceitual:
 
-Exemplo mental:
+```text
+Antes: cliente, mes, valor
+Depois: cliente, jan, fev, mar
+```
 
-- antes: uma linha para cada mês;
-- depois: uma coluna para cada mês.
+Para a DEA-C01, basta entender a ideia. Cada engine implementa de um jeito.
 
-Isso aparece mais em relatório e reorganização de resultado.
+---
 
-## Como isso aparece na AWS
+## Como aparece na AWS
 
-Você vai encontrar SQL ou SQL-like em vários pontos:
+SQL aparece principalmente em:
 
-- `Amazon Athena`;
-- `Amazon Redshift`;
-- transformações e validações em pipelines;
-- consultas para inspeção rápida em dados no `S3`.
+* `Amazon Athena`;
+* `Amazon Redshift`;
+* `Redshift Spectrum`;
+* validações em pipelines;
+* consultas rápidas em dados no `S3`.
 
-Mesmo quando a prova está falando de arquitetura, entender o básico de SQL ajuda a interpretar o que a questão quer fazer com os dados.
+Mesmo em questões de arquitetura, entender SQL ajuda a interpretar o que está sendo feito com os dados.
 
-## Pegadinhas para a prova
+---
 
-- `WHERE` filtra antes do agrupamento.
-- `GROUP BY` e agregação andam juntos.
-- `LEFT JOIN` preserva a tabela da esquerda.
-- consulta errada em `JOIN` pode multiplicar linhas sem você perceber.
-- às vezes a questão não quer que você escreva SQL; ela quer só que você entenda o resultado lógico da consulta.
+## Pegadinhas para prova
 
-## Quando usar
+* `WHERE` filtra antes do agrupamento.
+* `HAVING` filtra depois do agrupamento.
+* `GROUP BY` anda junto com agregações.
+* `LEFT JOIN` preserva a tabela da esquerda.
+* `JOIN` pode multiplicar linhas.
+* `DISTINCT` pode esconder problema de join.
+* `ORDER BY` só organiza o resultado final.
 
-SQL entra praticamente o tempo todo em engenharia de dados para:
-
-- explorar;
-- validar;
-- agregar;
-- juntar tabelas;
-- preparar consumo analítico.
-
-## Quando não usar
-
-Não force SQL como se ele resolvesse tudo. Em alguns cenários, o desafio está mais em ingestão, particionamento, streaming ou processamento distribuído do que na consulta em si.
+---
 
 ## Resumo rápido
 
-- `WHERE` filtra.
-- agregação resume.
-- `GROUP BY` cria grupos para resumir.
-- `ORDER BY` ordena.
-- `JOIN` junta tabelas.
+* `WHERE` filtra linhas.
+* `HAVING` filtra grupos.
+* Agregações resumem.
+* `GROUP BY` agrupa.
+* `ORDER BY` ordena.
+* `JOIN` junta tabelas.
+* `DISTINCT` remove duplicados.
+* `CASE WHEN` cria regras.
 
-## Checklist para prova
-
-- [ ] Conseguir ler `GROUP BY` sem hesitar
-- [ ] Entender diferença entre `INNER JOIN` e `LEFT JOIN`
-- [ ] Reconhecer o efeito de `ORDER BY`
-- [ ] Lembrar das agregações básicas
-- [ ] Saber que `Athena` e `Redshift` usam muito esse repertório
+---

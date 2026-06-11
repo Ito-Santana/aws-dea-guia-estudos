@@ -7,6 +7,8 @@ Material de estudos para a certificação AWS Certified Data Engineer - Associat
 - [Conceitos Básicos](fundamentos-engenharia-de-dados/conceitos-basicos.md)
 - [Data Lake vs Data Warehouse](fundamentos-engenharia-de-dados/lakes-vs-warehouse.md)
 - [Data Mesh](fundamentos-engenharia-de-dados/data-mesh.md)
+- [Guia de S3](fundamentos-engenharia-de-dados/guia.md)
+- [S3 - Introdução](fundamentos-engenharia-de-dados/s3-introducao.md)
 - [ETL](fundamentos-engenharia-de-dados/etl.md)
 - [Fonte de Dados e Tipos de Dados Comuns](fundamentos-engenharia-de-dados/fonte-de-dados-e-tipos-de-dados-comuns.md)
 - [Técnicas de Amostragem](fundamentos-engenharia-de-dados/tecnicas-de-amostragem.md)

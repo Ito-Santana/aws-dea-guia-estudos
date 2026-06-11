@@ -3,7 +3,7 @@
 title: S3 - Introdução
 layout: default
 description: Introdução ao Amazon S3 com foco em buckets, objetos, prefixos, metadados, tags e regras básicas de nomeação
--------------------------------------------------------------------------------------------------------------------------
+---
 
 # S3 - Introdução
 

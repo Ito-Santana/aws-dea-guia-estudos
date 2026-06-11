@@ -10,8 +10,6 @@ description: Tipos de dados e propriedades mais importantes para entender engenh
 
 Antes de falar de Glue, Athena, Redshift ou qualquer pipeline mais elaborado, tem uma base que precisa estar firme: que tipo de dado você está lidando e quais características desse dado vão impactar armazenamento, processamento e análise.
 
-Parece assunto introdutório demais, mas não é. Muita decisão de arquitetura nasce daqui.
-
 ## Tipos de dados
 
 Na prática, a divisão mais comum é esta:
@@ -112,17 +110,6 @@ Porque o tipo de dado afeta quase tudo:
 
 Não faz sentido tratar um log em JSON do mesmo jeito que uma tabela relacional pronta para BI.
 
-## Como aparece na AWS
-
-Na AWS, isso aparece o tempo todo:
-
-- `Amazon S3` guarda praticamente qualquer tipo de dado;
-- `AWS Glue Crawlers` ajudam a inferir schema de arquivos;
-- `AWS Glue` e `Amazon EMR` transformam dados estruturados e semiestruturados;
-- `Amazon Athena` consulta muito bem dados tabulares e formatos analíticos no `S3`;
-- `Amazon Redshift` funciona melhor com dados mais organizados para analytics;
-- `Amazon OpenSearch Service` pode entrar quando o dado é mais textual e o caso de uso envolve busca.
-
 ## Exemplo prático
 
 Imagina um e-commerce com três origens:
@@ -156,20 +143,6 @@ flowchart LR
 - `JSON` e `XML` são semiestruturados, não não estruturados.
 - `Parquet` não é "tipo de dado"; é formato de armazenamento muito usado em analytics.
 - `S3` armazena qualquer formato, mas isso não significa que qualquer formato será fácil de consultar.
-- Dado não estruturado pode fazer parte da arquitetura, mas nem sempre é foco principal da DEA-C01.
-
-## Quando usar
-
-Esse assunto não é algo que você "usa", e sim uma base para decidir melhor:
-
-- quando escolher formato;
-- quando planejar ingestão;
-- quando definir processamento;
-- quando pensar em catálogo e consumo.
-
-## Quando não usar
-
-Não vale complicar demais quando o cenário da prova só quer saber o essencial. Muitas questões não exigem taxonomia perfeita; exigem reconhecer o comportamento do dado e escolher a ferramenta compatível.
 
 ## Comparação rápida
 

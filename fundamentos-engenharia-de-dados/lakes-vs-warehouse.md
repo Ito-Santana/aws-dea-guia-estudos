@@ -28,13 +28,13 @@ Na AWS, o serviço mais clássico para isso é o **Amazon Redshift**.
 
 ### Como ele costuma funcionar
 
-```mermaid
+<div class="mermaid">
 flowchart LR
     A[Sistemas origem] --> B[ETL / ELT]
     B --> C[Data Warehouse]
     C --> D[BI / Dashboards]
     C --> E[SQL Analítico]
-```
+</div>
 
 ### Características
 
@@ -74,7 +74,7 @@ O data lake é útil quando você tem muitas fontes diferentes, formatos diferen
 
 ### Como ele costuma funcionar
 
-```mermaid
+<div class="mermaid">
 flowchart LR
     A[Sistemas origem] --> B[Ingestão]
     B --> C[Amazon S3]
@@ -82,7 +82,7 @@ flowchart LR
     C --> E[Amazon Athena]
     C --> F[Amazon EMR / Spark]
     C --> G[Amazon Redshift]
-```
+</div>
 
 ### Características
 
@@ -123,7 +123,7 @@ O lake guarda os dados com mais liberdade e menos imposição de schema.
 
 ### Comparação direta
 
-```mermaid
+<div class="mermaid">
 flowchart TB
     W[Data Warehouse] --> W1[Dados tratados]
     W --> W2[Schema rígido]
@@ -134,7 +134,7 @@ flowchart TB
     L --> L2[Schema flexível]
     L --> L3[Exploração e ciência de dados]
     L --> L4[Arquivos em S3]
-```
+</div>
 
 | Critério | Data Lake | Data Warehouse |
 | --- | --- | --- |
@@ -174,7 +174,7 @@ Na AWS, isso aparece muito em combinações como:
 
 ### Como ele costuma funcionar
 
-```mermaid
+<div class="mermaid">
 flowchart LR
     A[Sistemas origem] --> B[Ingestão]
     B --> C[Amazon S3]
@@ -184,7 +184,7 @@ flowchart LR
     E --> G[Redshift Spectrum]
     E --> H[EMR / Spark]
     E --> I[BI / ML]
-```
+</div>
 
 ### O que ele entrega
 

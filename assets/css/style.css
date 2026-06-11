@@ -80,50 +80,17 @@ a:hover {
 }
 
 .brand-mark {
-  position: relative;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 54px;
+  width: 58px;
   height: 36px;
-  border-radius: 10px;
-  background: linear-gradient(135deg, var(--brand-chip), var(--brand-chip-2));
-  box-shadow: var(--shadow);
 }
 
-.brand-aws-text {
-  position: relative;
-  top: -2px;
-  font-size: 0.88rem;
-  line-height: 1;
-  font-weight: 700;
-  letter-spacing: -0.03em;
-  color: var(--brand-text-on-chip);
-  text-transform: lowercase;
-}
-
-.brand-aws-smile {
-  position: absolute;
-  left: 13px;
-  bottom: 7px;
-  width: 26px;
-  height: 10px;
-  border-bottom: 3px solid var(--brand-smile);
-  border-radius: 0 0 24px 24px;
-  transform: rotate(-7deg);
-}
-
-.brand-aws-smile::after {
-  content: "";
-  position: absolute;
-  right: -2px;
-  bottom: -4px;
-  width: 0;
-  height: 0;
-  border-left: 6px solid var(--brand-smile);
-  border-top: 4px solid transparent;
-  border-bottom: 4px solid transparent;
-  transform: rotate(-16deg);
+.brand-logo {
+  display: block;
+  width: 58px;
+  height: auto;
 }
 
 .brand-text {
@@ -282,6 +249,49 @@ a:hover {
 .repo-link {
   color: var(--accent-strong);
   font-weight: 600;
+}
+
+.author-hero {
+  display: grid;
+  grid-template-columns: 148px minmax(0, 1fr);
+  gap: 22px;
+  align-items: center;
+  padding: 22px;
+  margin: 18px 0 28px;
+  border: 1px solid var(--line);
+  border-radius: 20px;
+  background:
+    radial-gradient(circle at top left, rgba(255, 153, 0, 0.12), transparent 28%),
+    linear-gradient(180deg, var(--panel-soft), var(--panel));
+}
+
+.author-hero-photo {
+  width: 148px;
+  height: 148px;
+  object-fit: cover;
+  border-radius: 24px;
+  border: 1px solid var(--line);
+  box-shadow: var(--shadow);
+}
+
+.author-hero-copy h2 {
+  margin: 4px 0 10px;
+  padding: 0;
+  border: 0;
+  font-size: 1.6rem;
+}
+
+.author-hero-copy p {
+  margin: 0 0 10px;
+}
+
+.author-hero-kicker {
+  margin: 0;
+  color: var(--accent-strong);
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
 }
 
 .hero,
@@ -445,9 +455,6 @@ a:hover {
     --shadow: 0 18px 36px rgba(0, 0, 0, 0.28);
     --header-bg: rgba(11, 17, 24, 0.84);
     --header-line: rgba(48, 68, 86, 0.7);
-    --brand-chip: #0b1220;
-    --brand-chip-2: #172033;
-    --brand-text-on-chip: #f3f7fb;
   }
 
   .content-panel th {
@@ -456,6 +463,12 @@ a:hover {
 
   .page-nav-link:hover {
     background: #182535;
+  }
+
+  .author-hero {
+    background:
+      radial-gradient(circle at top left, rgba(255, 153, 0, 0.1), transparent 28%),
+      linear-gradient(180deg, #121c28, #101923);
   }
 }
 
@@ -493,6 +506,16 @@ a:hover {
   .content-panel {
     padding: 22px 18px;
     border-radius: 18px;
+  }
+
+  .author-hero {
+    grid-template-columns: 1fr;
+    padding: 18px;
+  }
+
+  .author-hero-photo {
+    width: 112px;
+    height: 112px;
   }
 
   .page-nav {

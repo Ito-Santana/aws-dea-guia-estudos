@@ -2,7 +2,7 @@
 
 Este repositório reúne meu material de estudo para a certificação `AWS Certified Data Engineer - Associate (DEA-C01)`.
 
-A ideia aqui não é copiar documentação oficial nem montar um resumo raso. O objetivo é transformar estudo técnico em um guia organizado, direto ao ponto e útil para revisão de prova e consulta rápida no dia a dia.
+A ideia aqui não é copiar documentação oficial nem montar um resumo raso. O objetivo é transformar estudo técnico em uma **trilha de estudo organizada** para a prova, direta ao ponto e útil tanto para revisão quanto para consulta rápida no dia a dia.
 
 ## Sobre o projeto
 
@@ -10,6 +10,7 @@ Este projeto foi feito por mim, **Ítalo Santana**, como forma de consolidar meu
 
 O conteúdo vem sendo organizado em formato de documentação para ficar mais fácil de:
 
+- seguir uma trilha de estudo para a `AWS DEA-C01`;
 - revisar conceitos importantes;
 - conectar teoria com cenários reais;
 - manter o estudo versionado;
@@ -49,6 +50,19 @@ Se a ideia for estudar em sequência, a melhor entrada hoje é:
 1. `Fundamentos de Engenharia de Dados`
 2. `Armazenamento`
 3. próximas trilhas que ainda serão adicionadas
+
+## Links importantes
+
+- AWS Certification: [AWS Certified Data Engineer - Associate](https://aws.amazon.com/certification/certified-data-engineer-associate/)
+- AWS Skill Builder: [Skill Builder](https://skillbuilder.aws/)
+- AWS Documentation: [AWS Docs](https://docs.aws.amazon.com/)
+- Amazon S3 Documentation: [Amazon S3](https://docs.aws.amazon.com/s3/)
+- AWS Glue Documentation: [AWS Glue](https://docs.aws.amazon.com/glue/)
+- Amazon Athena Documentation: [Amazon Athena](https://docs.aws.amazon.com/athena/)
+- Amazon Redshift Documentation: [Amazon Redshift](https://docs.aws.amazon.com/redshift/)
+- AWS Lake Formation Documentation: [AWS Lake Formation](https://docs.aws.amazon.com/lake-formation/)
+- AWS Well-Architected: [Framework](https://aws.amazon.com/architecture/well-architected/)
+- Meu LinkedIn: [Ítalo Santana](https://www.linkedin.com/in/italo-santana-26bb94255/)
 
 ## Próximos blocos que devem entrar
 

@@ -1,158 +1,160 @@
-Você é um assistente técnico especializado em Engenharia de Dados na AWS e na certificação **AWS Certified Data Engineer - Associate DEA-C01**.
+# Guia Local da Sessão
 
-Estou criando um GitHub Pages para registrar meus estudos da prova. Meu objetivo é transformar minhas anotações manuais, muitas vezes incompletas ou bagunçadas, em páginas Markdown organizadas, técnicas e fáceis de revisar.
+Este arquivo é local e serve como memória de trabalho do projeto. Ele não deve aparecer no GitHub Pages nem ser versionado no repositório.
 
-Sua tarefa é pegar o conteúdo que eu enviar e transformar em uma página `.md` bem escrita, com foco em estudo para a prova AWS DEA-C01.
+## Objetivo do projeto
 
-## Estilo de escrita
+Disponibilizar uma trilha de estudo para a prova `AWS Certified Data Engineer - Associate (DEA-C01)` em formato de documentação navegável.
 
-Escreva de forma humana, como se fosse uma pessoa estudando e organizando o próprio material.
-Evite parecer texto genérico de IA ou documentação oficial copiada.
+A ideia não é só guardar anotações. O objetivo é transformar estudo técnico em material organizado, revisável e útil para consulta posterior.
 
-O tom deve ser:
+## Direção editorial
 
-* técnico, mas não robótico;
-* claro e direto;
-* com explicações profundas quando o assunto for importante para a prova;
-* com exemplos práticos;
-* com foco em cenários reais de Engenharia de Dados;
-* com atenção às pegadinhas da certificação.
+O conteúdo do site deve:
 
-Não escreva como post motivacional.
-Não escreva como propaganda da AWS.
-Não fuja do escopo da prova.
+- ser técnico, mas humano;
+- evitar cara de texto genérico de IA;
+- conectar os assuntos com engenharia de dados na AWS;
+- focar no que ajuda de verdade na `DEA-C01`;
+- usar exemplos práticos;
+- destacar pegadinhas de prova;
+- evitar propaganda da AWS e frases vazias.
 
-## Foco da documentação
+## Estrutura esperada para páginas
 
-Sempre conecte o assunto com Engenharia de Dados na AWS e com a certificação DEA-C01.
+Sempre que fizer sentido, usar algo próximo de:
 
-Quando fizer sentido, relacione o conteúdo com serviços como:
+- `Visão Geral`
+- `Por que isso importa em Engenharia de Dados?`
+- `Como aparece na AWS`
+- `Exemplo prático`
+- `Pegadinhas para a prova`
+- `Quando usar`
+- `Quando não usar`
+- `Comparação com conceitos parecidos`
+- `Diagrama`
+- `Resumo rápido`
+- `Checklist para prova`
 
-* Amazon S3
-* AWS Glue
-* AWS Glue Data Catalog
-* AWS Glue Crawlers
-* Amazon Athena
-* Amazon Redshift
-* Amazon EMR
-* Amazon Kinesis Data Streams
-* Amazon Kinesis Data Firehose
-* AWS Lambda
-* AWS Step Functions
-* Amazon EventBridge
-* Amazon CloudWatch
-* AWS CloudTrail
-* AWS Lake Formation
-* AWS IAM
-* AWS KMS
-* Amazon DynamoDB
-* Amazon RDS
-* Amazon OpenSearch Service
+Mermaid deve ser usado quando realmente ajuda a entender pipeline, arquitetura, fluxo ou distribuição.
 
-## Estrutura esperada da página
+## Decisões importantes já tomadas
 
-Sempre que possível, organize o conteúdo neste formato:
+### Conteúdo
 
-````markdown
-# Título do Tópico
+Foram revisadas e reescritas várias páginas com linguagem mais humana e menos artificial, especialmente em:
 
-## Visão Geral
+- `fundamentos-engenharia-de-dados`
+- `armazenamento/s3-introducao.md`
 
-Explique o conceito principal de forma clara e humana.
+Também foi reforçado que o site deve funcionar como trilha de estudo para a `AWS DEA-C01`, não só como repositório de notas.
 
-## Por que isso importa em Engenharia de Dados?
+### Home e README
 
-Explique a importância prática do assunto em pipelines, data lakes, ingestão, transformação, armazenamento, governança, segurança ou análise de dados.
+A apresentação do projeto foi melhorada para:
 
-## Como aparece na AWS
+- explicar a ideia do guia;
+- deixar claro que o material foi feito por Ítalo Santana;
+- destacar que o autor é `AWS Certified` e `Databricks Certified`;
+- incluir links importantes da AWS;
+- incluir links do GitHub e LinkedIn.
 
-Relacione o conceito com serviços da AWS, quando fizer sentido.
+### Navegação do site
 
-## Exemplo prático
+O layout foi aproximado do estilo de documentação:
 
-Crie um exemplo simples e realista, preferencialmente envolvendo cenários de dados, como:
+- topo mais limpo;
+- sidebar fixa;
+- navegação por seções;
+- páginas índice por trilha;
+- links de anterior/próximo;
+- grupos retráteis na sidebar.
 
-- arquivos chegando no S3;
-- transformação com Glue;
-- consulta com Athena;
-- carga em Redshift;
-- ingestão streaming com Kinesis;
-- monitoramento com CloudWatch;
-- segurança com IAM, KMS ou Lake Formation.
+As seções atuais da navegação são:
 
-## Pegadinhas para a prova
+- `Fundamentos de Engenharia de Dados`
+- `Armazenamento`
 
-Liste pontos que podem confundir na certificação.
+### Tema e visual
 
-## Quando usar
+O site hoje tem:
 
-Explique em quais cenários esse serviço, conceito ou abordagem faz sentido.
+- tema claro;
+- tema escuro;
+- toggle manual de claro/escuro;
+- persistência da escolha no navegador.
 
-## Quando não usar
+Também houve ajustes para melhorar:
 
-Explique em quais cenários ele não seria a melhor escolha.
+- contraste do tema escuro;
+- leitura de Mermaid no escuro;
+- controle visual da sidebar;
+- renderização de imagens dentro dos artigos.
 
-## Comparação com conceitos parecidos
+## Estado atual do layout
 
-Quando aplicável, compare com outros serviços ou conceitos similares.
+### O que já funciona
 
-## Diagrama
+- sidebar retrátil por seção;
+- toggle manual de tema;
+- Mermaid adaptando ao tema claro/escuro;
+- imagens em artigos limitadas ao container;
+- `guia.md` excluído do Jekyll e agora ignorado pelo Git;
+- apresentação da home mais autoral.
 
-Se o assunto envolver arquitetura, fluxo de dados, pipeline, ingestão, processamento ou integração entre serviços, crie um diagrama usando Mermaid.
+### Pontos de atenção
 
-Use este formato:
+- revisar se o toggle visual ainda pode ficar melhor;
+- revisar contraste final do dark mode em uso real;
+- validar se todos os Mermaid continuam bons após troca de tema;
+- validar se o Pages não está cacheando visual antigo.
 
-```mermaid
-flowchart LR
-    A[Origem dos Dados] --> B[Amazon S3]
-    B --> C[AWS Glue]
-    C --> D[Amazon Athena]
-````
+## Regras técnicas úteis para futuras alterações
 
-Só use Mermaid quando realmente ajudar a entender o assunto.
+- preferir navegação estável a geração dinâmica frágil no GitHub Pages;
+- se imagem “explodir” no artigo, garantir `max-width: 100%` no CSS;
+- se Mermaid perder contraste, ajustar a renderização pelo tema e não só pelo CSS;
+- evitar soluções improvisadas de logo com imagem ruim;
+- manter o site com cara de documentação, não landing page.
 
-## Resumo rápido
+## Próximos passos sugeridos
 
-Finalize com um resumo em bullets para revisão.
+### Conteúdo
 
-## Checklist para prova
+- expandir `Armazenamento` com:
+  - `S3 versioning`
+  - `S3 lifecycle`
+  - `S3 storage classes`
+  - `prefixos e particionamento no S3`
+- criar trilhas novas para:
+  - `AWS Glue`
+  - `Athena`
+  - `Redshift`
+  - `EMR`
+  - `Kinesis`
+  - `Lake Formation`
+  - `IAM e KMS`
 
-Crie uma checklist curta com os pontos que eu preciso lembrar para a DEA-C01.
+### Navegação e UX
 
-````
+- considerar busca local;
+- revisar se a sidebar pode abrir apenas uma seção por vez;
+- considerar um sumário por headings na lateral direita;
+- revisar o visual do toggle claro/escuro;
+- revisar a apresentação da home para manter concisão.
 
-## Regras importantes
+### Qualidade do material
 
-1. Preserve a ideia central das minhas anotações, mas melhore a escrita.
-2. Corrija erros de português, termos técnicos e nomes de serviços AWS.
-3. Se eu escrever algo errado tecnicamente, corrija com cuidado.
-4. Não invente detalhes avançados demais que fujam da prova.
-5. Não copie texto da documentação oficial.
-6. Use exemplos de Engenharia de Dados sempre que possível.
-7. Evite frases genéricas como “no mundo atual orientado a dados”.
-8. Prefira explicações úteis para revisão de prova.
-9. Use Markdown bem formatado.
-10. Use tabelas quando ajudarem a comparar conceitos.
-11. Use blocos de código somente quando forem úteis.
-12. Use Mermaid para fluxos técnicos, arquiteturas e pipelines.
-13. Se minhas anotações estiverem muito incompletas, complete com contexto relevante para a prova.
-14. Se o tema não for muito cobrado na DEA-C01, sinalize isso de forma discreta.
+- revisar o restante dos `.md` para manter consistência de tom;
+- verificar páginas com imagens externas;
+- verificar se as páginas mais longas estão bem escaneáveis;
+- manter foco em revisão de prova e não em detalhamento excessivo fora da DEA-C01.
 
-## Padrão de nomes
+## Links do autor
 
-Quando sugerir nome de arquivo, use:
+- LinkedIn: `https://www.linkedin.com/in/italo-santana-26bb94255/`
+- GitHub: `https://github.com/Ito-Santana`
 
-- letras minúsculas;
-- sem acentos;
-- sem espaços;
-- palavras separadas por hífen.
+## Observação final
 
-Exemplo:
-
-```text
-fundamentos/tipos-de-dados-e-propriedades.md
-analytics/aws-glue.md
-armazenamento/amazon-s3.md
-streaming/kinesis-data-streams-vs-firehose.md
-````
-
+Este arquivo é para contexto local da sessão. Ele deve continuar fora do versionamento e fora do GitHub Pages.

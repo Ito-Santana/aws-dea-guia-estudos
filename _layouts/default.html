@@ -23,7 +23,8 @@
 
         <nav class="site-nav" aria-label="Principal">
           <button class="theme-toggle" type="button" aria-label="Alternar tema" data-theme-toggle>
-            Escuro
+            <span class="theme-toggle-icon" aria-hidden="true">◐</span>
+            <span class="theme-toggle-label">Escuro</span>
           </button>
           <a href="{{ '/' | relative_url }}">Docs</a>
           {% if site.repository_url %}
@@ -41,8 +42,8 @@
             <a class="sidebar-home{% if page.url == '/' %} is-active{% endif %}" href="{{ '/' | relative_url }}">Início do site</a>
           </div>
 
-          <section class="sidebar-group">
-            <p class="sidebar-label">Fundamentos de Engenharia de Dados</p>
+          <details class="sidebar-group collapsible-group" {% if page.url contains '/fundamentos-engenharia-de-dados/' %}open{% endif %}>
+            <summary class="sidebar-summary">Fundamentos de Engenharia de Dados</summary>
             <div class="sidebar-links">
               <a class="sidebar-link{% if page.url == '/fundamentos-engenharia-de-dados/' %} is-active{% endif %}" href="{{ '/fundamentos-engenharia-de-dados/' | relative_url }}">Guia de fundamentos</a>
               <a class="sidebar-link{% if page.url == '/fundamentos-engenharia-de-dados/conceitos-basicos.html' %} is-active{% endif %}" href="{{ '/fundamentos-engenharia-de-dados/conceitos-basicos.html' | relative_url }}">Conceitos Básicos</a>
@@ -54,16 +55,16 @@
               <a class="sidebar-link{% if page.url == '/fundamentos-engenharia-de-dados/data-skew.html' %} is-active{% endif %}" href="{{ '/fundamentos-engenharia-de-dados/data-skew.html' | relative_url }}">Data Skew</a>
               <a class="sidebar-link{% if page.url == '/fundamentos-engenharia-de-dados/validacao-de-dados.html' %} is-active{% endif %}" href="{{ '/fundamentos-engenharia-de-dados/validacao-de-dados.html' | relative_url }}">Validação de Dados</a>
               <a class="sidebar-link{% if page.url == '/fundamentos-engenharia-de-dados/revisao-sql.html' %} is-active{% endif %}" href="{{ '/fundamentos-engenharia-de-dados/revisao-sql.html' | relative_url }}">Revisão SQL</a>
-              </div>
-          </section>
+            </div>
+          </details>
 
-          <section class="sidebar-group">
-            <p class="sidebar-label">Armazenamento</p>
+          <details class="sidebar-group collapsible-group" {% if page.url contains '/armazenamento/' %}open{% endif %}>
+            <summary class="sidebar-summary">Armazenamento</summary>
             <div class="sidebar-links">
               <a class="sidebar-link{% if page.url == '/armazenamento/' %} is-active{% endif %}" href="{{ '/armazenamento/' | relative_url }}">Guia de armazenamento</a>
               <a class="sidebar-link{% if page.url == '/armazenamento/s3-introducao.html' %} is-active{% endif %}" href="{{ '/armazenamento/s3-introducao.html' | relative_url }}">S3 - Introdução</a>
             </div>
-          </section>
+          </details>
 
           {% if site.repository_url %}
             <section class="sidebar-group sidebar-repo">
@@ -172,39 +173,59 @@
 
       const root = document.documentElement;
       const toggle = document.querySelector("[data-theme-toggle]");
+      const toggleLabel = toggle?.querySelector(".theme-toggle-label");
       const storedTheme = localStorage.getItem("theme");
 
-      const applyTheme = (theme) => {
-        root.setAttribute("data-theme", theme);
-        if (toggle) {
-          toggle.textContent = theme === "dark" ? "Claro" : "Escuro";
-        }
+      const getMermaidTheme = (theme) => theme === "dark" ? "dark" : "neutral";
+
+      const renderMermaids = async (theme) => {
+        mermaid.initialize({
+          startOnLoad: false,
+          theme: getMermaidTheme(theme),
+          securityLevel: "loose"
+        });
+
+        document.querySelectorAll(".mermaid").forEach((wrapper) => {
+          if (wrapper.dataset.mermaidSource) {
+            wrapper.removeAttribute("data-processed");
+            wrapper.innerHTML = "";
+            wrapper.textContent = wrapper.dataset.mermaidSource;
+          }
+        });
+
+        await mermaid.run({
+          querySelector: ".mermaid"
+        });
       };
 
-      if (storedTheme === "dark" || storedTheme === "light") {
-        applyTheme(storedTheme);
-      } else {
-        applyTheme(window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
-      }
-
-      toggle?.addEventListener("click", () => {
-        const nextTheme = root.getAttribute("data-theme") === "dark" ? "light" : "dark";
-        localStorage.setItem("theme", nextTheme);
-        applyTheme(nextTheme);
-      });
+      const applyTheme = async (theme) => {
+        root.setAttribute("data-theme", theme);
+        if (toggleLabel) {
+          toggleLabel.textContent = theme === "dark" ? "Claro" : "Escuro";
+        }
+        await renderMermaids(theme);
+      };
 
       document.querySelectorAll("pre code.language-mermaid").forEach((codeBlock) => {
         const pre = codeBlock.parentElement;
         const wrapper = document.createElement("div");
         wrapper.className = "mermaid";
-        wrapper.textContent = codeBlock.textContent;
+        wrapper.dataset.mermaidSource = codeBlock.textContent ?? "";
+        wrapper.textContent = wrapper.dataset.mermaidSource;
         pre.replaceWith(wrapper);
       });
 
-      mermaid.initialize({
-        startOnLoad: true,
-        theme: "neutral",
-        securityLevel: "loose"
+      const initialTheme =
+        storedTheme === "dark" || storedTheme === "light"
+          ? storedTheme
+          : (window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
+
+      await applyTheme(initialTheme);
+
+      toggle?.addEventListener("click", async () => {
+        const nextTheme = root.getAttribute("data-theme") === "dark" ? "light" : "dark";
+        localStorage.setItem("theme", nextTheme);
+        await applyTheme(nextTheme);
       });
     </script>
   </body>

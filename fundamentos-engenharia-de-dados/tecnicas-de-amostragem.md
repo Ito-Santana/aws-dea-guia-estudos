@@ -1,97 +1,126 @@
 ---
-title: Tecnicas de Amostragem
+
+title: Técnicas de Amostragem
 layout: default
-description: Tecnicas de amostragem para exploracao, validacao e analise de dados
+description: Técnicas de amostragem para exploração, validação e análise de dados
 ---
 
 # Técnicas de Amostragem
 
 ## Visão Geral
 
-Amostragem é usar só uma parte dos dados para entender o todo sem precisar processar a base inteira.
+Amostragem é trabalhar com uma parte dos dados em vez de processar a base inteira.
+A ideia é usar um recorte menor para investigar, testar ou validar alguma coisa antes de gastar mais tempo e processamento.
 
-Em engenharia de dados, isso aparece muito mais do que parece. Nem sempre você quer rodar um job caro só para validar uma hipótese, inspecionar qualidade ou testar uma transformação.
+---
 
-## Por que isso importa em Engenharia de Dados?
+## Por que isso importa?
 
-Porque trabalhar com 100% dos dados o tempo todo pode ser:
+Às vezes você só quer responder perguntas iniciais, como:
 
-- caro;
-- lento;
-- desnecessário;
-- ruim para exploração rápida.
+* os campos estão vindo preenchidos?
+* o timestamp está em qual formato?
+* existem valores fora do padrão?
+* a regra de transformação parece funcionar?
+* a distribuição dos dados faz sentido?
 
-Amostragem entra bem quando você quer testar um pipeline, investigar distribuição, validar schema, procurar anomalias ou simplesmente olhar o dado antes de decidir o próximo passo.
+Nesses casos, uma boa amostra ajuda a ganhar velocidade.
 
-Na DEA-C01, isso não costuma ser um dos tópicos mais pesados da prova, mas ajuda a entender práticas de exploração e validação.
+Mas tem um cuidado importante: **amostra não é garantia de verdade absoluta**. Ela ajuda a entender o dado, mas pode esconder casos raros, outliers ou grupos pequenos.
 
-## Tipos mais comuns
+---
 
 ## Amostragem aleatória
 
-É a mais direta.
+A amostragem aleatória escolhe registros ao acaso.
 
-Você seleciona registros de forma aleatória para tentar montar um recorte representativo da base.
-
-Boa para:
-
-- inspeção geral;
-- teste rápido;
-- validação inicial;
-- análise exploratória.
-
-O cuidado aqui é simples: aleatória não significa automaticamente boa. Se a base for muito desbalanceada, a amostra pode não refletir grupos pequenos importantes.
-
-## Amostragem estratificada
-
-Aqui você separa os dados em grupos antes de amostrar.
-
-Isso faz sentido quando a composição da base importa.
-
-Exemplos:
-
-- pedidos por região;
-- clientes por faixa de renda;
-- transações por tipo;
-- usuários por plano.
-
-Se você quer preservar proporções ou garantir presença mínima de determinados grupos, a estratificada costuma ser melhor que a aleatória pura.
-
-## Amostragem sistemática
-
-É quando você escolhe um intervalo fixo.
+É útil quando você quer uma visão geral da base, sem favorecer uma ordem ou grupo específico.
 
 Exemplo:
 
-- pegar uma linha a cada 100;
-- selecionar um arquivo a cada lote;
-- avaliar um evento a cada janela.
+```text
+De 10 milhões de eventos, selecionar 100 mil aleatoriamente para análise inicial.
+```
 
-Ela é prática, mas pode distorcer o resultado se a ordenação dos dados tiver algum padrão escondido.
+Ela funciona bem para exploração rápida, mas pode falhar se a base for muito desbalanceada.
 
-## Como aparece na AWS
+Imagine uma base em que 99% dos registros são de clientes comuns e 1% são de clientes enterprise. Uma amostra aleatória pequena pode quase não trazer clientes enterprise, mesmo eles sendo importantes para a análise.
 
-Esse tema aparece mais como prática de trabalho do que como serviço específico.
+---
 
-Na AWS, amostragem pode acontecer em:
+## Amostragem estratificada
 
-- consultas no `Amazon Athena`;
-- testes de transformação no `AWS Glue`;
-- análise exploratória em `Amazon EMR`;
-- inspeção inicial de arquivos no `Amazon S3`.
+A amostragem estratificada separa os dados em grupos antes de selecionar a amostra.
 
-O ponto não é "qual serviço faz amostragem", e sim por que você faria isso antes de gastar processamento com tudo.
+Esses grupos são chamados de estratos.
 
-## Exemplo prático
+Exemplo:
 
-Imagina uma empresa com bilhões de eventos no `S3`. Antes de converter tudo para `Parquet`, o time quer validar:
+```text
+Separar clientes por plano:
+- Free
+- Pro
+- Enterprise
 
-- campos nulos;
-- distribuição de eventos por tipo;
-- formatos de timestamp;
-- presença de valores fora do padrão.
+Depois, tirar uma amostra de cada grupo.
+```
 
-Em vez de processar tudo logo de cara, eles pegam uma amostra inicial para entender o comportamento dos dados e ajustar a transformação.
+Ela é útil quando você precisa garantir que grupos importantes apareçam na análise.
+
+Em dados reais, isso faz bastante sentido. Às vezes um grupo é pequeno em volume, mas muito importante para o negócio.
+
+Exemplos de estratos:
+
+* região;
+* plano do cliente;
+* tipo de transação;
+* canal de venda;
+* categoria de produto;
+* status do pedido.
+
+Se a base é desbalanceada, a estratificada costuma ser melhor que uma amostra aleatória simples.
+
+---
+
+## Amostragem sistemática
+
+A amostragem sistemática escolhe dados em intervalos fixos.
+
+Exemplo:
+
+```text
+Pegar 1 registro a cada 100.
+```
+
+Ou:
+
+```text
+Analisar 1 arquivo a cada lote recebido.
+```
+
+Ela é simples de implementar e pode ser útil em validações rápidas.
+
+O cuidado é que a ordem dos dados pode ter algum padrão escondido.
+
+Por exemplo: se os dados estão ordenados por horário e você sempre pega o mesmo intervalo, talvez acabe olhando sempre eventos parecidos. Nesse caso, a amostra pode ficar enviesada.
+
+---
+
+## Exemplo prático na AWS
+
+Imagine uma empresa com bilhões de eventos armazenados no `Amazon S3`.
+
+Antes de converter tudo para `Parquet`, o time quer entender melhor os dados.
+
+Eles podem pegar uma amostra para validar:
+
+* campos nulos;
+* tipos de evento;
+* formato de timestamp;
+* valores fora do padrão;
+* distribuição por cliente ou região.
+
+Depois dessa análise inicial, o pipeline fica mais seguro para processar a base completa.
 
 ```mermaid
 flowchart LR
@@ -101,49 +130,51 @@ flowchart LR
     D --> E[Processamento completo]
 ```
 
+---
+
 ## Pegadinhas para a prova
 
-- amostra rápida não é sinônimo de amostra representativa;
-- amostragem sistemática pode enviesar o resultado se existir padrão na ordenação;
-- base desbalanceada costuma pedir mais cuidado do que sorteio simples;
-- nem todo cenário de validação precisa usar 100% dos dados.
+* Amostra rápida não significa amostra representativa.
+* Amostragem aleatória pode perder grupos pequenos.
+* Amostragem estratificada ajuda quando existem grupos importantes.
+* Amostragem sistemática pode gerar viés se houver padrão na ordenação.
+* Nem toda validação pode ser feita só com amostra.
+* Para casos raros ou críticos, pode ser necessário analisar a base completa.
+
+---
 
 ## Quando usar
 
-- exploração inicial;
-- teste de pipeline;
-- validação de regra;
-- análise de distribuição;
-- redução de custo em etapas de investigação.
+Use amostragem quando você quer:
 
-## Quando não usar
+* explorar uma base nova;
+* testar uma transformação;
+* validar schema;
+* investigar qualidade;
+* reduzir custo em análise inicial;
+* entender distribuição antes do processamento completo.
 
-Evite depender só de amostra quando:
+---
 
-- a validação exige cobertura total;
-- você precisa identificar casos raros mas críticos;
-- o dado é muito sensível a outliers;
-- a decisão depende de exatidão completa.
 
 ## Comparação rápida
 
-| Técnica | Melhor uso |
-| --- | --- |
-| Aleatória | Visão geral da base |
-| Estratificada | Preservar grupos e proporções |
-| Sistemática | Coleta simples em intervalos fixos |
+| Técnica       | Ideia                         | Cuidado                         |
+| ------------- | ----------------------------- | ------------------------------- |
+| Aleatória     | Seleciona registros ao acaso  | Pode perder grupos pequenos     |
+| Estratificada | Amostra por grupos            | Precisa definir bem os grupos   |
+| Sistemática   | Seleciona em intervalos fixos | Pode sofrer viés pela ordenação |
+
+---
 
 ## Resumo rápido
 
-- Amostragem ajuda a explorar e validar sem processar tudo.
-- Aleatória é simples.
-- Estratificada preserva grupos.
-- Sistemática é prática, mas pede cuidado com viés.
+Amostragem é usar uma parte dos dados para explorar, testar ou validar antes de processar tudo.
 
-## Checklist para prova
+A aleatória é simples.
+A estratificada é melhor quando existem grupos importantes.
+A sistemática é prática, mas exige cuidado com padrões escondidos.
 
-- [ ] Saber a diferença entre aleatória, estratificada e sistemática
-- [ ] Entender que amostra pode introduzir viés
-- [ ] Lembrar que amostragem ajuda em exploração e teste
-- [ ] Não supor que amostra sempre substitui validação completa
-- [ ] Tratar o tema como apoio prático, não como serviço AWS específico
+Em Engenharia de Dados, amostragem ajuda a economizar tempo e custo, principalmente em bases grandes no `S3`, jobs no `Glue` e análises exploratórias.
+
+---

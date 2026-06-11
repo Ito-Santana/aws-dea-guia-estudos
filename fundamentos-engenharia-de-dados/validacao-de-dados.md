@@ -1,75 +1,63 @@
 ---
-title: Validacao de Dados
+
+title: Validação de Dados
 layout: default
-description: Validacoes para impedir que dados ruins avancem no pipeline
+description: Validações para impedir que dados ruins avancem no pipeline
 ---
 
 # Validação de Dados
 
 ## Visão Geral
 
-Validação de dados é a etapa em que você checa se o dado faz sentido antes de deixar ele seguir adiante.
+Validação de dados é a etapa em que o pipeline verifica se os dados atendem a regras mínimas antes de seguir para a próxima camada.
 
-Não é perfumaria. Se dado ruim entra sem controle, ele contamina tabela curada, métrica, dashboard e decisão de negócio.
+Ela serve para responder perguntas como:
 
-## Por que isso importa em Engenharia de Dados?
+* esse campo obrigatório veio preenchido?
+* esse valor está em um formato válido?
+* essa chave existe?
+* esse registro está duplicado?
 
-Porque pipeline "verde" não significa dado confiável.
+## Por que isso importa?
 
-É perfeitamente possível ter job rodando todo dia e ainda assim entregar:
+Se um dado ruim passa sem controle, pode chegar na camada curada, alimentar um dashboard, alterar uma métrica ou gerar uma decisão errada.
 
-- duplicidade;
-- nulo onde não podia;
-- chave quebrada;
-- data inválida;
-- valor fora de faixa;
-- regra de negócio inconsistente.
-
-Na DEA-C01, isso se conecta com qualidade, confiabilidade e publicação segura de datasets.
+---
 
 ## O que normalmente se valida
 
-- tipo de dado;
-- campo obrigatório;
-- formato;
-- faixa de valor;
-- unicidade;
-- consistência entre colunas;
-- integridade referencial;
-- atualização dentro da janela esperada.
+As validações dependem do domínio, mas algumas aparecem bastante em pipelines de dados.
 
-Exemplos:
+| Tipo de validação       | Exemplo                                                  |
+| ----------------------- | -------------------------------------------------------- |
+| Campo obrigatório       | `order_id` não pode ser nulo                             |
+| Tipo de dado            | `price` precisa ser numérico                             |
+| Formato                 | `event_time` precisa ser um timestamp válido             |
+| Faixa de valor          | `price` não pode ser negativo                            |
+| Unicidade               | `order_id` não deveria repetir                           |
+| Consistência            | pedido `ENTREGUE` precisa ter `delivery_date`            |
+| Integridade referencial | `customer_id` precisa existir na tabela de clientes      |
+| Atualização esperada    | arquivo diário precisa chegar dentro da janela combinada |
 
-- `order_id` não pode ser nulo;
-- `price` não pode ser negativo;
-- `event_time` precisa estar em timestamp válido;
-- pedido entregue não deveria estar sem data de entrega.
+Essas regras ajudam a separar o que está pronto para seguir do que precisa ser investigado.
 
-## Como aparece na AWS
-
-Na AWS, a validação pode entrar em:
-
-- jobs do `AWS Glue`;
-- processamento no `Amazon EMR`;
-- regras SQL em `Amazon Athena` ou `Amazon Redshift`;
-- funções `AWS Lambda`;
-- alertas no `Amazon CloudWatch`.
-
-Um padrão comum é separar registros inválidos em uma área de quarentena no `S3`.
+---
 
 ## Exemplo prático
 
-Chegam arquivos diários de pedidos no `S3`.
+Imagine que chegam arquivos diários de pedidos no `Amazon S3`.
 
-Antes de publicar a tabela final para `Athena`, o pipeline valida:
+Antes de publicar a tabela para consulta no `Athena`, o pipeline valida algumas regras:
 
-- colunas obrigatórias;
-- unicidade de `order_id`;
-- faixa válida de valor;
-- formato de data;
-- coerência entre status e timestamps.
+* `order_id` não pode ser nulo;
+* `order_id` não pode estar duplicado;
+* `price` precisa ser maior ou igual a zero;
+* `order_date` precisa ter formato válido;
+* se o pedido está `ENTREGUE`, precisa existir `delivery_date`.
 
-O que passa vai para a camada curada. O que falha vai para quarentena e gera alerta.
+O que passa nas regras segue para a camada curada.
+
+O que falha vai para uma área de quarentena no `S3`, junto com o motivo da reprovação.
 
 ```mermaid
 flowchart LR
@@ -81,52 +69,88 @@ flowchart LR
     D --> G[Amazon Athena]
 ```
 
-## Pegadinhas para a prova
+A quarentena é útil porque nem sempre o melhor caminho é derrubar o pipeline inteiro. Às vezes faz mais sentido isolar os registros inválidos, gerar alerta e permitir que os dados válidos sigam.
 
-- validação não é a mesma coisa que transformação;
-- schema compatível não garante dado correto;
-- qualidade de dados é mais ampla do que validação;
-- nem sempre o melhor é derrubar o pipeline inteiro; às vezes o certo é isolar os inválidos.
+---
+
+## Como aparece na AWS
+
+Na AWS, validação de dados pode aparecer em várias partes do pipeline.
+
+Exemplos:
+
+* `AWS Glue`, validando dados durante um job de ETL;
+* `Amazon EMR`, em processamento Spark mais customizado;
+* `Amazon Athena`, com consultas SQL de checagem;
+* `Amazon Redshift`, validando dados antes ou depois da carga;
+* `AWS Lambda`, para validações leves ou orientadas a evento;
+* `Amazon CloudWatch`, para alertas e monitoramento;
+* `Amazon S3`, como área de dados brutos, curados e quarentena.
+
+Um padrão comum é:
+
+```text
+raw -> validação -> curated
+              \
+               -> quarentena
+```
+
+---
+
 
 ## Quando usar
 
-Na prática, sempre.
+Na prática, validação deve existir em todo pipeline importante.
 
-Mas ela fica ainda mais importante quando:
+Ela fica ainda mais necessária quando:
 
-- a origem é instável;
-- o dataset vai para muitos consumidores;
-- o dado tem impacto financeiro;
-- há regra de negócio forte.
+* a origem é instável;
+* o dado vem de terceiros;
+* o dataset é consumido por muitos times;
+* o dado afeta métrica financeira;
+* existe regra de negócio forte;
+* a tabela alimenta dashboard ou processo crítico.
 
-## Quando não usar
+---
 
-O erro aqui não é "não usar". É validar mal:
+## Quando tomar cuidado
 
-- só no final;
-- sem rastreabilidade;
-- com regra pesada demais no ponto errado;
-- confiando só em schema.
+O problema geralmente não é validar. É validar mal.
+
+Alguns erros comuns:
+
+* validar só no final do pipeline;
+* confiar apenas no schema;
+* não registrar o motivo da falha;
+* descartar dados inválidos sem rastreabilidade;
+* derrubar o pipeline inteiro por erro pequeno e isolado;
+* deixar dados ruins passarem sem alerta.
+
+Uma boa validação precisa dizer o que falhou, onde falhou e o que foi feito com aquele registro.
+
+---
 
 ## Comparação com conceitos parecidos
 
-| Conceito | Ideia |
-| --- | --- |
-| Validação | Checar se o dado atende regras mínimas |
-| Limpeza | Corrigir ou padronizar o dado |
-| Qualidade de dados | Conceito mais amplo |
-| Observabilidade | Monitorar comportamento e falhas |
+| Conceito           | Ideia                                       |
+| ------------------ | ------------------------------------------- |
+| Validação          | Verificar se o dado atende regras           |
+| Transformação      | Modificar o dado                            |
+| Limpeza            | Corrigir, padronizar ou remover problemas   |
+| Qualidade de dados | Conjunto mais amplo de práticas             |
+| Observabilidade    | Monitorar comportamento, falhas e anomalias |
+| Quarentena         | Isolar dados inválidos para análise         |
+
+---
 
 ## Resumo rápido
 
-- Validação impede que dado ruim avance.
-- Pode checar nulo, formato, faixa, duplicidade e consistência.
-- `Glue`, `Athena`, `Redshift`, `EMR` e `CloudWatch` aparecem bastante nesse contexto.
+Validação de dados é o controle que impede dados ruins de avançarem no pipeline.
 
-## Checklist para prova
+Ela pode verificar nulos, tipos, formatos, duplicidades, faixas de valor, consistência e integridade referencial.
 
-- [ ] Entender validação como parte de qualidade de dados
-- [ ] Saber exemplos comuns de regra
-- [ ] Lembrar da quarentena no `S3`
-- [ ] Não confundir schema válido com dado certo
-- [ ] Associar o tema a confiabilidade do pipeline
+Na AWS, costuma aparecer com `Glue`, `EMR`, `Athena`, `Redshift`, `S3` e `CloudWatch`.
+
+Para a prova, lembre: schema válido não garante dado correto, e quarentena pode ser melhor do que simplesmente descartar ou deixar passar.
+
+---

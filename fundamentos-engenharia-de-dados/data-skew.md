@@ -289,15 +289,3 @@ O sintoma clássico é simples: várias tasks terminam, mas uma fica segurando o
 Mais recurso pode ajudar um pouco, mas não resolve a causa se os dados continuarem concentrados na mesma chave.
 
 ---
-
-## Checklist para prova
-
-* [ ] Entender que skew é distribuição desigual dos dados
-* [ ] Saber que o problema não é só volume alto
-* [ ] Associar skew a Spark, `AWS Glue` e `Amazon EMR`
-* [ ] Lembrar que joins e agregações são pontos comuns
-* [ ] Entender que particionamento ruim pode causar skew
-* [ ] Evitar confundir skew com small files problem
-* [ ] Saber que aumentar cluster nem sempre resolve
-* [ ] Reconhecer chaves concentradas como `customer_id`, `tenant_id` e `partner_id`
-* [ ] Diferenciar dados grandes de dados mal distribuídos

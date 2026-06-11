@@ -7,14 +7,13 @@ description: Arquitetura de dados orientada a dominio com ownership distribuido 
 # Data Mesh
 
 ## Visão Geral
+Segundo IBM - Data Mesh é uma abordagem arquitetural e organizacional descentralizada para a gestão de dados. Em vez de centralizar a responsabilidade e a infraestrutura de dados em uma única equipe de TI, ela delega a propriedade dos dados aos times de negócios (domínios) que os geram e os utilizam
 
 Data mesh é menos sobre ferramenta e mais sobre responsabilidade.
 
 A lógica é tirar dos ombros de um time central toda a missão de entender, produzir e manter os dados da empresa inteira. Em vez disso, cada domínio de negócio passa a cuidar melhor dos próprios dados.
 
 Vendas cuida dos dados de vendas. Financeiro cuida dos dados financeiros. Logística cuida dos dados de logística.
-
-Parece simples falando assim, mas isso muda bastante a forma como a plataforma de dados funciona.
 
 ## Por que isso importa em Engenharia de Dados?
 
@@ -24,8 +23,7 @@ O que costuma acontecer:
 
 - todo mundo depende de uma equipe central;
 - o backlog de pipeline só cresce;
-- os dados perdem contexto de negócio;
-- aparecem tabelas sem dono claro;
+- aparecem tabelas sem dono;
 - a plataforma escala tecnicamente, mas não operacionalmente.
 
 O data mesh tenta atacar isso distribuindo ownership sem abandonar padrão, segurança e governança.
@@ -51,7 +49,7 @@ Uma empresa tem três domínios fortes:
 - logística;
 - financeiro.
 
-Cada domínio publica seus próprios datasets curados no `S3`, registra metadados no `Glue Data Catalog`, define owner, documentação mínima e regras básicas de qualidade.
+Cada domínio publica seus próprios datasets curados no `S3`, registra metadados no `Glue Data Catalog`, define dono, documentação mínima e regras básicas de qualidade.
 
 O time de plataforma não some. Ele passa a cuidar da base comum:
 
@@ -77,8 +75,7 @@ flowchart LR
 - data mesh não é data lake;
 - data mesh não é um serviço da AWS;
 - autonomia de domínio não significa ausência de padrão;
-- se a empresa ainda está lutando para montar o básico do lake, talvez seja cedo para falar em data mesh.
-
+- 
 ## Quando usar
 
 - muitos domínios de negócio maduros;
@@ -86,12 +83,6 @@ flowchart LR
 - necessidade de ownership claro;
 - plataforma já tem alguma maturidade.
 
-## Quando não usar
-
-- empresa pequena;
-- time de dados ainda montando fundação básica;
-- domínios sem capacidade de assumir responsabilidade real;
-- ausência total de governança.
 
 ## Comparação com conceitos parecidos
 

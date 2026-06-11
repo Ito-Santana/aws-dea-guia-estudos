@@ -2,6 +2,8 @@ title: AWS DEA Guia de Estudos
 description: Material de estudos para a certificação AWS Certified Data Engineer - Associate
 lang: pt-BR
 repository_url: https://github.com/Ito-Santana/aws-dea-guia-estudos
+exclude:
+  - guia.md
 
 defaults:
   - scope:

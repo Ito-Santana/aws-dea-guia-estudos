@@ -8,7 +8,6 @@
     <link rel="stylesheet" href="{{ '/assets/css/style.css' | relative_url }}">
   </head>
   <body>
-    {% assign sorted_pages = site.pages | sort: "path" %}
     <header class="site-header">
       <div class="shell header-inner">
         <a class="brand" href="{{ '/' | relative_url }}">
@@ -20,9 +19,7 @@
         </a>
 
         <nav class="site-nav" aria-label="Principal">
-          <a href="{{ '/' | relative_url }}">Início</a>
-          <a href="{{ '/fundamentos-engenharia-de-dados/conceitos-basicos.html' | relative_url }}">Fundamentos</a>
-          <a href="{{ '/armazenamento/s3-introducao.html' | relative_url }}">Armazenamento</a>
+          <a href="{{ '/' | relative_url }}">Docs</a>
           {% if site.repository_url %}
             <a href="{{ site.repository_url }}" target="_blank" rel="noreferrer">Repositório</a>
           {% endif %}
@@ -34,40 +31,33 @@
       <div class="shell docs-shell">
         <aside class="docs-sidebar" aria-label="Navegação lateral">
           <div class="sidebar-section">
-            <p class="sidebar-label">Navegação</p>
+            <p class="sidebar-label">Documentação</p>
             <a class="sidebar-home{% if page.url == '/' %} is-active{% endif %}" href="{{ '/' | relative_url }}">Visão geral</a>
           </div>
 
-          {% assign current_section = "" %}
-          {% for doc in sorted_pages %}
-            {% assign first_segment = doc.path | split: '/' | first %}
-            {% if doc.name == 'index.md' or doc.name == 'README.md' or first_segment == '_layouts' or first_segment == 'assets' %}
-              {% continue %}
-            {% endif %}
+          <section class="sidebar-group">
+            <p class="sidebar-label">Armazenamento</p>
+            <div class="sidebar-links">
+              <a class="sidebar-link{% if page.url == '/armazenamento/' %} is-active{% endif %}" href="{{ '/armazenamento/' | relative_url }}">Guia de armazenamento</a>
+              <a class="sidebar-link{% if page.url == '/armazenamento/s3-introducao.html' %} is-active{% endif %}" href="{{ '/armazenamento/s3-introducao.html' | relative_url }}">S3 - Introdução</a>
+            </div>
+          </section>
 
-            {% if first_segment != current_section %}
-              {% if current_section != "" %}
-                  </div>
-                </section>
-              {% endif %}
-              {% assign current_section = first_segment %}
-              <section class="sidebar-group">
-                <p class="sidebar-label">
-                  {% case current_section %}
-                    {% when 'fundamentos-engenharia-de-dados' %}Fundamentos de Engenharia de Dados
-                    {% when 'armazenamento' %}Armazenamento
-                    {% else %}{{ current_section | replace: '-', ' ' | capitalize }}
-                  {% endcase %}
-                </p>
-                <div class="sidebar-links">
-            {% endif %}
-
-            <a class="sidebar-link{% if page.url == doc.url %} is-active{% endif %}" href="{{ doc.url | relative_url }}">{{ doc.title | default: doc.name | replace: '.md', '' }}</a>
-          {% endfor %}
-          {% if current_section != "" %}
+          <section class="sidebar-group">
+            <p class="sidebar-label">Fundamentos de Engenharia de Dados</p>
+            <div class="sidebar-links">
+              <a class="sidebar-link{% if page.url == '/fundamentos-engenharia-de-dados/' %} is-active{% endif %}" href="{{ '/fundamentos-engenharia-de-dados/' | relative_url }}">Guia de fundamentos</a>
+              <a class="sidebar-link{% if page.url == '/fundamentos-engenharia-de-dados/conceitos-basicos.html' %} is-active{% endif %}" href="{{ '/fundamentos-engenharia-de-dados/conceitos-basicos.html' | relative_url }}">Conceitos Básicos</a>
+              <a class="sidebar-link{% if page.url == '/fundamentos-engenharia-de-dados/lakes-vs-warehouse.html' %} is-active{% endif %}" href="{{ '/fundamentos-engenharia-de-dados/lakes-vs-warehouse.html' | relative_url }}">Data Lake vs Data Warehouse</a>
+              <a class="sidebar-link{% if page.url == '/fundamentos-engenharia-de-dados/data-mesh.html' %} is-active{% endif %}" href="{{ '/fundamentos-engenharia-de-dados/data-mesh.html' | relative_url }}">Data Mesh</a>
+              <a class="sidebar-link{% if page.url == '/fundamentos-engenharia-de-dados/etl.html' %} is-active{% endif %}" href="{{ '/fundamentos-engenharia-de-dados/etl.html' | relative_url }}">ETL</a>
+              <a class="sidebar-link{% if page.url == '/fundamentos-engenharia-de-dados/fonte-de-dados-e-tipos-de-dados-comuns.html' %} is-active{% endif %}" href="{{ '/fundamentos-engenharia-de-dados/fonte-de-dados-e-tipos-de-dados-comuns.html' | relative_url }}">Fonte de Dados e Tipos de Dados Comuns</a>
+              <a class="sidebar-link{% if page.url == '/fundamentos-engenharia-de-dados/tecnicas-de-amostragem.html' %} is-active{% endif %}" href="{{ '/fundamentos-engenharia-de-dados/tecnicas-de-amostragem.html' | relative_url }}">Técnicas de Amostragem</a>
+              <a class="sidebar-link{% if page.url == '/fundamentos-engenharia-de-dados/data-skew.html' %} is-active{% endif %}" href="{{ '/fundamentos-engenharia-de-dados/data-skew.html' | relative_url }}">Data Skew</a>
+              <a class="sidebar-link{% if page.url == '/fundamentos-engenharia-de-dados/validacao-de-dados.html' %} is-active{% endif %}" href="{{ '/fundamentos-engenharia-de-dados/validacao-de-dados.html' | relative_url }}">Validação de Dados</a>
+              <a class="sidebar-link{% if page.url == '/fundamentos-engenharia-de-dados/revisao-sql.html' %} is-active{% endif %}" href="{{ '/fundamentos-engenharia-de-dados/revisao-sql.html' | relative_url }}">Revisão SQL</a>
               </div>
-            </section>
-          {% endif %}
+          </section>
 
           {% if site.repository_url %}
             <section class="sidebar-group sidebar-repo">
@@ -80,6 +70,77 @@
         <div class="docs-main">
           <div class="content-panel">
             {{ content }}
+
+            {% assign prev_url = '' %}
+            {% assign prev_title = '' %}
+            {% assign next_url = '' %}
+            {% assign next_title = '' %}
+
+            {% case page.url %}
+              {% when '/fundamentos-engenharia-de-dados/conceitos-basicos.html' %}
+                {% assign prev_url = '/fundamentos-engenharia-de-dados/' %}
+                {% assign prev_title = 'Guia de fundamentos' %}
+                {% assign next_url = '/fundamentos-engenharia-de-dados/lakes-vs-warehouse.html' %}
+                {% assign next_title = 'Data Lake vs Data Warehouse' %}
+              {% when '/fundamentos-engenharia-de-dados/lakes-vs-warehouse.html' %}
+                {% assign prev_url = '/fundamentos-engenharia-de-dados/conceitos-basicos.html' %}
+                {% assign prev_title = 'Conceitos Básicos' %}
+                {% assign next_url = '/fundamentos-engenharia-de-dados/data-mesh.html' %}
+                {% assign next_title = 'Data Mesh' %}
+              {% when '/fundamentos-engenharia-de-dados/data-mesh.html' %}
+                {% assign prev_url = '/fundamentos-engenharia-de-dados/lakes-vs-warehouse.html' %}
+                {% assign prev_title = 'Data Lake vs Data Warehouse' %}
+                {% assign next_url = '/fundamentos-engenharia-de-dados/etl.html' %}
+                {% assign next_title = 'ETL' %}
+              {% when '/fundamentos-engenharia-de-dados/etl.html' %}
+                {% assign prev_url = '/fundamentos-engenharia-de-dados/data-mesh.html' %}
+                {% assign prev_title = 'Data Mesh' %}
+                {% assign next_url = '/fundamentos-engenharia-de-dados/fonte-de-dados-e-tipos-de-dados-comuns.html' %}
+                {% assign next_title = 'Fonte de Dados e Tipos de Dados Comuns' %}
+              {% when '/fundamentos-engenharia-de-dados/fonte-de-dados-e-tipos-de-dados-comuns.html' %}
+                {% assign prev_url = '/fundamentos-engenharia-de-dados/etl.html' %}
+                {% assign prev_title = 'ETL' %}
+                {% assign next_url = '/fundamentos-engenharia-de-dados/tecnicas-de-amostragem.html' %}
+                {% assign next_title = 'Técnicas de Amostragem' %}
+              {% when '/fundamentos-engenharia-de-dados/tecnicas-de-amostragem.html' %}
+                {% assign prev_url = '/fundamentos-engenharia-de-dados/fonte-de-dados-e-tipos-de-dados-comuns.html' %}
+                {% assign prev_title = 'Fonte de Dados e Tipos de Dados Comuns' %}
+                {% assign next_url = '/fundamentos-engenharia-de-dados/data-skew.html' %}
+                {% assign next_title = 'Data Skew' %}
+              {% when '/fundamentos-engenharia-de-dados/data-skew.html' %}
+                {% assign prev_url = '/fundamentos-engenharia-de-dados/tecnicas-de-amostragem.html' %}
+                {% assign prev_title = 'Técnicas de Amostragem' %}
+                {% assign next_url = '/fundamentos-engenharia-de-dados/validacao-de-dados.html' %}
+                {% assign next_title = 'Validação de Dados' %}
+              {% when '/fundamentos-engenharia-de-dados/validacao-de-dados.html' %}
+                {% assign prev_url = '/fundamentos-engenharia-de-dados/data-skew.html' %}
+                {% assign prev_title = 'Data Skew' %}
+                {% assign next_url = '/fundamentos-engenharia-de-dados/revisao-sql.html' %}
+                {% assign next_title = 'Revisão SQL' %}
+              {% when '/fundamentos-engenharia-de-dados/revisao-sql.html' %}
+                {% assign prev_url = '/fundamentos-engenharia-de-dados/validacao-de-dados.html' %}
+                {% assign prev_title = 'Validação de Dados' %}
+              {% when '/armazenamento/s3-introducao.html' %}
+                {% assign prev_url = '/armazenamento/' %}
+                {% assign prev_title = 'Guia de armazenamento' %}
+              {% endcase %}
+
+            {% if prev_url != '' or next_url != '' %}
+              <nav class="page-nav" aria-label="Navegação entre páginas">
+                {% if prev_url != '' %}
+                  <a class="page-nav-link prev" href="{{ prev_url | relative_url }}">
+                    <span class="page-nav-label">Anterior</span>
+                    <strong>{{ prev_title }}</strong>
+                  </a>
+                {% endif %}
+                {% if next_url != '' %}
+                  <a class="page-nav-link next" href="{{ next_url | relative_url }}">
+                    <span class="page-nav-label">Próximo</span>
+                    <strong>{{ next_title }}</strong>
+                  </a>
+                {% endif %}
+              </nav>
+            {% endif %}
           </div>
         </div>
       </div>

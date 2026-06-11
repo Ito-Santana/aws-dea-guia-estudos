@@ -1,122 +1,169 @@
 ---
-title: S3 - Introdução
+title: S3 - Introducao
 layout: default
-description: Introdução ao Amazon S3 com foco em conceito e regras básicas de nomeação de buckets
+description: Introducao ao Amazon S3 com foco em buckets, objetos, tags e regras basicas de nomeacao
 ---
 
 # S3 - Introdução
 
-O **Amazon S3** é o serviço de armazenamento de objetos da AWS.
+## Visão Geral
 
-Na prática, ele serve para guardar arquivos e dados de forma simples, escalável e bem durável. Ele é um dos serviços mais importantes da AWS porque aparece em muita coisa: data lake, backup, logs, arquivos brutos, dados curados, estáticos de site e até integração entre serviços.
+O `Amazon S3` é o serviço de armazenamento de objetos da AWS.
 
-O jeito mais simples de pensar no S3 é este:
+Na prática, ele aparece em quase toda arquitetura de dados: landing zone, data lake, backup, logs, arquivos brutos, dados curados e integração entre serviços.
 
-* você cria um **bucket**;
-* coloca objetos dentro dele;
-* organiza os arquivos por prefixo;
-* define permissões, criptografia e ciclo de vida conforme a necessidade.
+Se eu tivesse que resumir o S3 do jeito mais direto possível, seria assim:
 
----
+- você cria um bucket;
+- grava objetos dentro dele;
+- organiza esses objetos por prefixo;
+- usa metadados, tags, permissões e ciclo de vida para controlar o ambiente.
 
-## Bucket e objeto
+## Por que isso importa em Engenharia de Dados?
 
-No S3, o bucket é o contêiner lógico.
+Porque o S3 costuma ser a base do lake na AWS.
 
-O objeto é o arquivo que fica dentro dele. Esse objeto pode ser um CSV, JSON, Parquet, imagem, documento, log ou qualquer outro tipo de arquivo.
+É nele que os dados normalmente chegam primeiro e também é nele que muita coisa continua armazenada para consulta com `Athena`, transformação com `Glue`, processamento com `EMR` ou carga para `Redshift`.
 
-Exemplo mental:
+Para a `DEA-C01`, S3 não é detalhe. É peça central.
 
-* bucket: `dados-vendas`
-* objeto: `2025/06/pedidos.csv`
+## Bucket
 
----
+O bucket é o contêiner lógico do S3.
 
-## Onde o S3 entra no dia a dia
-
-O S3 costuma ser a base de muita arquitetura de dados na AWS porque ele funciona bem como repositório central.
-
-Ele aparece em cenários como:
-
-* data lake;
-* landing zone de ingestão;
-* backup;
-* arquivos para análise;
-* dados curados para consumo;
-* arquivos estáticos;
-* compartilhamento entre serviços.
-
----
-
-## Regras vigentes de nomeação de bucket
-
-A AWS mantém regras bem específicas para nome de bucket. As principais, hoje, são estas:
-
-* o nome precisa ter entre **3 e 63 caracteres**;
-* só pode usar **letras minúsculas**, números, ponto (`.`) e hífen (`-`);
-* o nome precisa começar e terminar com **letra ou número**;
-* não pode ter **dois pontos seguidos**;
-* não pode ter formato de **endereço IP**;
-* não pode começar com `xn--`;
-* não pode começar com `sthree-`;
-* não pode começar com `amzn-s3-demo-`;
-* não pode terminar com `-s3alias`;
-* não pode terminar com `--ol-s3`;
-* não pode terminar com `.mrap`;
-* não pode terminar com `--x-s3`;
-* não pode terminar com `--table-s3`;
-* não pode terminar com `-an`, a não ser quando você estiver criando bucket no **account regional namespace**;
-* se usar **S3 Transfer Acceleration**, o nome não pode ter ponto (`.`).
-
-Além disso:
-
-* bucket S3 existe em **namespace global**;
-* o nome precisa ser único dentro da partição;
-* depois que o bucket é criado, você não muda o nome nem a região;
-* não é uma boa ideia colocar informação sensível no nome do bucket, porque ele aparece na URL.
-
-### Exemplo de nome válido
-
-```text
-meu-time-dados-2025
-```
-
-### Exemplo de nome ruim
-
-```text
-Meu_Time_Dados
-```
-
-Esse segundo exemplo não vale porque tem letra maiúscula e underscore.
-
----
-
-## Account regional namespace
-
-A AWS também permite criar buckets no **account regional namespace**.
-
-Isso é útil quando você quer nomes previsíveis e quer garantir que só a sua conta possa usar aquele nome.
-
-O formato geral é:
-
-```text
-bucket-name-prefix-accountId-region-an
-```
+É como se fosse o espaço principal onde você vai guardar os objetos. Ele não é o arquivo em si. Ele é o lugar onde os arquivos ficam.
 
 Exemplo:
 
 ```text
-dados-vendas-111122223333-us-west-2-an
+Bucket: dados-vendas
 ```
 
----
+Dentro desse bucket, você pode ter vários objetos organizados por caminho lógico.
+
+## Objeto
+
+O objeto é a unidade armazenada no S3.
+
+Pode ser:
+
+- um `CSV`;
+- um `JSON`;
+- um `Parquet`;
+- uma imagem;
+- um log;
+- um backup;
+- qualquer arquivo binário.
+
+Exemplo:
+
+```text
+Bucket: dados-vendas
+Objeto: raw/2026/06/11/pedidos.csv
+```
+
+No S3, esse "caminho" não é pasta real como em sistema de arquivos tradicional. É chave de objeto. Mas, no dia a dia, pensar nisso como organização por pastas ajuda bastante.
+
+## Tags
+
+Tags são pares de chave e valor usados para classificar e organizar recursos.
+
+No contexto do S3, elas podem aparecer tanto no bucket quanto em objetos, dependendo do caso.
+
+Exemplos de tags:
+
+```text
+ambiente=producao
+time=dados
+sensibilidade=restrito
+```
+
+Na prática, tags ajudam em:
+
+- organização;
+- governança;
+- controle de custo;
+- automação;
+- identificação de owner;
+- políticas baseadas em classificação.
+
+Em ambiente de dados, isso é útil porque nem todo arquivo no S3 tem o mesmo uso, o mesmo dono ou o mesmo nível de sensibilidade.
+
+## Como aparece na AWS
+
+O S3 conversa com quase tudo no ecossistema de dados da AWS:
+
+- `AWS Glue` lê e transforma arquivos no S3;
+- `AWS Glue Crawlers` inferem schema;
+- `Amazon Athena` consulta dados direto no bucket;
+- `Amazon Redshift` pode carregar ou consultar dados no S3;
+- `Amazon EMR` processa grandes volumes armazenados ali;
+- `AWS Lake Formation` ajuda na governança do lake;
+- `AWS Lambda` pode reagir à chegada de novos objetos.
+
+## Exemplo prático
+
+Um pipeline simples pode funcionar assim:
+
+- arquivos brutos chegam em um bucket de ingestão;
+- um job do `AWS Glue` transforma os dados;
+- o resultado vai para outro prefixo em `Parquet`;
+- o catálogo é atualizado;
+- `Athena` consulta a camada curada.
+
+```mermaid
+flowchart LR
+    A[Arquivos brutos] --> B[Bucket S3]
+    B --> C[AWS Glue]
+    C --> D[Objetos Parquet]
+    D --> E[AWS Glue Data Catalog]
+    E --> F[Amazon Athena]
+```
+
+## Regras básicas de nomeação de bucket
+
+Aqui vale guardar só o que mais cai e o que mais evita erro:
+
+- o nome deve ter entre `3` e `63` caracteres;
+- deve começar e terminar com letra minúscula ou número;
+- só pode usar letras minúsculas, números, ponto (`.`) e hífen (`-`);
+- não pode começar com `xn--`;
+- não pode terminar com `-s3alias`.
+
+Exemplo válido:
+
+```text
+dados-vendas-2026
+```
+
+Exemplo inválido:
+
+```text
+Dados_Vendas
+```
+
+Esse falha porque tem letra maiúscula e underscore.
+
+## Pegadinhas para a prova
+
+- S3 é armazenamento de objetos, não bloco nem arquivo tradicional.
+- Bucket é o contêiner; objeto é o item armazenado.
+- O "caminho" do objeto é chave, não pasta real.
+- Tags ajudam em organização e governança, não só em custo.
+- Em questões de data lake na AWS, S3 quase sempre está no centro da arquitetura.
 
 ## Resumo rápido
 
-Se eu simplificar:
+- `Amazon S3` é o serviço de armazenamento de objetos da AWS.
+- Bucket é o contêiner lógico.
+- Objeto é o arquivo armazenado.
+- Tags ajudam a classificar e governar buckets e objetos.
+- Para bucket, lembre principalmente das regras básicas de nome.
 
-* S3 é armazenamento de objetos;
-* bucket é o contêiner;
-* objeto é o arquivo;
-* nome de bucket tem regra rígida;
-* o S3 costuma ser a base de muita arquitetura de dados na AWS.
+## Checklist para prova
+
+- [ ] Saber a diferença entre bucket e objeto
+- [ ] Lembrar que S3 é armazenamento de objetos
+- [ ] Entender o papel de tags em organização e governança
+- [ ] Associar S3 a data lake, ingestão e analytics
+- [ ] Guardar as regras básicas de nomeação de bucket

@@ -1,0 +1,10 @@
+title: AWS DEA Guia de Estudos
+description: Material de estudos para a certificação AWS Certified Data Engineer - Associate
+lang: pt-BR
+
+defaults:
+  - scope:
+      path: ""
+      type: "pages"
+    values:
+      layout: "default"

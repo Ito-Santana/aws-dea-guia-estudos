@@ -1,3 +1,9 @@
+---
+title: Conceitos Básicos
+layout: default
+description: Tipos de dados, propriedades e base conceitual de engenharia de dados
+---
+
 # Conceitos Básicos de Engenharia de Dados
 
 ## Tipos de Dados

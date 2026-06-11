@@ -1,5 +1,5 @@
 :root {
-  color-scheme: light;
+  color-scheme: light dark;
   --bg: #f3f6fa;
   --panel: #ffffff;
   --panel-soft: #f7f9fc;
@@ -12,6 +12,12 @@
   --sidebar-bg: #f7f9fc;
   --code-bg: #f3f6fb;
   --shadow: 0 12px 32px rgba(15, 23, 42, 0.06);
+  --header-bg: rgba(243, 246, 250, 0.88);
+  --header-line: rgba(203, 215, 228, 0.78);
+  --brand-chip: #111827;
+  --brand-chip-2: #1f2937;
+  --brand-smile: #ff9900;
+  --brand-text-on-chip: #f8fafc;
 }
 
 * {
@@ -48,9 +54,9 @@ a:hover {
   position: sticky;
   top: 0;
   z-index: 20;
-  background: rgba(243, 246, 250, 0.88);
+  background: var(--header-bg);
   backdrop-filter: blur(14px);
-  border-bottom: 1px solid rgba(203, 215, 228, 0.78);
+  border-bottom: 1px solid var(--header-line);
 }
 
 .header-inner {
@@ -74,18 +80,50 @@ a:hover {
 }
 
 .brand-mark {
+  position: relative;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 36px;
+  width: 54px;
   height: 36px;
   border-radius: 10px;
-  background: linear-gradient(135deg, #172554, #1d4ed8);
-  color: #f8fafc;
-  font-size: 0.72rem;
-  font-weight: 700;
-  letter-spacing: 0.08em;
+  background: linear-gradient(135deg, var(--brand-chip), var(--brand-chip-2));
   box-shadow: var(--shadow);
+}
+
+.brand-aws-text {
+  position: relative;
+  top: -2px;
+  font-size: 0.88rem;
+  line-height: 1;
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  color: var(--brand-text-on-chip);
+  text-transform: lowercase;
+}
+
+.brand-aws-smile {
+  position: absolute;
+  left: 13px;
+  bottom: 7px;
+  width: 26px;
+  height: 10px;
+  border-bottom: 3px solid var(--brand-smile);
+  border-radius: 0 0 24px 24px;
+  transform: rotate(-7deg);
+}
+
+.brand-aws-smile::after {
+  content: "";
+  position: absolute;
+  right: -2px;
+  bottom: -4px;
+  width: 0;
+  height: 0;
+  border-left: 6px solid var(--brand-smile);
+  border-top: 4px solid transparent;
+  border-bottom: 4px solid transparent;
+  transform: rotate(-16deg);
 }
 
 .brand-text {
@@ -146,6 +184,8 @@ a:hover {
   border-radius: 18px;
   max-height: calc(100vh - 108px);
   overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-gutter: stable;
 }
 
 .docs-main {
@@ -387,6 +427,36 @@ a:hover {
   padding: 18px 0 28px;
   color: var(--muted);
   font-size: 0.95rem;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #0b1118;
+    --panel: #101923;
+    --panel-soft: #16212d;
+    --text: #e6edf5;
+    --muted: #97a7b8;
+    --line: #223243;
+    --line-strong: #304456;
+    --accent: #7cb4ff;
+    --accent-strong: #a7cbff;
+    --sidebar-bg: #0f1720;
+    --code-bg: #0d1520;
+    --shadow: 0 18px 36px rgba(0, 0, 0, 0.28);
+    --header-bg: rgba(11, 17, 24, 0.84);
+    --header-line: rgba(48, 68, 86, 0.7);
+    --brand-chip: #0b1220;
+    --brand-chip-2: #172033;
+    --brand-text-on-chip: #f3f7fb;
+  }
+
+  .content-panel th {
+    background: #132030;
+  }
+
+  .page-nav-link:hover {
+    background: #182535;
+  }
 }
 
 @media (max-width: 1040px) {

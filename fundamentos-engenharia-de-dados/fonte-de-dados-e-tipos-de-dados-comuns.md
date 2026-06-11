@@ -1,176 +1,320 @@
 ---
-title: Fonte de Dados e Tipos de Dados Comuns
+
+title: Fontes de Dados e Formatos Comuns
 layout: default
-description: Fontes de dados e formatos mais comuns em pipelines de engenharia de dados na AWS
+description: Fontes de dados, tipos e formatos mais comuns em pipelines de engenharia de dados na AWS
 ---
 
-# Fonte de Dados e Tipos de Dados Comuns
+# Fontes de Dados e Formatos Comuns
 
 ## Visão Geral
 
-Quando um pipeline começa, as duas primeiras perguntas costumam ser bem objetivas:
+Em Engenharia de Dados, uma **fonte de dados** é o lugar de onde os dados vêm.
 
-- de onde esse dado vem;
-- em que formato ele chega.
+Pode ser um banco de dados, uma API, um arquivo, um sistema interno, um log de aplicação ou um fluxo de eventos.
 
-Parece básico, mas esse começo já define boa parte do resto: tipo de ingestão, custo de processamento, dificuldade de transformação e até o serviço AWS que faz mais sentido.
+Antes de montar um pipeline, é importante entender a origem do dado, porque cada fonte tem características diferentes. Algumas fontes entregam dados organizados em tabelas. Outras entregam mensagens em tempo real. Outras enviam arquivos periodicamente.
 
-## Por que isso importa em Engenharia de Dados?
+Além da fonte, também é preciso entender o **formato** em que o dado chega.
 
-Porque um pipeline raramente nasce de uma única fonte limpa e padronizada.
+Por exemplo:
 
-No mundo real, você mistura:
+* uma API pode entregar dados em `JSON`;
+* um sistema legado pode gerar arquivos `XML`;
+* uma exportação manual pode vir em `CSV`;
+* uma camada analítica no `S3` pode usar `Parquet`.
 
-- banco relacional;
-- API;
-- log;
-- evento;
-- arquivo legado;
-- exportação manual.
+Essas decisões afetam a ingestão, o processamento, o custo e a forma como os dados serão consultados depois.
 
-E cada origem vem com comportamento próprio. Algumas são boas para consulta direta. Outras servem mais como dado de aterrissagem. Algumas são ótimas para analytics. Outras são melhores para troca entre sistemas.
+---
 
-## Fontes de dados mais comuns
+## Fonte de dados não é a mesma coisa que formato
 
-## Bancos relacionais
+Uma confusão comum é misturar fonte de dados com formato de dados.
 
-São fontes clássicas para pipelines batch e cargas analíticas.
+A **fonte** é de onde o dado vem.
+
+O **formato** é como o dado está representado ou armazenado.
+
+Exemplo:
+
+```text
+Fonte: API de pagamentos
+Formato: JSON
+```
+
+Outro exemplo:
+
+```text
+Fonte: Amazon RDS
+Formato: tabelas relacionais
+```
+
+---
+
+## Por que isso importa?
+
+A fonte e o formato influenciam várias decisões do pipeline.
+
+Eles ajudam a definir:
+
+* como o dado será extraído;
+* se o processamento será batch ou streaming;
+* qual serviço AWS faz mais sentido;
+* como o schema será identificado;
+
+---
+
+## Fontes de dados comuns
+
+### Bancos relacionais
+
+Bancos relacionais são fontes muito comuns em pipelines de dados.
+
+Eles armazenam dados em tabelas, com linhas, colunas e schema definido.
 
 Exemplos:
 
-- `Amazon RDS`;
-- `PostgreSQL`;
-- `MySQL`;
-- `SQL Server`;
-- `Oracle`.
+* `Amazon RDS`;
+* `PostgreSQL`;
+* `MySQL`;
+* `SQL Server`;
+* `Oracle`.
 
-Normalmente entregam dados estruturados, com schema claro, e entram bem em ETL, CDC e replicação.
+Essas fontes costumam ser usadas para dados transacionais, como pedidos, clientes, pagamentos, produtos e contratos.
 
-## APIs
+Em um pipeline, os dados podem ser extraídos desses bancos para análise em outro ambiente, como um data lake no `S3` ou um data warehouse no `Redshift`.
 
-APIs costumam entregar `JSON` e são muito comuns quando o dado vem de SaaS, integrações externas ou aplicações modernas.
+Exemplo:
 
-A vantagem é a flexibilidade. A desvantagem é que schema e volume podem variar bastante.
+```text
+PostgreSQL -> AWS Glue -> S3 em Parquet -> Athena
+```
 
-## Arquivos
+---
 
-Ainda aparecem demais no dia a dia.
+### APIs
+
+APIs são fontes comuns quando os dados vêm de sistemas externos ou aplicações modernas.
+
+Normalmente, uma API entrega os dados em `JSON`.
+
+Exemplos de dados vindos de APIs:
+
+* dados de pagamento;
+* dados de CRM;
+* integrações com sistemas de terceiros.
+
+---
+
+### Arquivos
+
+Arquivos são uma das fontes mais comuns em pipelines.
+
+Eles podem ser gerados por sistemas, enviados por parceiros, exportados manualmente ou produzidos por outros pipelines.
+
+Formatos comuns:
+
+* `CSV`;
+* `JSON`;
+* `Parquet`;
+* `Avro`;
+* `XML`.
+
+Exemplo:
+
+```text
+Arquivo CSV recebido no S3 -> Glue transforma -> Parquet no S3 -> Athena consulta
+```
+
+---
+
+### Logs
+
+Logs são registros gerados por aplicações, servidores, serviços ou sistemas.
+
+Eles podem conter informações como:
+
+* erro de aplicação;
+* acesso de usuário;
+* evento de navegação;
+* chamada de API;
+* tempo de resposta;
+* status de processamento.
+
+---
+
+### Streaming e eventos
+
+Streaming é usado quando os dados chegam continuamente, e não apenas em arquivos ou cargas programadas.
 
 Exemplos:
 
-- `CSV`;
-- `JSON`;
-- `Parquet`;
-- `Avro`;
-- `XML`.
+* cliques de usuários;
+* eventos de compra;
+* telemetria;
+* mensagens entre sistemas;
+* logs em tempo quase real.
 
-Em muita arquitetura na AWS, os arquivos vão parar primeiro no `Amazon S3`, que funciona como zona de aterrissagem.
+Um exemplo simples:
 
-## Streaming e eventos
+```text
+Eventos da aplicação -> Kinesis Data Firehose -> S3
+```
 
-Quando o dado chega continuamente, entram cenários de streaming.
+---
 
-Exemplos comuns:
+### JDBC e ODBC
 
-- eventos de navegação;
-- telemetria;
-- logs em tempo quase real;
-- mensagens de aplicações.
+`JDBC` e `ODBC` não são fontes de dados e também não são formatos de arquivo.
 
-Na AWS, isso conversa bem com `Amazon Kinesis Data Streams`, `Kinesis Data Firehose`, `AWS Lambda` e `Amazon S3`.
+Eles são formas de conexão com bancos de dados.
 
-## JDBC e ODBC
+O `JDBC` é muito usado no ecossistema Java.
 
-Isso costuma aparecer mais como mecanismo de acesso do que como fonte em si, mas vale revisar porque cai em material introdutório.
+O `ODBC` é uma interface mais genérica, comum em ferramentas de BI e integrações diversas.
 
-`JDBC` é mais ligado ao ecossistema Java.
+Eles aparecem quando uma ferramenta precisa se conectar a um banco para ler ou escrever dados.
 
-`ODBC` é mais genérico e costuma aparecer em ferramentas variadas, integrações e drivers de acesso a banco.
+---
 
-Regra simples para lembrar:
+## Formatos de dados comuns
 
-- consumidor Java: pense em `JDBC`;
-- acesso mais genérico via driver: pense em `ODBC`.
+### CSV
 
-## Tipos de dados e formatos comuns
+`CSV` é um formato simples para dados tabulares.
 
-## CSV
+Cada linha representa um registro, e os valores normalmente são separados por vírgula.
 
-É o formato mais simples da lista.
+Exemplo:
 
-Bom para troca rápida, exportação e dados tabulares sem muita complexidade.
+```csv
+id,nome,valor
+1,Produto A,100.50
+2,Produto B,80.00
+```
 
-Pontos fortes:
+Pontos positivos:
 
-- fácil de gerar;
-- fácil de abrir;
-- ampla compatibilidade.
+* fácil de gerar;
+* fácil de abrir;
+* compatível com muitas ferramentas.
 
 Limitações:
 
-- não preserva bem tipos;
-- não lida bem com nested data;
-- não é a melhor escolha para analytics em escala.
+* não preserva bem tipos de dados;
+* pode ter problemas com separador e encoding;
+* não representa bem dados aninhados;
+* não é eficiente para consultas analíticas grandes.
 
-## JSON
+---
 
-É o formato que mais aparece em API, evento e log moderno.
+### JSON
 
-Bom quando o schema é mais flexível, com campos opcionais ou estruturas aninhadas.
+`JSON` é muito usado em APIs, eventos e logs.
 
-Funciona bem para ingestão, mas não costuma ser o formato final ideal para consulta pesada no lake.
+Ele permite representar dados com estrutura flexível, inclusive objetos aninhados.
 
-## Parquet
+Exemplo:
 
-Esse é um dos mais importantes para a DEA-C01.
+```json
+{
+  "customer_id": 123,
+  "event": "purchase",
+  "amount": 99.90
+}
+```
 
-`Parquet` é colunar. Isso importa porque engines analíticas como `Athena` e `Redshift Spectrum` conseguem ler só as colunas necessárias, reduzindo leitura, custo e tempo de consulta.
+Pontos positivos:
 
-Se o cenário for lake analítico em `S3`, `Parquet` quase sempre aparece como uma escolha forte.
+* flexível;
+* comum em APIs;
+* bom para eventos;
+* suporta estruturas aninhadas.
 
-## Avro
+Limitações:
 
-`Avro` entra muito bem quando a prioridade é serialização, compactação e evolução de schema.
+* pode ter schema variável;
+* pode ser mais caro de consultar em grande volume;
+* nem sempre é ideal como formato final para analytics.
 
-É comum em integração entre sistemas e em alguns pipelines de streaming.
 
-Resumo prático:
+---
 
-- `Parquet`: melhor para leitura analítica;
-- `Avro`: melhor para transporte e integração com schema bem controlado.
+### Parquet
 
-## XML
+`Parquet` é um formato colunar muito usado em data lakes analíticos.
 
-Ainda aparece bastante em integração corporativa e sistemas legados.
+Diferente de formatos orientados a linha, o `Parquet` organiza os dados por coluna.
 
-Não é o formato mais agradável para analytics moderno, mas continua relevante quando a origem já produz XML e você não controla isso.
+Isso é importante porque consultas analíticas muitas vezes não precisam ler todas as colunas da tabela.
 
-## Como aparece na AWS
+Exemplo:
 
-Na AWS, esse tema costuma virar algo assim:
+Se uma tabela tem 50 colunas, mas a consulta usa apenas 3, um formato colunar permite ler menos dados.
 
-- `S3` recebe arquivos e eventos;
-- `Glue Crawlers` detectam schema;
-- `Glue` transforma `CSV` e `JSON` em `Parquet`;
-- `Athena` consulta arquivos no lake;
-- `Kinesis Data Firehose` entrega dados de streaming no `S3`;
-- `Redshift` consome dados já preparados para analytics.
+Isso reduz:
 
-## Exemplo prático
+* volume lido;
+* tempo de consulta;
+* custo;
+* processamento desnecessário.
 
-Uma empresa recebe:
+Na AWS, `Parquet` aparece muito com:
 
-- pedidos de um `PostgreSQL`;
-- eventos de clique em `JSON`;
-- relatórios legados em `XML`.
+* `Amazon S3`;
+* `Amazon Athena`;
+* `AWS Glue`;
+* `Redshift Spectrum`.
 
-O pipeline faz o seguinte:
 
-- extrai os pedidos do banco;
-- aterrissa os eventos e relatórios no `S3`;
-- usa `AWS Glue` para padronizar os dados;
-- converte o que for analítico para `Parquet`;
-- publica tabelas para consulta no `Athena`.
+---
+
+### Avro
+
+`Avro` é um formato usado principalmente para serialização de dados e integração entre sistemas.
+
+Ele trabalha bem com schema e pode ser útil quando existe necessidade de evolução controlada desse schema.
+
+É comum em pipelines de eventos, streaming e troca de dados entre sistemas.
+
+Comparação prática:
+
+| Formato   | Uso mais comum                                |
+| --------- | --------------------------------------------- |
+| `Parquet` | Consulta analítica                            |
+| `Avro`    | Transporte, serialização e evolução de schema |
+
+---
+
+### XML
+
+`XML` é um formato mais comum em sistemas legados e integrações corporativas antigas.
+
+Ele é mais verboso que `JSON` e costuma ser menos prático para analytics moderno.
+
+Mesmo assim, ainda aparece bastante porque muitos sistemas antigos continuam exportando ou recebendo arquivos nesse formato.
+
+Em pipelines modernos, é comum receber `XML`, tratar os dados e converter para um formato mais adequado para análise, como `Parquet`.
+
+---
+
+## Exemplo prático na AWS
+
+Imagine uma empresa que recebe dados de três origens:
+
+* pedidos de um banco `PostgreSQL`;
+* eventos de clique em `JSON`;
+* relatórios antigos em `XML`.
+
+Um pipeline poderia funcionar assim:
+
+1. Extrair pedidos do `PostgreSQL`;
+2. Armazenar eventos `JSON` e arquivos `XML` no `S3`;
+3. Usar `AWS Glue` para limpar e padronizar os dados;
+4. Converter os dados analíticos para `Parquet`;
+5. Registrar as tabelas no `AWS Glue Data Catalog`;
+6. Consultar os dados com `Amazon Athena`.
 
 ```mermaid
 flowchart LR
@@ -183,50 +327,61 @@ flowchart LR
     G --> H[Amazon Athena]
 ```
 
+---
+
+## Como aparece na AWS
+
+Na AWS, esse assunto geralmente aparece em arquiteturas de data lake e pipelines de ingestão.
+
+Alguns exemplos:
+
+* `Amazon S3` armazena arquivos brutos e tratados;
+* `AWS Glue` transforma os dados;
+* `Glue Crawlers` detectam schema em arquivos;
+* `Glue Data Catalog` guarda metadados das tabelas;
+* `Amazon Athena` consulta arquivos no `S3`;
+* `Amazon Kinesis` recebe dados em streaming;
+* `Amazon Redshift` armazena dados analíticos em um data warehouse.
+
+Um fluxo comum seria:
+
+```text
+Fonte de dados -> S3 bruto -> Glue -> Parquet no S3 -> Athena
+```
+
+---
+
 ## Pegadinhas para a prova
 
-- `JDBC` e `ODBC` são formas de acesso, não formatos de arquivo.
-- `CSV` é simples, mas ruim para analytics grande comparado a `Parquet`.
-- `JSON` é ótimo para ingestão, mas costuma perder para `Parquet` no consumo analítico.
-- `Avro` e `Parquet` não competem da mesma forma; eles brilham em cenários diferentes.
-- `XML` pode continuar aparecendo em cenários reais por legado, mesmo não sendo a melhor opção técnica.
+* Fonte de dados e formato de dados não são a mesma coisa.
+* `S3` é armazenamento, não formato.
+* `JDBC` e `ODBC` são formas de conexão, não formatos.
+* `Parquet` é melhor para consultas analíticas em data lake.
+* `Avro` é muito usado em serialização e evolução de schema.
+* `XML` aparece bastante em integração legada.
 
-## Quando usar
+---
 
-- `CSV`: troca simples e exportação tabular.
-- `JSON`: APIs, logs, eventos e dados flexíveis.
-- `Parquet`: data lake analítico em `S3`.
-- `Avro`: integração entre sistemas e schema evolution.
-- `XML`: quando a origem já depende dele.
+## Quando usar cada formato
 
-## Quando não usar
+| Formato   | Quando faz sentido                                      |
+| --------- | ------------------------------------------------------- |
+| `CSV`     | Exportação simples e dados tabulares pequenos ou médios |
+| `JSON`    | APIs, eventos, logs e dados semi-estruturados           |
+| `Parquet` | Consultas analíticas em escala no `S3`                  |
+| `Avro`    | Integração entre sistemas e evolução de schema          |
+| `XML`     | Sistemas legados e integrações corporativas antigas     |
 
-- evitar `CSV` como formato principal de analytics em larga escala;
-- evitar `JSON` cru como camada final de consulta se você pode converter para `Parquet`;
-- evitar escolher formato só pela facilidade de gerar, ignorando custo de leitura depois.
-
-## Comparação rápida
-
-| Formato | Melhor uso |
-| --- | --- |
-| CSV | Dados tabulares simples |
-| JSON | APIs, eventos, logs |
-| Parquet | Analytics em escala |
-| Avro | Troca de dados com schema |
-| XML | Integração legada |
+---
 
 ## Resumo rápido
 
-- Fonte e formato definem boa parte da arquitetura.
-- `JDBC` e `ODBC` ajudam no acesso a bancos.
-- `Parquet` é um dos formatos mais importantes para analytics na AWS.
-- `JSON` domina ingestão moderna.
-- `CSV` continua comum, mas não costuma ser o melhor formato final para o lake.
+Uma fonte de dados é a origem do dado.
 
-## Checklist para prova
+Um formato de dados é a forma como esse dado está representado ou armazenado.
 
-- [ ] Diferenciar fonte de dados de formato de dados
-- [ ] Saber o papel de `JDBC` e `ODBC`
-- [ ] Associar `Parquet` a analytics em `S3`
-- [ ] Associar `JSON` a APIs e eventos
-- [ ] Lembrar que `CSV` é simples, mas menos eficiente para consultas analíticas
+Em pipelines na AWS, é comum extrair dados de bancos, APIs, arquivos, logs e eventos, armazenar no `S3`, transformar com `AWS Glue`, catalogar com `Glue Data Catalog` e consultar com `Athena`.
+
+Para a prova, o ponto mais importante é diferenciar fonte, formato e serviço AWS.
+
+---

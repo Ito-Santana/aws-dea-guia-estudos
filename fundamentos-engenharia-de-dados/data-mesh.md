@@ -75,7 +75,8 @@ flowchart LR
 - data mesh não é data lake;
 - data mesh não é um serviço da AWS;
 - autonomia de domínio não significa ausência de padrão;
-- 
+
+
 ## Quando usar
 
 - muitos domínios de negócio maduros;
@@ -98,11 +99,4 @@ flowchart LR
 - Não substitui governança.
 - Na AWS, costuma usar `S3`, `Glue`, `Athena` e `Lake Formation`.
 - É mais modelo operacional do que stack técnica.
-
-## Checklist para prova
-
-- [ ] Lembrar que não é serviço AWS
-- [ ] Distinguir data mesh de data lake
-- [ ] Associar o tema a ownership por domínio
-- [ ] Entender o papel da governança federada
-- [ ] Reconhecer cenários em que o gargalo é organizacional
+---

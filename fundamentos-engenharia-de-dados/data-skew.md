@@ -8,23 +8,32 @@ description: Conceito básico de data skew e impacto em processamento distribuí
 
 **Data skew** é quando os dados ficam distribuídos de forma desigual.
 
-Em vez de todas as partições, chaves ou grupos receberem volumes parecidos, um lado fica muito mais pesado que os outros. Em processamento distribuído, isso vira gargalo.
+Em vez de cada partição, chave ou grupo receber um volume parecido, uma parte fica muito mais pesada que as outras. Em processamento distribuído, isso costuma virar gargalo.
 
 ---
 
 ## O que acontece
 
-Imagine um job que distribui registros por `cliente_id`.
+Imagine um job que distribui os registros por `cliente_id`.
 
-Se um único cliente concentra uma quantidade enorme de registros, essa partição fica sobrecarregada.
+Se um único cliente concentra milhões de linhas, essa partição vai ficar sobrecarregada.
 
 Enquanto isso:
 
 * uma parte do cluster trabalha demais;
-* outras partes ficam ociosas;
+* outras ficam paradas;
 * o job demora mais;
-* o consumo de memória sobe;
-* o processamento pode até falhar.
+* a memória sobe;
+* o processo pode até falhar.
+
+### Visão simples
+
+<div class="mermaid">
+flowchart LR
+    A[Dados equilibrados] --> B[Processamento paralelo]
+    C[Dados concentrados] --> D[Uma partição pesada]
+    D --> E[Lentidão / gargalo]
+</div>
 
 ---
 
@@ -38,7 +47,7 @@ Data skew aparece muito em:
 * agregações;
 * partições mal desenhadas.
 
-Na prática, é um problema de distribuição. O código pode estar certo e ainda assim o job ficar ruim porque os dados não estão equilibrados.
+Na prática, o problema não é só o volume. É a concentração do volume em poucos grupos.
 
 ---
 
@@ -47,10 +56,10 @@ Na prática, é um problema de distribuição. O código pode estar certo e aind
 Alguns sinais comuns:
 
 * uma etapa demora muito mais que as outras;
-* um executor fica muito mais carregado que os demais;
-* o uso de CPU e memória fica desigual;
-* joins e group by ficam mais lentos que o esperado;
-* o job parece “preso” em uma parte específica.
+* um executor fica bem mais carregado que os demais;
+* CPU e memória ficam desequilibrados;
+* joins e group by ficam lentos;
+* o job parece travar em uma parte específica.
 
 ---
 
@@ -62,9 +71,9 @@ As saídas mais comuns são:
 * distribuir melhor os dados;
 * tratar valores muito concentrados;
 * usar broadcast join quando fizer sentido;
-* revisar a forma de agrupar ou ordenar os dados.
+* revisar a forma de agrupar ou ordenar.
 
-Nem sempre existe uma solução única. Às vezes o problema está na modelagem; às vezes está na chave de junção; às vezes está na forma como a base foi particionada.
+Nem sempre existe uma solução única. Às vezes o problema está na modelagem, às vezes na chave, às vezes na forma de particionar.
 
 ---
 
@@ -72,6 +81,6 @@ Nem sempre existe uma solução única. Às vezes o problema está na modelagem;
 
 Data skew é desequilíbrio na distribuição dos dados.
 
-Se uma parte do processamento recebe muito mais volume que as outras, o paralelo deixa de funcionar bem.
+Se uma parte do processamento recebe muito mais volume que as outras, o paralelismo deixa de ajudar.
 
-Em prova, pense nisso como um problema de concentração de dados que atrapalha performance.
+Em prova, pense nisso como um problema de concentração que derruba performance.

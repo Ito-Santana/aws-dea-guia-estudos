@@ -1,14 +1,14 @@
 ---
 title: Fonte de Dados e Tipos de Dados Comuns
 layout: default
-description: Fontes comuns como JDBC e ODBC, e formatos como CSV, JSON, Parquet e Avro
+description: Fontes comuns como JDBC e ODBC, e formatos como CSV, JSON, Parquet, Avro e XML
 ---
 
 # Fonte de Dados e Tipos de Dados Comuns
 
-Esse assunto aparece muito em prova porque é a base de quase todo pipeline.
+Antes de pensar em transformação, modelagem ou analytics, vale entender duas coisas: de onde o dado vem e em que formato ele chega.
 
-Antes de pensar em transformação ou modelagem, você precisa saber de onde o dado vem e em que formato ele chega.
+Esse assunto aparece muito porque quase todo pipeline de dados começa por aqui.
 
 ---
 
@@ -16,86 +16,146 @@ Antes de pensar em transformação ou modelagem, você precisa saber de onde o d
 
 ### JDBC
 
-**JDBC** é uma forma comum de conectar aplicações Java a bancos de dados relacionais.
+**JDBC** é uma API de Java para acessar dados tabulares, principalmente bancos relacionais.
 
-Na prática, ele aparece muito quando você precisa extrair dados de sistemas como:
+Na prática, você usa JDBC quando a aplicação que está lendo ou escrevendo dado é Java ou roda no ecossistema Java. É muito comum em integrações com:
 
 * PostgreSQL;
 * MySQL;
 * SQL Server;
 * Oracle;
-* Amazon RDS.
+* Amazon RDS;
+* outras fontes relacionais.
 
-Na AWS, o JDBC é muito lembrado quando o **AWS Glue** ou o **Amazon EMR** vão buscar dados em bancos relacionais.
+O ponto principal aqui é: JDBC fala a linguagem do Java.
 
 ### ODBC
 
-**ODBC** é outra forma de conexão com bancos e fontes tabulares.
+**ODBC** é uma API mais genérica para acesso a banco de dados.
 
-Ele é parecido com JDBC na ideia geral: conectar um consumidor a uma fonte de dados relacional. A diferença principal é mais histórica e de ecossistema.
+Ela não nasceu presa a uma linguagem específica. A ideia é ser uma camada de acesso que conversa com drivers diferentes em tempo de execução. O ODBC ficou muito associado ao mundo Windows porque nasceu no ecossistema Microsoft e historicamente aparece muito em ferramentas de desktop, relatórios e integração com DSN, mas ele não é exclusivo do Windows.
 
-Em prova, o mais importante é entender que tanto JDBC quanto ODBC são formas de acessar dados de bancos e sistemas estruturados.
+Hoje você encontra ODBC também em outras plataformas, dependendo do driver e do gerenciador instalado.
+
+O jeito mais simples de pensar é:
+
+* **JDBC**: mais natural em aplicações Java;
+* **ODBC**: mais genérico, muito comum em ferramentas e integrações variadas.
+
+### Diferença prática entre JDBC e ODBC
+
+Se você quiser uma regra simples para prova e estudo:
+
+* se o consumidor é Java, pense em **JDBC**;
+* se a ideia é uma camada mais universal de acesso a banco, pense em **ODBC**;
+* os dois normalmente aparecem com fontes relacionais e dados tabulares.
+
+Na AWS, isso aparece bastante quando Glue, Spark, EMR ou alguma ferramenta de integração precisa buscar dado em banco relacional.
 
 ---
 
-## Formatos comuns
+## Tipos de dados comuns
 
 ### CSV
 
-É um formato simples e muito usado.
+O **CSV** é o formato mais direto de todos.
 
-* fácil de gerar;
-* fácil de ler;
-* comum em trocas entre sistemas;
-* geralmente vem com estrutura tabular.
+Ele é bom quando o dado é tabular e você quer algo simples de gerar, ler e trocar entre sistemas.
 
-Na AWS, aparece bastante em **S3** e em cargas simples de **Glue** ou **Athena**.
+Use CSV quando:
+
+* o arquivo é basicamente uma tabela;
+* a estrutura é simples;
+* você quer facilidade de interoperar com outras ferramentas;
+* não precisa de nested data.
+
+Ponto fraco: ele não lida bem com estrutura complexa, tipos ricos ou volume grande com eficiência.
 
 ### JSON
 
-É muito comum em APIs, eventos e logs.
+O **JSON** é muito usado em APIs, eventos e logs.
 
-* flexível;
-* suporta estruturas aninhadas;
-* muito usado em dados semiestruturados.
+Ele funciona bem quando o dado vem com estrutura flexível, campos opcionais ou objetos aninhados.
 
-É um formato clássico para ingestão em **S3**, **Athena** e pipelines com **Glue**.
+Use JSON quando:
+
+* a origem é API;
+* o dado tem estrutura variável;
+* você quer algo legível e fácil de integrar;
+* os registros podem ter campos diferentes entre si.
+
+JSON é uma escolha muito natural para ingestão, mas não costuma ser a melhor opção para analytics pesado em larga escala.
 
 ### Parquet
 
-É um formato colunar.
+O **Parquet** é um formato colunar.
 
-Ele costuma ser melhor para análise porque lê só as colunas necessárias.
+Isso faz diferença porque, em análise, normalmente você não quer ler a linha inteira. Você quer ler só as colunas que importam naquela consulta.
 
-Em geral, o Parquet é uma escolha muito boa quando você quer:
+Use Parquet quando:
 
-* consulta mais eficiente;
-* menor custo de leitura;
-* melhor uso em analytics.
+* o foco é consulta analítica;
+* a base é grande;
+* você quer economizar leitura e custo;
+* os dados vão ficar em data lake;
+* a maior parte do consumo é leitura e agregação.
 
-Na AWS, ele é muito usado em **data lake** e **lakehouse**.
+Entre os formatos dessa lista, o Parquet costuma ser a melhor escolha para análise em S3.
 
 ### Avro
 
-É um formato bem comum em integração e streaming.
+O **Avro** é muito usado para serialização e integração entre sistemas.
 
-Ele suporta schema e costuma ser útil quando você quer trocar dados com mais controle sobre estrutura.
+Ele é bom quando você quer transportar dados com schema e manter melhor controle sobre evolução de estrutura.
 
-Na prática, ele aparece bastante em pipelines com eventos e integrações mais técnicas.
+Use Avro quando:
+
+* o dado vai trafegar entre sistemas;
+* você está lidando com streaming ou mensageria;
+* schema evolution importa;
+* a prioridade é serialização compacta e leitura mais ligada ao registro inteiro do que a colunas soltas.
+
+Se eu resumir sem rodeio:
+
+* **Parquet** é melhor para leitura analítica;
+* **Avro** é melhor para troca de dados e pipelines com schema.
+
+### XML
+
+O **XML** é mais verboso e mais antigo, mas ainda aparece bastante em integrações legadas e sistemas corporativos.
+
+Use XML quando:
+
+* a fonte já usa XML por padrão;
+* você está lidando com integração corporativa antiga;
+* a estrutura vem por tags e hierarquia;
+* você precisa interoperar com sistemas que já falam XML.
+
+Para análise moderna, XML normalmente não é a primeira escolha. Ele aparece mais por compatibilidade do que por eficiência.
+
+---
+
+## Como escolher sem complicar
+
+Se eu fosse simplificar a escolha:
+
+* **JDBC**: acesso Java a banco relacional;
+* **ODBC**: acesso mais genérico a banco, muito comum em integrações e ferramentas;
+* **CSV**: tabela simples;
+* **JSON**: dado flexível e semiestruturado;
+* **Parquet**: analytics em escala;
+* **Avro**: integração e schema evolution;
+* **XML**: legado e integrações corporativas.
 
 ---
 
 ## Resumo rápido
 
-* **JDBC / ODBC**: conexão com fontes relacionais.
-* **CSV**: simples e tabular.
-* **JSON**: flexível e semiestruturado.
-* **Parquet**: colunar e eficiente para análise.
-* **Avro**: útil em troca de dados com schema.
-
-Se a prova falar de ingestão, extração ou formatos, pense primeiro nisso:
-
-* origem relacional tende a lembrar JDBC/ODBC;
-* dado mais livre tende a lembrar JSON;
-* analytics em escala tende a lembrar Parquet;
-* integração e eventos podem lembrar Avro.
+* JDBC e ODBC são formas de acessar dados em bancos.
+* JDBC é mais natural no mundo Java.
+* ODBC é mais genérico e historicamente muito associado ao ecossistema Microsoft, mas não fica preso ao Windows.
+* CSV serve para tabela simples.
+* JSON serve para dado flexível.
+* Parquet serve para leitura analítica.
+* Avro serve muito bem para troca de dados e streaming.
+* XML aparece muito em integrações antigas.

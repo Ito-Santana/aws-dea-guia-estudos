@@ -1,29 +1,43 @@
 ---
 title: Revisão SQL
 layout: default
-description: Revisão prática de SQL para fundamentos de engenharia de dados e prova AWS
+description: Revisão prática de SQL para fundamentos de engenharia de dados e DEA
 ---
 
 # Revisão SQL
 
-A DEA não costuma cobrar SQL do zero. Ela parte do pressuposto de que você já consegue ler, entender e montar consultas básicas.
+SQL é uma parte que a DEA não vai ensinar do zero. A ideia é que você já consiga ler consulta, entender o que ela faz e montar as bases mais comuns sem travar.
 
-Então, se SQL ainda não está confortável para você, vale estudar com calma ou fazer um curso na internet antes de seguir. Isso ajuda muito, porque esse conteúdo aparece o tempo todo quando a ideia é trabalhar com dados.
+Se essa parte ainda está fraca, vale estudar com calma ou fazer um curso básico antes de avançar. Não é vergonha nenhuma; só evita ficar tropeçando no resto do conteúdo.
+
+---
+
+## O que o SQL mais cobra
+
+Na prática, quase tudo gira em torno de quatro blocos:
+
+* filtrar;
+* agrupar;
+* ordenar;
+* combinar tabelas.
+
+Se você entende bem isso, já cobre uma boa parte do que aparece na revisão.
 
 ---
 
 ## Agregação
 
-Agregação é quando você resume dados.
+Agregação é quando você resume os dados.
 
-Em vez de olhar linha por linha, você quer responder coisas como:
+Em vez de olhar linha por linha, você quer responder perguntas como:
 
-* quantos pedidos foram feitos;
-* qual foi o total vendido;
-* qual a média de consumo;
-* qual o maior ou menor valor.
+* quantos pedidos existem;
+* quanto foi vendido no total;
+* qual é a média;
+* qual foi o maior valor;
+* qual foi o menor valor.
 
-Funções comuns:
+Funções mais comuns:
 
 * `COUNT`
 * `SUM`
@@ -42,9 +56,9 @@ FROM pedidos;
 
 ## GROUP BY
 
-`GROUP BY` serve para agrupar os dados antes de agregar.
+`GROUP BY` serve para separar os dados em grupos antes de agregar.
 
-Se você quer o total por cliente, por mês ou por região, ele entra aqui.
+Se você quer o total por região, por mês ou por cliente, é aqui que entra.
 
 Exemplo:
 
@@ -54,19 +68,35 @@ FROM pedidos
 GROUP BY regiao;
 ```
 
-Se quiser agregar por mais de uma coluna, dá para fazer também.
+Se quiser o total por região e por status ao mesmo tempo, também dá.
+
+```sql
+SELECT regiao, status, COUNT(*) AS total_pedidos
+FROM pedidos
+GROUP BY regiao, status;
+```
+
+### Fluxo mental
+
+<div class="mermaid">
+flowchart LR
+    A[Linhas soltas] --> B[GROUP BY]
+    B --> C[Grupos]
+    C --> D[Agregação]
+    D --> E[Resultado resumido]
+</div>
 
 ---
 
 ## ORDER BY
 
-`ORDER BY` serve para ordenar o resultado.
+`ORDER BY` serve para ordenar o resultado final.
 
 Você pode ordenar:
 
 * crescente;
 * decrescente;
-* por uma ou mais colunas.
+* por mais de uma coluna.
 
 Exemplo:
 
@@ -76,7 +106,57 @@ FROM vendas
 ORDER BY receita DESC;
 ```
 
-Na prática, isso aparece muito em listas de ranking, relatórios e consultas de análise.
+Isso aparece muito em ranking, relatório e consulta analítica.
+
+---
+
+## JOIN
+
+`JOIN` é o que combina tabelas.
+
+Esse é um dos assuntos mais importantes de SQL. Se você não entende join, o resto fica capenga.
+
+### INNER JOIN
+
+Traz só os registros que existem nas duas tabelas.
+
+Use quando você só quer o que realmente casou.
+
+### LEFT JOIN
+
+Traz tudo da tabela da esquerda e o que casar da direita.
+
+Use quando a tabela principal não pode perder linhas.
+
+### RIGHT JOIN
+
+É o espelho do `LEFT JOIN`, mas aparece menos no dia a dia.
+
+### FULL OUTER JOIN
+
+Traz tudo dos dois lados.
+
+Use quando você quer enxergar tanto o que casou quanto o que ficou de fora.
+
+### CROSS JOIN
+
+Gera todas as combinações possíveis.
+
+É menos comum, mas em alguns casos faz sentido.
+
+### Visão rápida
+
+<div class="mermaid">
+flowchart TB
+    A[Tabela A] --> I[INNER JOIN]
+    B[Tabela B] --> I
+
+    A --> L[LEFT JOIN]
+    B --> L
+
+    A --> F[FULL OUTER JOIN]
+    B --> F
+</div>
 
 ---
 
@@ -84,75 +164,35 @@ Na prática, isso aparece muito em listas de ranking, relatórios e consultas de
 
 Pivoting é quando você transforma linhas em colunas.
 
-Isso não é uma coisa que aparece em todo banco do mesmo jeito, mas o conceito é importante: você está reorganizando os dados para facilitar leitura ou relatório.
+Isso não aparece em todo banco da mesma forma, mas o conceito é importante.
 
 Exemplo mental:
 
-* antes: uma linha por mês;
+* antes: uma linha para cada mês;
 * depois: uma coluna para cada mês.
 
-Isso pode aparecer em ferramentas de banco, SQL analítico ou transformações antes de publicar uma tabela final.
-
----
-
-## JOIN types
-
-`JOIN` é o que você usa para combinar tabelas.
-
-Esse é um dos tópicos mais importantes de SQL.
-
-### INNER JOIN
-
-Traz só os registros que existem nas duas tabelas.
-
-Exemplo de uso: pedidos que realmente têm cliente correspondente.
-
-### LEFT JOIN
-
-Traz tudo da tabela da esquerda e o que combinar da direita.
-
-Se não houver correspondência, a parte da direita vem nula.
-
-É muito útil quando você quer manter a base principal inteira.
-
-### RIGHT JOIN
-
-É o inverso do `LEFT JOIN`, mas aparece menos no dia a dia.
-
-### FULL OUTER JOIN
-
-Traz tudo das duas tabelas.
-
-É útil quando você quer enxergar os dados que casam e os que ficaram de fora.
-
-### CROSS JOIN
-
-Gera combinação de todos com todos.
-
-É menos comum, mas pode aparecer em cenários específicos.
+É uma reorganização que ajuda muito em relatório e visualização.
 
 ---
 
 ## O que vale guardar
 
-Se a questão falar de SQL, normalmente ela está testando se você entende:
+Se a questão falar de SQL, normalmente ela está testando se você sabe:
 
-* como resumir dados com agregação;
-* como agrupar com `GROUP BY`;
-* como ordenar com `ORDER BY`;
-* como reorganizar dados com pivoting;
-* como combinar tabelas com diferentes tipos de `JOIN`.
-
-Na prática, a DEA espera que essa base já esteja pronta.
+* resumir dados com agregação;
+* separar grupos com `GROUP BY`;
+* ordenar com `ORDER BY`;
+* combinar tabelas com `JOIN`;
+* reorganizar dados com pivoting.
 
 ---
 
 ## Resumo rápido
 
 * **Agregação**: resume dados.
-* **GROUP BY**: separa por grupo antes de agregar.
-* **ORDER BY**: ordena o resultado.
-* **Pivoting**: transforma linhas em colunas.
-* **JOIN**: combina tabelas.
+* **GROUP BY**: cria grupos.
+* **ORDER BY**: organiza o resultado.
+* **JOIN**: junta tabelas.
+* **Pivoting**: muda linhas em colunas.
 
-Se SQL ainda estiver fraco, estude isso antes. Faz diferença real no resto da preparação.
+Se SQL ainda não está natural, vale revisar antes de seguir. Isso evita sofrimento desnecessário no resto do estudo.

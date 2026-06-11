@@ -485,6 +485,16 @@ a:hover {
   color: var(--text);
 }
 
+.content-panel img {
+  display: block;
+  max-width: 100%;
+  height: auto;
+  margin: 18px auto;
+  border-radius: 16px;
+  border: 1px solid var(--line);
+  box-shadow: var(--shadow);
+}
+
 .content-panel table {
   width: 100%;
   border-collapse: collapse;

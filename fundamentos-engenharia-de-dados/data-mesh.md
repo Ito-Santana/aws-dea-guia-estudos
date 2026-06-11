@@ -1,203 +1,117 @@
 ---
 title: Data Mesh
 layout: default
-description: Arquitetura distribuída de dados com foco em domínio, responsabilidade e governança
+description: Arquitetura de dados orientada a dominio com ownership distribuido e governanca federada
 ---
 
 # Data Mesh
 
-O **data mesh** é uma forma de organizar dados em que cada domínio de negócio assume mais responsabilidade pelos próprios dados.
+## Visão Geral
 
-Em vez de deixar tudo concentrado em um time central, a ideia é distribuir essa responsabilidade entre as áreas que realmente conhecem o assunto. Vendas cuida dos dados de vendas, financeiro cuida dos dados financeiros, logística cuida dos dados de logística.
+Data mesh é menos sobre ferramenta e mais sobre responsabilidade.
 
-Na prática, isso muda duas coisas:
+A lógica é tirar dos ombros de um time central toda a missão de entender, produzir e manter os dados da empresa inteira. Em vez disso, cada domínio de negócio passa a cuidar melhor dos próprios dados.
 
-* quem produz e mantém os dados;
-* como esses dados são publicados para outras áreas.
+Vendas cuida dos dados de vendas. Financeiro cuida dos dados financeiros. Logística cuida dos dados de logística.
 
-Na AWS, isso costuma aparecer com S3, Glue, Athena e Lake Formation, mas o ponto principal não é a ferramenta. O ponto principal é a forma de organizar a responsabilidade.
+Parece simples falando assim, mas isso muda bastante a forma como a plataforma de dados funciona.
 
----
+## Por que isso importa em Engenharia de Dados?
 
-## A ideia por trás
+Porque muitos times de dados crescem e viram gargalo.
 
-Se eu tiver que resumir em uma frase, data mesh é isso:
+O que costuma acontecer:
 
-**os dados deixam de ser um problema exclusivo de um time central e passam a ser responsabilidade compartilhada pelos domínios que realmente entendem aquele assunto.**
+- todo mundo depende de uma equipe central;
+- o backlog de pipeline só cresce;
+- os dados perdem contexto de negócio;
+- aparecem tabelas sem dono claro;
+- a plataforma escala tecnicamente, mas não operacionalmente.
 
-Isso não significa bagunça. Significa distribuir responsabilidade com regra, padrão e governança.
+O data mesh tenta atacar isso distribuindo ownership sem abandonar padrão, segurança e governança.
 
-### Visão simples
+## Como aparece na AWS
 
-<div class="mermaid">
+Na AWS, esse modelo costuma usar:
+
+- `Amazon S3` como base do lake;
+- `AWS Glue Data Catalog` para metadados;
+- `AWS Glue` e `Amazon EMR` para processamento;
+- `Amazon Athena` para consumo;
+- `AWS Lake Formation` para governança;
+- `AWS IAM` e `AWS KMS` para controle de acesso e criptografia.
+
+O ponto é importante: não existe um "serviço data mesh". A AWS entra como conjunto de peças para viabilizar o modelo.
+
+## Exemplo prático
+
+Uma empresa tem três domínios fortes:
+
+- vendas;
+- logística;
+- financeiro.
+
+Cada domínio publica seus próprios datasets curados no `S3`, registra metadados no `Glue Data Catalog`, define owner, documentação mínima e regras básicas de qualidade.
+
+O time de plataforma não some. Ele passa a cuidar da base comum:
+
+- padrões de bucket;
+- catálogo;
+- permissões;
+- templates de pipeline;
+- monitoramento;
+- governança.
+
+```mermaid
 flowchart LR
-    A[Domínio Vendas] --> D[Dados de vendas]
-    B[Domínio Financeiro] --> E[Dados financeiros]
-    C[Domínio Logística] --> F[Dados de logística]
+    A[Dominio Vendas] --> D[Amazon S3]
+    B[Dominio Logistica] --> D
+    C[Dominio Financeiro] --> D
+    D --> E[AWS Glue Data Catalog]
+    E --> F[AWS Lake Formation]
+    F --> G[Amazon Athena]
+```
 
-    D --> G[Plataforma de dados]
-    E --> G
-    F --> G
+## Pegadinhas para a prova
 
-    G --> H[Consumo analítico]
-    G --> I[BI / ML]
-</div>
+- data mesh não é data lake;
+- data mesh não é um serviço da AWS;
+- autonomia de domínio não significa ausência de padrão;
+- se a empresa ainda está lutando para montar o básico do lake, talvez seja cedo para falar em data mesh.
 
----
+## Quando usar
 
-## O que muda na prática
+- muitos domínios de negócio maduros;
+- time central virou gargalo;
+- necessidade de ownership claro;
+- plataforma já tem alguma maturidade.
 
-Num modelo mais tradicional, o time central de dados recebe pedidos de tudo quanto é lado, modela o dado, cria pipeline, publica tabela e tenta manter isso saudável.
+## Quando não usar
 
-No data mesh, essa responsabilidade fica mais próxima de quem entende o assunto. O time central não some, mas muda de papel. Ele vira mais uma plataforma e menos um gargalo.
+- empresa pequena;
+- time de dados ainda montando fundação básica;
+- domínios sem capacidade de assumir responsabilidade real;
+- ausência total de governança.
 
-O resultado esperado é:
+## Comparação com conceitos parecidos
 
-* menos fila para atender solicitações;
-* mais autonomia para os domínios;
-* dados mais próximos do contexto de negócio;
-* menos dependência de uma equipe única para tudo.
+| Conceito | Foco |
+| --- | --- |
+| Data Lake | Armazenar dados |
+| Data Warehouse | Organizar para analytics |
+| Data Mesh | Distribuir ownership e operação |
 
----
+## Resumo rápido
 
-## O que precisa existir
+- Data mesh redistribui responsabilidade por domínio.
+- Não substitui governança.
+- Na AWS, costuma usar `S3`, `Glue`, `Athena` e `Lake Formation`.
+- É mais modelo operacional do que stack técnica.
 
-Para isso funcionar, algumas coisas precisam estar no lugar.
+## Checklist para prova
 
-### Dados por domínio
-
-Cada área cuida do próprio pedaço. Isso ajuda porque o time já fala a linguagem do negócio e sabe o que o dado significa.
-
-Exemplo:
-
-* vendas entende pedido, conversão e receita;
-* financeiro entende faturamento, repasse e inadimplência;
-* logística entende entrega, prazo e SLA.
-
-### Dados como produto
-
-Esse ponto é importante. O dado não pode ser só “uma tabela jogada no catálogo”.
-
-Se ele vai ser consumido por outras equipes, precisa ter:
-
-* dono claro;
-* documentação mínima;
-* contrato de uso;
-* qualidade conhecida;
-* expectativa de atualização;
-* definição do que aquele dado representa.
-
-Se isso não existe, o consumo vira ruído.
-
-### Plataforma self-service
-
-Os times de domínio precisam conseguir publicar e consumir dados sem depender de uma equipe central para cada detalhe.
-
-Na AWS, isso geralmente passa por:
-
-* **Amazon S3** para armazenar os dados;
-* **AWS Glue Catalog** para catalogar metadados;
-* **Amazon Athena** para consultas SQL;
-* **AWS Lake Formation** para governança e controle de acesso;
-* **AWS Glue** e **Amazon EMR** para processamento;
-* **Amazon Redshift** quando a camada analítica central ainda faz sentido.
-
-### Governança federada
-
-Mesmo com autonomia, a empresa não pode abrir mão de padrão.
-
-A governança entra para definir:
-
-* quem pode publicar;
-* quem pode consumir;
-* como os dados são nomeados;
-* quais metadados são obrigatórios;
-* quais regras de segurança precisam ser seguidas.
-
-Ou seja: cada domínio assume responsabilidade, mas não inventa tudo do zero.
-
----
-
-## Onde a AWS entra nisso
-
-Na AWS, o data mesh não depende de um serviço único. Ele é mais uma combinação de peças.
-
-Uma forma comum de montar isso é:
-
-<div class="mermaid">
-flowchart TB
-    subgraph Dominios
-      A[Domínio Vendas]
-      B[Domínio Marketing]
-      C[Domínio Financeiro]
-    end
-
-    subgraph Plataforma
-      D[Amazon S3]
-      E[AWS Glue Catalog]
-      F[AWS Lake Formation]
-      G[Amazon Athena]
-    end
-
-    A --> D
-    B --> D
-    C --> D
-    D --> E
-    E --> F
-    F --> G
-</div>
-
-Esse desenho costuma funcionar bem quando a empresa quer autonomia sem perder controle.
-
----
-
-## Data Mesh vs Data Lake
-
-Esses dois termos aparecem juntos, mas não são a mesma coisa.
-
-O **data lake** é a base onde os dados ficam armazenados e podem ser explorados.
-O **data mesh** é a forma de organizar quem cuida desses dados e como essa responsabilidade é distribuída.
-
-Dá para ter data lake sem data mesh.
-Dá para ter data mesh usando data lake como base.
-Dá para combinar data mesh com lakehouse também.
-
-### Comparação rápida
-
-| Critério | Data Lake | Data Mesh |
-| --- | --- | --- |
-| Foco principal | Armazenamento e exploração | Organização por domínio |
-| Responsabilidade | Mais centralizada | Distribuída por área |
-| Governança | Técnica | Federada |
-| Estrutura | Repositório de dados | Modelo operacional |
-| AWS mais comum | S3, Glue, Athena | S3, Glue, Lake Formation, Athena, Redshift |
-
----
-
-## Quando faz sentido usar
-
-Data mesh faz sentido quando a empresa já cresceu o suficiente para ter vários domínios maduros e um time central de dados que virou gargalo.
-
-Ele funciona melhor quando:
-
-* existem várias áreas com autonomia real;
-* os dados já têm uso importante no negócio;
-* há maturidade para documentação e governança;
-* a empresa aceita responsabilidade distribuída;
-* a plataforma de dados já está organizada o bastante para suportar isso.
-
-Se a empresa ainda está organizando o básico de ingestão, qualidade e catálogo, normalmente o data mesh é cedo demais. Nesse caso, faz mais sentido fortalecer o lake, o warehouse ou o lakehouse primeiro.
-
----
-
-## Fechando a ideia
-
-O jeito mais simples de pensar em data mesh é este:
-
-* **Data Lake**: onde os dados ficam.
-* **Data Warehouse**: onde os dados são organizados para análise.
-* **Data Mesh**: quem é dono dos dados e como essa responsabilidade é distribuída.
-
-Na AWS, isso costuma girar em torno de **S3**, **Glue**, **Athena**, **Lake Formation**, **EMR** e, em alguns casos, **Redshift**.
-
-O data mesh não é uma solução mágica. Ele só faz sentido quando a empresa já tem complexidade suficiente para justificar essa distribuição de responsabilidade.
+- [ ] Lembrar que não é serviço AWS
+- [ ] Distinguir data mesh de data lake
+- [ ] Associar o tema a ownership por domínio
+- [ ] Entender o papel da governança federada
+- [ ] Reconhecer cenários em que o gargalo é organizacional

@@ -1,86 +1,110 @@
 ---
 title: Data Skew
 layout: default
-description: Conceito básico de data skew e impacto em processamento distribuído
+description: Desequilibrio na distribuicao dos dados e impacto em processamento distribuido
 ---
 
 # Data Skew
 
-**Data skew** é quando os dados ficam distribuídos de forma desigual.
+## Visão Geral
 
-Em vez de cada partição, chave ou grupo receber um volume parecido, uma parte fica muito mais pesada que as outras. Em processamento distribuído, isso costuma virar gargalo.
+Data skew acontece quando os dados não se distribuem de forma equilibrada entre partições ou tasks.
 
----
+Na teoria, processamento distribuído deveria dividir o trabalho. Na prática, se uma partição recebe volume demais e as outras quase nada, o paralelismo fica capenga.
 
-## O que acontece
+É aquele tipo de problema em que o cluster parece grande, mas uma parte do job continua demorando demais porque quase todo o peso caiu no mesmo lugar.
 
-Imagine um job que distribui os registros por `cliente_id`.
+## Por que isso importa em Engenharia de Dados?
 
-Se um único cliente concentra milhões de linhas, essa partição vai ficar sobrecarregada.
+Porque skew derruba performance, aumenta custo e pode até quebrar jobs.
 
-Enquanto isso:
+Os sintomas clássicos são:
 
-* uma parte do cluster trabalha demais;
-* outras ficam paradas;
-* o job demora mais;
-* a memória sobe;
-* o processo pode até falhar.
+- uma task demora muito mais que as outras;
+- uso de memória fica desigual;
+- join fica caro demais;
+- o job parece "travado" perto do fim;
+- subir mais recurso não resolve tanto quanto deveria.
 
-### Visão simples
+## Como aparece na AWS
 
-<div class="mermaid">
+Na AWS, isso costuma aparecer em:
+
+- jobs Spark no `AWS Glue`;
+- processamento no `Amazon EMR`;
+- joins grandes;
+- agregações pesadas;
+- particionamento ruim em dados no `S3`.
+
+Um caso bem comum é chave muito concentrada. Exemplo: um `customer_id` ou `tenant_id` com volume muito maior que o restante.
+
+## Exemplo prático
+
+Você faz um join no `AWS Glue` entre eventos e cadastro de clientes usando `customer_id`.
+
+Quase todos os clientes têm poucos registros, mas um parceiro gigante concentra milhões de eventos com a mesma chave. O resultado é que uma task recebe peso demais e segura o job inteiro.
+
+```mermaid
 flowchart LR
-    A[Dados equilibrados] --> B[Processamento paralelo]
-    C[Dados concentrados] --> D[Uma partição pesada]
-    D --> E[Lentidão / gargalo]
-</div>
+    A[Dados de entrada] --> B[Distribuicao por chave]
+    B --> C1[Task leve]
+    B --> C2[Task leve]
+    B --> C3[Task pesada]
+    C3 --> D[Gargalo do job]
+```
 
----
+## Pegadinhas para a prova
 
-## Onde isso aparece
+- skew não é só volume alto; é volume mal distribuído;
+- aumentar cluster nem sempre resolve se a chave continua concentrada;
+- partição ruim e join ruim podem gerar sintomas parecidos;
+- nem toda lentidão em Spark é skew.
 
-Data skew aparece muito em:
+## Como mitigar
 
-* Spark;
-* Glue;
-* joins grandes;
-* agregações;
-* partições mal desenhadas.
+O importante para a prova é reconhecer a lógica das soluções:
 
-Na prática, o problema não é só o volume. É a concentração do volume em poucos grupos.
+- melhorar a chave de partição;
+- revisar a estratégia de join;
+- usar `broadcast join` quando um lado é pequeno;
+- isolar ou tratar valores extremos;
+- reorganizar melhor os dados.
 
----
+Não precisa decorar tuning avançado de Spark para DEA-C01.
 
-## Como perceber
+## Quando usar
 
-Alguns sinais comuns:
+Não é algo que se "usa". É um problema que você precisa identificar quando o processamento distribuído não escala como deveria.
 
-* uma etapa demora muito mais que as outras;
-* um executor fica bem mais carregado que os demais;
-* CPU e memória ficam desequilibrados;
-* joins e group by ficam lentos;
-* o job parece travar em uma parte específica.
+## Quando não usar
 
----
+Não chame de skew quando o problema real for:
 
-## Como lidar
+- leitura excessiva de arquivo;
+- arquivo pequeno demais em grande quantidade;
+- gargalo externo de rede ou banco;
+- dimensionamento ruim sem concentração real de chave.
 
-As saídas mais comuns são:
+## Comparação com conceitos parecidos
 
-* mudar a chave de particionamento;
-* distribuir melhor os dados;
-* tratar valores muito concentrados;
-* usar broadcast join quando fizer sentido;
-* revisar a forma de agrupar ou ordenar.
-
-Nem sempre existe uma solução única. Às vezes o problema está na modelagem, às vezes na chave, às vezes na forma de particionar.
-
----
+| Conceito | Ideia |
+| --- | --- |
+| Data Skew | Distribuição desigual de dados |
+| Shuffle alto | Muito movimento de dados entre nós |
+| Small files problem | Muitos arquivos pequenos |
+| Particionamento ruim | Organização ruim dos dados para consulta ou processamento |
 
 ## Resumo rápido
 
-Data skew é desequilíbrio na distribuição dos dados.
+- Data skew é desequilíbrio de distribuição.
+- Ele prejudica jobs distribuídos.
+- Aparece muito em `Glue`, `EMR`, Spark, joins e agregações.
+- O sintoma clássico é uma partição segurando o job inteiro.
 
-Se uma parte do processamento recebe muito mais volume que as outras, o paralelismo deixa de ajudar.
+## Checklist para prova
 
-Em prova, pense nisso como um problema de concentração que derruba performance.
+- [ ] Entender que skew é concentração desigual
+- [ ] Associar skew a jobs distribuídos
+- [ ] Lembrar de joins e agregações como pontos comuns
+- [ ] Saber que mais cluster não resolve tudo
+- [ ] Não confundir skew com qualquer problema genérico de performance

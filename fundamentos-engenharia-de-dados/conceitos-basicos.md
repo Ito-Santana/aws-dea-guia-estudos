@@ -1,90 +1,78 @@
 ---
-title: Conceitos Básicos
+title: Conceitos Basicos
 layout: default
-description: Tipos de dados, propriedades e base conceitual de engenharia de dados
+description: Tipos de dados e propriedades mais importantes para entender engenharia de dados na AWS
 ---
 
 # Conceitos Básicos de Engenharia de Dados
 
-## Tipos de Dados
+## Visão Geral
 
-Na Engenharia de Dados, uma das primeiras classificações importantes é entender como os dados estão organizados. De forma geral, eles podem ser divididos em três categorias principais:
+Antes de falar de Glue, Athena, Redshift ou qualquer pipeline mais elaborado, tem uma base que precisa estar firme: que tipo de dado você está lidando e quais características desse dado vão impactar armazenamento, processamento e análise.
 
-* Dados estruturados
-* Dados semiestruturados
-* Dados não estruturados
+Parece assunto introdutório demais, mas não é. Muita decisão de arquitetura nasce daqui.
 
----
+## Tipos de dados
 
-## Dados Estruturados
+Na prática, a divisão mais comum é esta:
 
-Dados estruturados são dados organizados em um formato bem definido, normalmente seguindo um esquema fixo. Eles costumam ser armazenados em tabelas, com linhas e colunas, sendo comuns em bancos de dados relacionais.
+- dados estruturados;
+- dados semiestruturados;
+- dados não estruturados.
 
-Esse tipo de dado é mais fácil de consultar, validar e relacionar, principalmente usando SQL.
+Essa classificação ajuda a entender duas coisas:
 
-### Características
+- quão previsível é o schema;
+- quão fácil vai ser consultar, validar e transformar esse dado.
 
-* Possuem estrutura consistente
-* São organizados em linhas e colunas
-* Têm schema bem definido
-* São facilmente consultáveis com SQL
-* São comuns em sistemas transacionais e analíticos
+## Dados estruturados
 
-### Exemplos
+São os mais organizados. Normalmente vêm em linhas e colunas, com schema fixo e regras claras.
 
-* Tabelas em bancos relacionais
-* Arquivos CSV
-* Planilhas Excel
-* MySQL
-* PostgreSQL
-* Oracle
-* SQL Server
-* Amazon Redshift
+É o tipo de dado que encaixa muito bem em SQL, validação mais rígida e consumo analítico tradicional.
 
-### Exemplo prático
+Exemplos:
 
-Uma tabela de clientes com colunas como:
+- tabelas em `Amazon RDS`;
+- dados em `Amazon Redshift`;
+- arquivos `CSV`;
+- planilhas;
+- tabelas de sistemas transacionais.
+
+Exemplo simples:
 
 ```text
 id_cliente | nome | email | data_cadastro
 ```
 
-Nesse caso, cada registro segue a mesma estrutura.
+Se toda linha respeita esse mesmo desenho, você está no mundo dos dados estruturados.
 
----
+## Dados semiestruturados
 
-## Dados Semiestruturados
+Aqui o dado ainda tem organização, mas não naquele formato rígido de tabela relacional.
 
-Dados semiestruturados não seguem o modelo rígido de linhas e colunas, mas ainda possuem alguma organização interna. Normalmente, eles usam chaves, tags ou hierarquias para representar informações.
+É muito comum em:
 
-Esse tipo de dado é muito comum em APIs, logs, eventos e integrações entre sistemas.
+- respostas de API;
+- logs;
+- eventos;
+- documentos com chaves e valores;
+- arquivos com campos opcionais.
 
-### Características
+Exemplos clássicos:
 
-* Não possuem estrutura tabular rígida
-* Possuem algum padrão de organização
-* Podem ter campos opcionais ou variáveis
-* São comuns em sistemas distribuídos, APIs e pipelines de dados
-* Podem ser processados por ferramentas como Spark, Glue, Athena e bancos NoSQL
+- `JSON`;
+- `XML`;
+- `Avro`.
 
-### Exemplos
+Um ponto importante para a prova: `Parquet` costuma aparecer junto com semiestruturados em alguns resumos, mas ele é mais um formato de armazenamento colunar do que um "tipo de dado" em si. Em contexto de engenharia de dados, o importante é lembrar que ele é excelente para analytics.
 
-* JSON
-* XML
-* Avro
-* Parquet
-* ORC
-* Logs de aplicações
-* Eventos de streaming
-* Respostas de APIs
-
-### Exemplo prático
+Exemplo:
 
 ```json
 {
   "id_cliente": 123,
   "nome": "Maria",
-  "email": "maria@email.com",
   "enderecos": [
     {
       "cidade": "Recife",
@@ -94,104 +82,114 @@ Esse tipo de dado é muito comum em APIs, logs, eventos e integrações entre si
 }
 ```
 
-Esse dado não está em formato de tabela tradicional, mas possui uma estrutura clara baseada em **chaves e valores**.
+Isso não está em uma tabela tradicional, mas está longe de ser bagunça total.
 
----
+## Dados não estruturados
 
-## Dados Não Estruturados
+Aqui o dado não traz um schema claro para consulta direta. Você até consegue armazenar, catalogar e processar, mas normalmente precisa de etapas extras antes de extrair valor analítico.
 
-Dados não estruturados são dados que não possuem um formato predefinido ou um schema claro. Eles geralmente exigem processamento adicional para que informações úteis possam ser extraídas.
+Exemplos:
 
-Esse tipo de dado é comum em arquivos multimídia, documentos, textos livres e conteúdos gerados por usuários.
-
-### Características
-
-* Não possuem schema definido
-* São mais difíceis de consultar diretamente
-* Normalmente exigem pré-processamento
-* Podem precisar de técnicas de NLP, visão computacional ou extração de texto
-* Costumam ocupar grande volume de armazenamento
-
-### Exemplos
-
-* Imagens
-* Vídeos
-* Áudios
-* PDFs
-* E-mails
-* Documentos de texto
-* Contratos
-* Posts em redes sociais
-* Chamados de atendimento
-
-### Exemplo prático
-
-Um arquivo de áudio de uma ligação de atendimento não possui colunas ou campos estruturados. Para analisá-lo, seria necessário primeiro transcrever o áudio e depois aplicar algum processamento sobre o texto.
-
----
-
-## Comparação Rápida
-
-| Tipo de dado    | Estrutura                                           | Exemplos                               | Facilidade de consulta |
-| --------------- | --------------------------------------------------- | -------------------------------------- | ---------------------- |
-| Estruturado     | Schema fixo, linhas e colunas                       | SQL, CSV, PostgreSQL, Redshift         | Alta                   |
-| Semiestruturado | Organização flexível com chaves, tags ou hierarquia | JSON, XML, Logs, Avro, Parquet         | Média                  |
-| Não estruturado | Sem schema definido                                 | Imagens, vídeos, áudios, PDFs, e-mails | Baixa                  |
-
----
-
-# Propriedade dos Dados (3V's)
-
-## Volume
-
-Volume se refere à quantidade de dados que uma empresa ou sistema precisa armazenar e processar. Esse volume pode variar bastante, indo de gigabytes até terabytes, petabytes ou mais.
-
-Quando o volume cresce, alguns desafios começam a aparecer:
-
-- como armazenar esses dados de forma eficiente;
-- como processar sem demorar demais;
-- como evitar custos desnecessários;
-- como organizar os dados para facilitar consultas futuras.
-
-Exemplo:
-
-Uma rede social pode gerar terabytes de dados por dia com posts, curtidas, comentários, imagens, vídeos e logs de navegação dos usuários.
-
----
-
-## Velocidade
-
-Velocidade se refere à rapidez com que novos dados são gerados, coletados e precisam ser processados.
-
-Nem todo dado precisa ser processado em tempo real. Alguns dados podem ser processados uma vez por dia, enquanto outros precisam ser analisados em poucos segundos.
-
-Quando a velocidade é alta, normalmente entram arquiteturas de streaming ou processamento quase em tempo real.
-
-Exemplo:
-
-Um sistema antifraude precisa analisar transações financeiras quase em tempo real. Se a análise demorar muito, a transação suspeita pode ser aprovada antes da detecção.
-
----
-
-## Variedade
-
-Variedade se refere aos diferentes formatos e origens dos dados.
-
-Na prática, uma empresa raramente trabalha com apenas um tipo de dado. Ela pode receber dados de bancos relacionais, APIs, arquivos CSV, logs, eventos, imagens, vídeos e documentos.
-
-Essa variedade traz desafios porque cada fonte pode ter um formato, um schema e uma qualidade diferente.
-
-Exemplos de formatos:
-
-- CSV;
-- JSON;
 - imagens;
 - vídeos;
-- arquivos de texto;
-- logs de aplicação.
+- áudios;
+- PDFs;
+- e-mails;
+- documentos livres.
 
-Exemplo:
+Se você recebe um áudio de atendimento, por exemplo, primeiro precisa transcrever ou enriquecer esse conteúdo antes de tratar aquilo como dado analítico de verdade.
 
-Uma empresa de e-commerce pode ter dados de pedidos em um banco relacional, eventos de navegação em JSON, imagens de produtos em arquivos e logs da aplicação em texto.
+## Por que isso importa em Engenharia de Dados?
 
-Antes de analisar tudo junto, é preciso organizar, padronizar e transformar esses dados.
+Porque o tipo de dado afeta quase tudo:
+
+- o formato ideal de armazenamento;
+- o custo de consulta;
+- a ferramenta de processamento;
+- a estratégia de catálogo;
+- a forma de validar;
+- a facilidade de consumo.
+
+Não faz sentido tratar um log em JSON do mesmo jeito que uma tabela relacional pronta para BI.
+
+## Como aparece na AWS
+
+Na AWS, isso aparece o tempo todo:
+
+- `Amazon S3` guarda praticamente qualquer tipo de dado;
+- `AWS Glue Crawlers` ajudam a inferir schema de arquivos;
+- `AWS Glue` e `Amazon EMR` transformam dados estruturados e semiestruturados;
+- `Amazon Athena` consulta muito bem dados tabulares e formatos analíticos no `S3`;
+- `Amazon Redshift` funciona melhor com dados mais organizados para analytics;
+- `Amazon OpenSearch Service` pode entrar quando o dado é mais textual e o caso de uso envolve busca.
+
+## Exemplo prático
+
+Imagina um e-commerce com três origens:
+
+- pedidos em banco relacional;
+- eventos de navegação em JSON;
+- imagens de produto em arquivos no `S3`.
+
+Nesse cenário:
+
+- os pedidos entram como dados estruturados;
+- os eventos entram como semiestruturados;
+- as imagens entram como não estruturados.
+
+O pipeline não vai tratar tudo da mesma forma. Os pedidos podem ir para consulta analítica mais direto. Os eventos talvez precisem de flatten, padronização e conversão para `Parquet`. As imagens podem ficar só armazenadas, com metadados separados.
+
+```mermaid
+flowchart LR
+    A[Amazon RDS] --> D[Dados estruturados]
+    B[Eventos JSON] --> E[Dados semiestruturados]
+    C[Imagens no S3] --> F[Dados nao estruturados]
+    D --> G[AWS Glue]
+    E --> G
+    G --> H[Parquet no S3]
+    H --> I[Amazon Athena]
+```
+
+## Pegadinhas para a prova
+
+- `CSV` é simples, mas continua sendo dado estruturado.
+- `JSON` e `XML` são semiestruturados, não não estruturados.
+- `Parquet` não é "tipo de dado"; é formato de armazenamento muito usado em analytics.
+- `S3` armazena qualquer formato, mas isso não significa que qualquer formato será fácil de consultar.
+- Dado não estruturado pode fazer parte da arquitetura, mas nem sempre é foco principal da DEA-C01.
+
+## Quando usar
+
+Esse assunto não é algo que você "usa", e sim uma base para decidir melhor:
+
+- quando escolher formato;
+- quando planejar ingestão;
+- quando definir processamento;
+- quando pensar em catálogo e consumo.
+
+## Quando não usar
+
+Não vale complicar demais quando o cenário da prova só quer saber o essencial. Muitas questões não exigem taxonomia perfeita; exigem reconhecer o comportamento do dado e escolher a ferramenta compatível.
+
+## Comparação rápida
+
+| Tipo | Como costuma vir | Facilidade de consulta |
+| --- | --- | --- |
+| Estruturado | Tabelas, linhas e colunas | Alta |
+| Semiestruturado | JSON, XML, eventos, logs | Média |
+| Não estruturado | Áudio, vídeo, imagem, texto livre | Baixa |
+
+## Resumo rápido
+
+- Estruturado: schema fixo, consulta fácil.
+- Semiestruturado: estrutura flexível, mas ainda organizada.
+- Não estruturado: exige mais preparação para análise.
+- Na AWS, `S3`, `Glue`, `Athena`, `EMR` e `Redshift` aparecem bastante nesse contexto.
+
+## Checklist para prova
+
+- [ ] Saber diferenciar estruturado, semiestruturado e não estruturado
+- [ ] Não confundir `JSON` com dado não estruturado
+- [ ] Lembrar que `Parquet` é formato analítico, não categoria de dado
+- [ ] Associar `S3` ao armazenamento flexível de vários formatos
+- [ ] Entender que o tipo de dado influencia consulta, custo e processamento

@@ -1,85 +1,132 @@
 ---
-title: Validação de Dados
+title: Validacao de Dados
 layout: default
-description: Conceitos básicos de validação de dados em pipelines e contexto AWS
+description: Validacoes para impedir que dados ruins avancem no pipeline
 ---
 
 # Validação de Dados
 
-Validação de dados é checar se o dado faz sentido antes de ele seguir no pipeline.
+## Visão Geral
 
-Parece simples, mas isso evita muito problema. Se um dado ruim entra no começo, ele pode contaminar relatórios, métricas, análises e até decisões de negócio.
+Validação de dados é a etapa em que você checa se o dado faz sentido antes de deixar ele seguir adiante.
 
----
+Não é perfumaria. Se dado ruim entra sem controle, ele contamina tabela curada, métrica, dashboard e decisão de negócio.
 
-## O que se valida
+## Por que isso importa em Engenharia de Dados?
 
-As checagens mais comuns são:
+Porque pipeline "verde" não significa dado confiável.
 
-* tipo de dado;
-* campo nulo;
-* duplicidade;
-* formato;
-* faixa válida;
-* chave obrigatória;
-* consistência entre colunas.
+É perfeitamente possível ter job rodando todo dia e ainda assim entregar:
 
-Exemplos simples:
+- duplicidade;
+- nulo onde não podia;
+- chave quebrada;
+- data inválida;
+- valor fora de faixa;
+- regra de negócio inconsistente.
 
-* data precisa estar no formato esperado;
-* preço não pode ser negativo;
-* identificador único não pode repetir;
-* status precisa bater com a regra do domínio.
+Na DEA-C01, isso se conecta com qualidade, confiabilidade e publicação segura de datasets.
 
----
+## O que normalmente se valida
 
-## Quando validar
+- tipo de dado;
+- campo obrigatório;
+- formato;
+- faixa de valor;
+- unicidade;
+- consistência entre colunas;
+- integridade referencial;
+- atualização dentro da janela esperada.
 
-A validação pode acontecer em vários pontos:
+Exemplos:
 
-* na ingestão;
-* depois da transformação;
-* antes da carga final;
-* antes de publicar a tabela para consumo.
+- `order_id` não pode ser nulo;
+- `price` não pode ser negativo;
+- `event_time` precisa estar em timestamp válido;
+- pedido entregue não deveria estar sem data de entrega.
 
-Na prática, isso evita que dados errados avancem demais no pipeline.
+## Como aparece na AWS
 
----
+Na AWS, a validação pode entrar em:
 
-## Por que isso importa
+- jobs do `AWS Glue`;
+- processamento no `Amazon EMR`;
+- regras SQL em `Amazon Athena` ou `Amazon Redshift`;
+- funções `AWS Lambda`;
+- alertas no `Amazon CloudWatch`.
 
-Se os dados estão errados, o problema não fica só na origem.
+Um padrão comum é separar registros inválidos em uma área de quarentena no `S3`.
 
-Ele aparece depois como:
+## Exemplo prático
 
-* relatório errado;
-* métrica errada;
-* retrabalho;
-* quebra de pipeline;
-* custo desnecessário;
-* decisão ruim.
+Chegam arquivos diários de pedidos no `S3`.
 
----
+Antes de publicar a tabela final para `Athena`, o pipeline valida:
 
-## Validação e qualidade
+- colunas obrigatórias;
+- unicidade de `order_id`;
+- faixa válida de valor;
+- formato de data;
+- coerência entre status e timestamps.
 
-Validação é parte da qualidade de dados, mas não cobre tudo.
+O que passa vai para a camada curada. O que falha vai para quarentena e gera alerta.
 
-Qualidade também envolve:
+```mermaid
+flowchart LR
+    A[Dados brutos no S3] --> B[AWS Glue]
+    B --> C{Validacao}
+    C -->|Aprovado| D[Camada curada]
+    C -->|Reprovado| E[Quarentena no S3]
+    E --> F[CloudWatch]
+    D --> G[Amazon Athena]
+```
 
-* completude;
-* precisão;
-* consistência;
-* atualidade;
-* unicidade;
-* confiabilidade.
+## Pegadinhas para a prova
 
-Ou seja: validar é impedir que o erro siga adiante. Qualidade é um pouco mais ampla que isso.
+- validação não é a mesma coisa que transformação;
+- schema compatível não garante dado correto;
+- qualidade de dados é mais ampla do que validação;
+- nem sempre o melhor é derrubar o pipeline inteiro; às vezes o certo é isolar os inválidos.
 
----
+## Quando usar
+
+Na prática, sempre.
+
+Mas ela fica ainda mais importante quando:
+
+- a origem é instável;
+- o dataset vai para muitos consumidores;
+- o dado tem impacto financeiro;
+- há regra de negócio forte.
+
+## Quando não usar
+
+O erro aqui não é "não usar". É validar mal:
+
+- só no final;
+- sem rastreabilidade;
+- com regra pesada demais no ponto errado;
+- confiando só em schema.
+
+## Comparação com conceitos parecidos
+
+| Conceito | Ideia |
+| --- | --- |
+| Validação | Checar se o dado atende regras mínimas |
+| Limpeza | Corrigir ou padronizar o dado |
+| Qualidade de dados | Conceito mais amplo |
+| Observabilidade | Monitorar comportamento e falhas |
 
 ## Resumo rápido
 
-Validação de dados é a checagem que impede dado ruim de continuar no fluxo.
+- Validação impede que dado ruim avance.
+- Pode checar nulo, formato, faixa, duplicidade e consistência.
+- `Glue`, `Athena`, `Redshift`, `EMR` e `CloudWatch` aparecem bastante nesse contexto.
 
-Se o dado não bate com as regras mínimas, ele precisa ser tratado antes de chegar no consumo final.
+## Checklist para prova
+
+- [ ] Entender validação como parte de qualidade de dados
+- [ ] Saber exemplos comuns de regra
+- [ ] Lembrar da quarentena no `S3`
+- [ ] Não confundir schema válido com dado certo
+- [ ] Associar o tema a confiabilidade do pipeline

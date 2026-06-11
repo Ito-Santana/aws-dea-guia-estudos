@@ -1,127 +1,149 @@
 ---
 title: ETL
 layout: default
-description: Conceito básico de ETL e sua relação com pipelines de dados na AWS
+description: Extract, Transform, Load no contexto de pipelines de dados na AWS
 ---
 
 # ETL
 
-**ETL** quer dizer **Extract, Transform, Load**.
+## Visão Geral
 
-É um jeito de organizar o caminho do dado desde a origem até o destino. Na prática, o dado quase nunca chega pronto. Ele vem com campo faltando, tipo errado, valor duplicado, data fora do padrão ou alguma regra de negócio que ainda precisa ser aplicada.
+ETL significa `Extract, Transform, Load`.
 
-Por isso ETL é tão básico em engenharia de dados: ele coloca ordem no fluxo.
+É o fluxo em que você extrai os dados da origem, transforma antes e só depois carrega no destino final.
 
----
+Isso continua sendo um conceito básico porque dado de origem quase nunca chega pronto. Sempre tem alguma coisa para ajustar: tipo, nulo, duplicidade, regra de negócio, schema, formato.
 
-## Como pensar no ETL
+## Por que isso importa em Engenharia de Dados?
 
-Uma forma simples de enxergar isso é:
+Porque boa parte do trabalho de engenharia de dados é exatamente pegar dado operacional e deixá-lo utilizável.
 
-1. pegar o dado da origem;
-2. tratar o que precisa ser corrigido;
-3. gravar o resultado em um destino mais confiável.
+Sem ETL, ou sem alguma variação dele, você acaba espalhando dado inconsistente pela arquitetura.
 
-### Fluxo
-
-<div class="mermaid">
-flowchart LR
-    A[Origem] --> B[Extract]
-    B --> C[Transform]
-    C --> D[Load]
-    D --> E[Destino]
-</div>
-
----
+## Etapas do ETL
 
 ## Extract
 
-É a etapa de extrair o dado da fonte.
+É a captura da origem.
 
-A fonte pode ser:
+Pode vir de:
 
-* banco relacional;
-* API;
-* arquivo;
-* sistema legado;
-* fila;
-* evento.
-
-Na AWS, isso pode vir de **RDS**, **DynamoDB**, **S3** ou fontes externas.
-
-O foco aqui é trazer o dado para dentro do pipeline sem alterar o significado dele.
-
----
+- `Amazon RDS`;
+- `Amazon DynamoDB`;
+- APIs;
+- arquivos no `S3`;
+- logs;
+- eventos.
 
 ## Transform
 
-Essa é a parte em que o dado ganha forma.
+Aqui mora a parte mais trabalhosa.
 
-Aqui entram as tarefas mais comuns do dia a dia:
+É onde você:
 
-* trocar tipo de coluna;
-* padronizar datas;
-* remover duplicidade;
-* tratar nulos;
-* aplicar regra de negócio;
-* juntar tabelas;
-* criar colunas derivadas;
-* filtrar registros ruins;
-* converter formatos.
-
-Essa costuma ser a etapa mais cara em tempo e em lógica, porque é onde o dado bruto vira dado útil.
-
-Na AWS, a transformação pode acontecer em **AWS Glue**, **Amazon EMR**, **Athena** ou **Redshift**, dependendo da arquitetura.
-
----
+- corrige tipos;
+- padroniza datas;
+- remove duplicidade;
+- trata nulos;
+- aplica regra de negócio;
+- faz join;
+- enriquece;
+- converte formato, por exemplo de `CSV` para `Parquet`.
 
 ## Load
 
-Depois do tratamento, o dado é carregado no destino.
+Depois de tratar, você grava o resultado onde ele será consumido.
 
-Esse destino pode ser:
+Destinos comuns:
 
-* um data lake;
-* um data warehouse;
-* uma tabela curada;
-* uma camada pronta para consumo analítico;
-* um conjunto de arquivos organizados para consulta.
+- `Amazon S3`;
+- `Amazon Redshift`;
+- tabelas para `Athena`;
+- camadas curadas para outros times.
 
-Na AWS, isso normalmente termina em **S3** ou **Redshift**.
+## Como aparece na AWS
 
----
+Na AWS, ETL aparece muito com:
 
-## ETL e ELT
+- `AWS Glue`;
+- `Amazon EMR`;
+- `Amazon S3`;
+- `Amazon Redshift`;
+- `Amazon Athena`;
+- `AWS Step Functions` e `Amazon EventBridge` para orquestração.
 
-Vale separar uma coisa que muita gente mistura.
+Se a questão pedir ETL gerenciado e serverless, `AWS Glue` é um candidato muito forte.
 
-No **ETL**, você transforma antes de carregar.
+## Exemplo prático
 
-No **ELT**, você carrega primeiro e transforma depois, dentro do próprio destino.
+Chegam arquivos CSV de vendas no `S3`.
 
-O ETL costuma fazer mais sentido quando você quer controlar bem o tratamento antes da carga final.
-O ELT costuma aparecer quando o destino tem força suficiente para transformar depois, como acontece em muitas arquiteturas analíticas modernas.
+O job no `Glue`:
 
----
+- lê os arquivos;
+- corrige tipos;
+- remove registros inválidos;
+- padroniza timestamp;
+- converte para `Parquet`;
+- grava a camada curada no `S3`;
+- publica a tabela no catálogo para consulta via `Athena`.
+
+```mermaid
+flowchart LR
+    A[CSV no S3] --> B[AWS Glue]
+    B --> C[Tratamento e padronizacao]
+    C --> D[Parquet curado no S3]
+    D --> E[AWS Glue Data Catalog]
+    E --> F[Amazon Athena]
+```
+
+## ETL vs ELT
+
+Essa diferença cai bastante:
+
+- `ETL`: transforma antes de carregar;
+- `ELT`: carrega antes e transforma depois no destino.
+
+Se o destino analítico tem força para transformar depois, `ELT` pode ser uma escolha melhor. Se o dado precisa chegar já controlado e limpo, `ETL` faz bastante sentido.
+
+## Pegadinhas para a prova
+
+- `Glue` é muito associado a ETL na AWS;
+- `Lambda` pode transformar, mas não é escolha natural para ETL pesado;
+- converter para `Parquet` costuma melhorar leitura analítica;
+- ETL e ingestão não são exatamente a mesma coisa.
 
 ## Quando usar
 
-ETL faz sentido quando:
+- quando o dado precisa ser tratado antes do consumo;
+- quando a qualidade precisa ser controlada cedo;
+- quando existem regras claras de negócio antes da carga final.
 
-* a origem vem despadronizada;
-* existe regra de negócio clara;
-* o destino precisa ser confiável;
-* você quer chegar em dados mais organizados antes do consumo;
-* a qualidade do dado é importante logo na entrada.
+## Quando não usar
 
----
+- quando a ideia é só aterrissar dado bruto rapidamente;
+- quando o modelo é claramente `ELT`;
+- quando a transformação é mínima e cabe melhor no motor de consulta.
+
+## Comparação com conceitos parecidos
+
+| Conceito | Ideia |
+| --- | --- |
+| ETL | Extrai, transforma, carrega |
+| ELT | Extrai, carrega, transforma |
+| CDC | Captura mudança na origem |
+| Ingestão | Coloca o dado no pipeline |
 
 ## Resumo rápido
 
-* **Extract**: pega o dado.
-* **Transform**: trata o dado.
-* **Load**: grava o dado.
-* **ETL**: transforma antes de carregar.
-* **ELT**: carrega antes de transformar.
+- ETL organiza a entrada do dado antes do destino final.
+- `Glue`, `S3`, `Athena`, `EMR` e `Redshift` aparecem muito nesse assunto.
+- Para a prova, diferenciar ETL de ELT é essencial.
 
-Na AWS, isso aparece muito com **Glue**, **S3**, **Redshift**, **Athena** e **EMR**.
+## Checklist para prova
+
+- [ ] Saber a ordem do ETL
+- [ ] Diferenciar ETL de ELT
+- [ ] Associar ETL a limpeza e padronização
+- [ ] Lembrar de `AWS Glue`
+- [ ] Relacionar `Parquet` com camada analítica no lake

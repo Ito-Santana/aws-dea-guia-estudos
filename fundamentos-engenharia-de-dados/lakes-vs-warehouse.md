@@ -1,233 +1,172 @@
 ---
 title: Data Lake vs Data Warehouse
 layout: default
-description: Comparação prática entre data lake, data warehouse e lakehouse na AWS
+description: Comparacao pratica entre data lake, data warehouse e lakehouse no contexto AWS
 ---
 
 # Data Lake vs Data Warehouse
 
-Quando a gente fala de arquitetura de dados na AWS, quase sempre a discussão cai em uma pergunta simples: onde esses dados vão morar e como eles vão ser usados?
+## Visão Geral
 
-A resposta normalmente passa por três caminhos:
+Essa é uma comparação que aparece o tempo todo em arquitetura de dados, e normalmente a confusão começa porque muita gente trata os dois como rivais diretos.
 
-* **Data Warehouse**, quando o foco é consulta analítica organizada.
-* **Data Lake**, quando o foco é guardar tudo com flexibilidade.
-* **Lakehouse**, quando a ideia é juntar os dois mundos.
+Não são.
 
-Antes de comparar, vale entender cada um com calma.
-
----
+Os dois resolvem problemas diferentes. Em muitas arquiteturas boas, os dois convivem.
 
 ## Data Warehouse
 
-O **data warehouse** é um ambiente preparado para análise de dados com estrutura bem definida. A lógica aqui é simples: os dados entram, passam por transformação e são organizados para consulta rápida e consistente.
+O data warehouse é a casa dos dados já mais organizados para análise.
 
-Na prática, o warehouse funciona melhor quando a empresa já sabe quais perguntas quer responder. Ele costuma receber dados tratados, padronizados e modelados para relatórios, dashboards e análises de negócio.
+Ele funciona melhor quando:
 
-Na AWS, o serviço mais clássico para isso é o **Amazon Redshift**.
+- o schema está bem definido;
+- as métricas são relativamente conhecidas;
+- o consumo é mais previsível;
+- BI e relatórios têm bastante peso.
 
-### Como ele costuma funcionar
+Na AWS, o nome que você precisa ter na cabeça aqui é `Amazon Redshift`.
 
-<div class="mermaid">
-flowchart LR
-    A[Sistemas origem] --> B[ETL / ELT]
-    B --> C[Data Warehouse]
-    C --> D[BI / Dashboards]
-    C --> E[SQL Analítico]
-</div>
-
-### Características
-
-* Dados geralmente estruturados.
-* Schema bem definido.
-* Alta performance para consultas analíticas.
-* Bom para relatórios recorrentes.
-* Menos flexível para dados brutos ou formatos variados.
-
-### AWS relacionada
-
-* **Amazon Redshift**: data warehouse gerenciado.
-* **Redshift Spectrum**: consulta dados no S3 sem carregar tudo para dentro do cluster.
-* **AWS Glue**: ETL e catálogo para preparar dados antes da carga.
-* **Amazon QuickSight**: camada de visualização e BI.
-
-### Quando usar
-
-Use data warehouse quando:
-
-* você quer relatórios e dashboards confiáveis;
-* os dados já estão bem modelados;
-* a equipe precisa responder perguntas de negócio com SQL;
-* performance de leitura é mais importante que flexibilidade de ingestão.
-
-Exemplo comum: análise de vendas, receita, churn, funil comercial e indicadores executivos.
-
----
+O raciocínio do warehouse é este: primeiro você trata, modela e organiza. Depois consulta com performance e consistência.
 
 ## Data Lake
 
-O **data lake** é um repositório central para guardar dados em estado bruto ou quase bruto, em qualquer formato. A ideia é armazenar primeiro e decidir depois como vai consumir.
+O data lake é mais flexível. A proposta é centralizar dados em vários formatos sem exigir modelagem rígida logo na entrada.
 
-Na AWS, o centro dessa arquitetura é o **Amazon S3**.
+Na AWS, a base mais comum é `Amazon S3`.
 
-O data lake é útil quando você tem muitas fontes diferentes, formatos diferentes e ainda não quer engessar o modelo logo no começo.
+O lake faz sentido quando você precisa:
 
-### Como ele costuma funcionar
+- receber muita coisa diferente;
+- guardar dado bruto;
+- explorar usos ainda não totalmente definidos;
+- suportar analytics, ciência de dados e processamento em escala.
 
-<div class="mermaid">
+Ele aceita a bagunça inicial melhor do que o warehouse. Em troca, cobra mais disciplina de catálogo, governança e organização.
+
+## Por que isso importa em Engenharia de Dados?
+
+Porque essa decisão muda:
+
+- custo de armazenamento;
+- formato de ingestão;
+- performance de consulta;
+- flexibilidade da arquitetura;
+- esforço de governança.
+
+Para a DEA-C01, a prova costuma testar se você sabe qual abordagem encaixa melhor no cenário descrito, não se você consegue defender uma moda arquitetural.
+
+## Como aparece na AWS
+
+O desenho mais comum é:
+
+- `Amazon S3` como base do lake;
+- `AWS Glue Data Catalog` para metadados;
+- `Amazon Athena` para consultar o lake direto;
+- `AWS Lake Formation` para governança;
+- `Amazon Redshift` para analytics mais estruturado;
+- `Redshift Spectrum` para acessar dados no `S3` sem mover tudo para dentro do cluster.
+
+## Exemplo prático
+
+Pensa em uma empresa de varejo:
+
+- logs de navegação;
+- pedidos;
+- catálogo de produto;
+- relatórios financeiros;
+- arquivos externos de parceiros.
+
+Os logs e arquivos brutos podem ir para o `S3` primeiro. Depois, parte desse dado é tratada e carregada no `Redshift` para relatórios executivos e dashboards estáveis.
+
+```mermaid
 flowchart LR
-    A[Sistemas origem] --> B[Ingestão]
-    B --> C[Amazon S3]
-    C --> D[AWS Glue Catalog]
-    C --> E[Amazon Athena]
-    C --> F[Amazon EMR / Spark]
-    C --> G[Amazon Redshift]
-</div>
-
-### Características
-
-* Armazena dados estruturados, semiestruturados e não estruturados.
-* Aceita JSON, CSV, Parquet, logs, imagens, áudio e muito mais.
-* Custo de armazenamento costuma ser baixo.
-* Dá liberdade para explorar novos usos dos dados.
-* Exige mais disciplina de governança, catálogo e organização.
-
-### AWS relacionada
-
-* **Amazon S3**: camada principal de armazenamento.
-* **AWS Glue Data Catalog**: catálogo de metadados.
-* **Amazon Athena**: consulta SQL direto sobre arquivos no S3.
-* **AWS Lake Formation**: controle de acesso e governança.
-* **Amazon EMR** e **AWS Glue**: processamento e transformação.
-
-### Quando usar
-
-Use data lake quando:
-
-* você precisa guardar muitos formatos de dados;
-* a origem ainda está em evolução;
-* existe interesse em exploração, ciência de dados e machine learning;
-* o volume é grande e o custo precisa ser controlado;
-* você quer centralizar dados sem modelar tudo de antemão.
-
-Exemplo comum: logs de aplicação, eventos de navegação, arquivos de IoT, JSON de APIs e documentos brutos.
-
----
+    A[Fontes diversas] --> B[Amazon S3 Data Lake]
+    B --> C[AWS Glue]
+    C --> D[Amazon Redshift]
+    B --> E[Amazon Athena]
+    D --> F[BI e dashboards]
+```
 
 ## Data Lake vs Data Warehouse
 
-Os dois resolvem problemas diferentes.
+O jeito mais prático de lembrar:
 
-O warehouse organiza os dados para consumo analítico rápido.
-O lake guarda os dados com mais liberdade e menos imposição de schema.
-
-### Comparação direta
-
-<div class="mermaid">
-flowchart TB
-    W[Data Warehouse] --> W1[Dados tratados]
-    W --> W2[Schema rígido]
-    W --> W3[SQL analítico]
-    W --> W4[BI e relatórios]
-
-    L[Data Lake] --> L1[Dados brutos ou semibrutos]
-    L --> L2[Schema flexível]
-    L --> L3[Exploração e ciência de dados]
-    L --> L4[Arquivos em S3]
-</div>
+- lake: guarda com flexibilidade;
+- warehouse: organiza para consumo analítico rápido.
 
 | Critério | Data Lake | Data Warehouse |
 | --- | --- | --- |
-| Tipo de dado | Qualquer formato | Principalmente estruturado |
-| Schema | Flexível | Bem definido |
-| Custo de armazenamento | Geralmente menor | Geralmente maior |
-| Consulta | Mais dependente de preparação | Mais direta e rápida |
-| Público comum | Eng. dados, ciência de dados, ML | BI, analytics, negócio |
-| AWS mais comum | S3, Glue, Athena, EMR | Redshift, QuickSight, Glue |
-
-### Leitura prática
-
-Se a empresa quer explorar dados novos, guardar tudo e ainda não sabe exatamente o uso final, o lake tende a fazer mais sentido.
-
-Se a empresa já sabe quais métricas precisa acompanhar e quer um ambiente mais controlado para analytics, o warehouse costuma ser melhor.
-
-Na AWS, é muito comum os dois conviverem no mesmo ecossistema:
-
-* o lake recebe os dados brutos no **S3**;
-* o warehouse recebe os dados tratados no **Redshift**;
-* o **Athena** acessa arquivos direto no lake;
-* o **QuickSight** consome tanto o lake quanto o warehouse, dependendo da arquitetura.
-
----
+| Dados de entrada | Brutos, variados, estruturados ou não | Mais tratados e organizados |
+| Schema | Mais flexível | Mais definido |
+| Armazenamento | Geralmente mais barato | Geralmente mais caro |
+| Consumo | Exploração, processamento, analytics | BI, relatórios, SQL analítico |
+| AWS mais comum | `S3`, `Glue`, `Athena` | `Redshift` |
 
 ## Lakehouse
 
-O **lakehouse** tenta juntar a flexibilidade do data lake com a organização e a performance analítica do data warehouse.
+Lakehouse é a tentativa de reduzir a distância entre esses dois mundos.
 
-A ideia é simples: manter os dados em um lake, mas com camadas, metadados, governança e suporte forte a consultas analíticas confiáveis.
+A ideia é manter a flexibilidade do lake, mas com recursos que deixam o ambiente mais confiável para analytics tabular, com melhor controle de tabela, metadados e evolução.
 
-Na AWS, isso aparece muito em combinações como:
+Na AWS, isso costuma aparecer com combinações como:
 
-* **S3 + Iceberg + Athena**
-* **S3 + Glue Catalog + Redshift Spectrum**
-* **S3 + Lake Formation + EMR / Spark**
+- `S3` + `Apache Iceberg` + `Athena`;
+- `S3` + `Glue Data Catalog`;
+- `S3` + `Lake Formation`;
+- `S3` + `Redshift Spectrum`.
 
-### Como ele costuma funcionar
+Não precisa tratar lakehouse como bala de prata. Para a prova, o mais importante é reconhecer o padrão.
 
-<div class="mermaid">
-flowchart LR
-    A[Sistemas origem] --> B[Ingestão]
-    B --> C[Amazon S3]
-    C --> D[Iceberg / Delta / Hudi]
-    D --> E[Catálogo e governança]
-    E --> F[Athena]
-    E --> G[Redshift Spectrum]
-    E --> H[EMR / Spark]
-    E --> I[BI / ML]
-</div>
+## Pegadinhas para a prova
 
-### O que ele entrega
+- data lake não é sinônimo de dado bagunçado, embora isso aconteça quando a governança falha;
+- warehouse não é melhor em tudo; ele é melhor para consumo mais estruturado;
+- `S3` é base clássica de lake, enquanto `Redshift` é referência forte de warehouse na AWS;
+- `Redshift Spectrum` é útil quando você quer consultar dados no `S3` sem carregar tudo no warehouse;
+- lakehouse é relevante, mas normalmente não substitui o entendimento básico de lake vs warehouse.
 
-* dados no formato de lake;
-* consulta mais organizada e confiável;
-* suporte a tabelas e metadados mais ricos;
-* menos duplicação entre camadas;
-* uma ponte entre analytics tradicional e dados em grande escala.
+## Quando usar
 
-### Quando usar
+Use data lake quando:
 
-Use lakehouse quando:
+- há muita variedade de formato;
+- a entrada é grande e heterogênea;
+- você quer armazenar bruto e decidir depois o consumo;
+- ciência de dados, exploração e processamento em escala são relevantes.
 
-* você quer reduzir a separação rígida entre lake e warehouse;
-* precisa de mais governança sem perder flexibilidade;
-* quer trabalhar com tabelas abertas em S3;
-* a empresa já amadureceu o suficiente para cuidar bem de catálogo, partições e qualidade dos dados.
+Use data warehouse quando:
 
-Em projetos AWS mais modernos, o lakehouse aparece quando o time quer evitar montar dois ambientes paralelos sem necessidade.
+- o consumo principal é BI e analytics estruturado;
+- as perguntas de negócio já estão mais definidas;
+- performance de consulta e consistência são prioridade.
 
----
+## Quando não usar
 
-## Resumo Final
+Evite data warehouse como única camada quando:
 
-Se eu simplificar bastante:
+- você recebe muitos formatos diferentes;
+- ainda precisa guardar dado bruto;
+- a exploração é muito aberta.
 
-* **Data Warehouse**: melhor para análise estruturada, relatórios e BI.
-* **Data Lake**: melhor para guardar tudo, explorar e escalar com flexibilidade.
-* **Lakehouse**: melhor quando você quer unir flexibilidade com organização e governança.
+Evite tratar o lake como resposta completa quando:
 
-Na AWS, o trio mais importante para guardar na cabeça é:
+- o time precisa de consultas altamente organizadas e recorrentes;
+- o consumo principal é relatório executivo estável;
+- ninguém está cuidando bem de catálogo, particionamento e qualidade.
 
-* **S3** como base do lake;
-* **Redshift** como referência de warehouse;
-* **Athena, Glue e Lake Formation** como peças que conectam tudo.
+## Resumo rápido
 
-Na prática, a arquitetura certa depende menos de moda e mais de contexto:
+- `S3` normalmente representa o lake.
+- `Redshift` normalmente representa o warehouse.
+- Lake é mais flexível na entrada.
+- Warehouse é mais forte para analytics estruturado.
+- Em muitas arquiteturas, os dois coexistem.
 
-* volume;
-* variedade;
-* maturidade do time;
-* custo;
-* tipo de consumo;
-* nível de governança necessário.
+## Checklist para prova
 
-Se a dúvida for entre eles, a resposta certa quase nunca é "um substitui o outro". Normalmente é "qual combina melhor com o problema agora".
+- [ ] Associar `S3` a data lake
+- [ ] Associar `Redshift` a data warehouse
+- [ ] Entender quando usar `Athena` sobre o lake
+- [ ] Lembrar do papel de `Redshift Spectrum`
+- [ ] Não tratar lake e warehouse como equivalentes

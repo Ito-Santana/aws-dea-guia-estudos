@@ -36,14 +36,6 @@
           </div>
 
           <section class="sidebar-group">
-            <p class="sidebar-label">Armazenamento</p>
-            <div class="sidebar-links">
-              <a class="sidebar-link{% if page.url == '/armazenamento/' %} is-active{% endif %}" href="{{ '/armazenamento/' | relative_url }}">Guia de armazenamento</a>
-              <a class="sidebar-link{% if page.url == '/armazenamento/s3-introducao.html' %} is-active{% endif %}" href="{{ '/armazenamento/s3-introducao.html' | relative_url }}">S3 - Introdução</a>
-            </div>
-          </section>
-
-          <section class="sidebar-group">
             <p class="sidebar-label">Fundamentos de Engenharia de Dados</p>
             <div class="sidebar-links">
               <a class="sidebar-link{% if page.url == '/fundamentos-engenharia-de-dados/' %} is-active{% endif %}" href="{{ '/fundamentos-engenharia-de-dados/' | relative_url }}">Guia de fundamentos</a>
@@ -57,6 +49,14 @@
               <a class="sidebar-link{% if page.url == '/fundamentos-engenharia-de-dados/validacao-de-dados.html' %} is-active{% endif %}" href="{{ '/fundamentos-engenharia-de-dados/validacao-de-dados.html' | relative_url }}">Validação de Dados</a>
               <a class="sidebar-link{% if page.url == '/fundamentos-engenharia-de-dados/revisao-sql.html' %} is-active{% endif %}" href="{{ '/fundamentos-engenharia-de-dados/revisao-sql.html' | relative_url }}">Revisão SQL</a>
               </div>
+          </section>
+
+          <section class="sidebar-group">
+            <p class="sidebar-label">Armazenamento</p>
+            <div class="sidebar-links">
+              <a class="sidebar-link{% if page.url == '/armazenamento/' %} is-active{% endif %}" href="{{ '/armazenamento/' | relative_url }}">Guia de armazenamento</a>
+              <a class="sidebar-link{% if page.url == '/armazenamento/s3-introducao.html' %} is-active{% endif %}" href="{{ '/armazenamento/s3-introducao.html' | relative_url }}">S3 - Introdução</a>
+            </div>
           </section>
 
           {% if site.repository_url %}
@@ -153,6 +153,15 @@
     </footer>
     <script type="module">
       import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs";
+
+      document.querySelectorAll("pre code.language-mermaid").forEach((codeBlock) => {
+        const pre = codeBlock.parentElement;
+        const wrapper = document.createElement("div");
+        wrapper.className = "mermaid";
+        wrapper.textContent = codeBlock.textContent;
+        pre.replaceWith(wrapper);
+      });
+
       mermaid.initialize({
         startOnLoad: true,
         theme: "neutral",

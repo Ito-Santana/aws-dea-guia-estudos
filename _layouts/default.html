@@ -22,7 +22,7 @@
         </a>
 
         <nav class="site-nav" aria-label="Principal">
-          <button class="theme-toggle" type="button" aria-label="Alternar tema" data-theme-toggle>
+          <button class="theme-toggle" type="button" aria-label="Alternar para tema escuro" title="Alternar tema" data-theme-toggle>
             <span class="theme-toggle-icon" aria-hidden="true">◐</span>
             <span class="theme-toggle-label">Escuro</span>
           </button>
@@ -62,6 +62,7 @@
             <summary class="sidebar-summary">Armazenamento</summary>
             <div class="sidebar-links">
               <a class="sidebar-link{% if page.url == '/armazenamento/' %} is-active{% endif %}" href="{{ '/armazenamento/' | relative_url }}">Guia de armazenamento</a>
+              <p class="sidebar-subtitle">Amazon S3</p>
               <a class="sidebar-link{% if page.url == '/armazenamento/s3-introducao.html' %} is-active{% endif %}" href="{{ '/armazenamento/s3-introducao.html' | relative_url }}">S3 - Introdução</a>
               <a class="sidebar-link{% if page.url == '/armazenamento/s3-segurança.html' %} is-active{% endif %}" href="{{ '/armazenamento/s3-segurança.html' | relative_url }}">S3 - Segurança</a>
               <a class="sidebar-link{% if page.url == '/armazenamento/s3-versionamento.html' %} is-active{% endif %}" href="{{ '/armazenamento/s3-versionamento.html' | relative_url }}">S3 - Versionamento</a>
@@ -208,6 +209,11 @@
             {% endif %}
           </div>
         </div>
+
+        <aside class="toc-panel" aria-label="Sumário da página">
+          <p class="toc-title">Nesta página</p>
+          <nav class="toc-links" data-page-toc></nav>
+        </aside>
       </div>
     </main>
 
@@ -223,6 +229,7 @@
       const toggle = document.querySelector("[data-theme-toggle]");
       const toggleLabel = toggle?.querySelector(".theme-toggle-label");
       const storedTheme = localStorage.getItem("theme");
+      const toc = document.querySelector("[data-page-toc]");
 
       const getMermaidTheme = (theme) => theme === "dark" ? "dark" : "neutral";
 
@@ -251,8 +258,52 @@
         if (toggleLabel) {
           toggleLabel.textContent = theme === "dark" ? "Claro" : "Escuro";
         }
+        toggle?.setAttribute(
+          "aria-label",
+          theme === "dark" ? "Alternar para tema claro" : "Alternar para tema escuro"
+        );
         await renderMermaids(theme);
       };
+
+      const slugify = (text) =>
+        text
+          .toLowerCase()
+          .normalize("NFD")
+          .replace(/[\u0300-\u036f]/g, "")
+          .replace(/[^a-z0-9]+/g, "-")
+          .replace(/^-+|-+$/g, "");
+
+      const buildPageToc = () => {
+        if (!toc) return;
+
+        const pageNav = document.querySelector(".page-nav");
+        const headings = [...document.querySelectorAll(".content-panel h2, .content-panel h3")]
+          .filter((heading) => !pageNav?.contains(heading));
+
+        if (headings.length < 2) {
+          toc.closest(".toc-panel")?.setAttribute("hidden", "");
+          return;
+        }
+
+        const usedIds = new Map();
+
+        headings.forEach((heading) => {
+          if (!heading.id) {
+            const baseId = slugify(heading.textContent || "secao") || "secao";
+            const count = usedIds.get(baseId) || 0;
+            usedIds.set(baseId, count + 1);
+            heading.id = count === 0 ? baseId : `${baseId}-${count + 1}`;
+          }
+
+          const link = document.createElement("a");
+          link.href = `#${heading.id}`;
+          link.textContent = heading.textContent || "";
+          link.className = heading.tagName === "H3" ? "toc-link toc-link-sub" : "toc-link";
+          toc.appendChild(link);
+        });
+      };
+
+      buildPageToc();
 
       document.querySelectorAll("pre code.language-mermaid").forEach((codeBlock) => {
         const pre = codeBlock.parentElement;

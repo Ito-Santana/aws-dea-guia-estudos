@@ -133,25 +133,6 @@ namespace = agrupamento lógico de tabelas
 
 ---
 
-## Tabela
-
-Uma tabela no S3 Tables representa um dataset estruturado.
-
-Ela tem dados e metadados associados.
-
-Exemplo:
-
-```text
-Table bucket: empresa-analytics
-Namespace: vendas
-Tabela: pedidos
-```
-
-Essa tabela pode ser consultada por engines compatíveis com `Iceberg`, como `Athena`, `Spark`, `Trino` e outras ferramentas.
-
-A AWS documenta que tabelas em table buckets podem ser consultadas com SQL por engines que suportam Iceberg.
-
----
 
 ## Manutenção automática
 
@@ -168,59 +149,6 @@ Em tabelas Iceberg comuns no S3, você muitas vezes precisa se preocupar com tar
 No `S3 Tables`, a AWS gerencia parte dessa manutenção automaticamente, incluindo compactação e gerenciamento de snapshots.
 
 Isso importa porque um lakehouse não é só criar uma tabela Iceberg. Também é preciso manter essa tabela saudável ao longo do tempo.
-
----
-
-## Integração com Glue e Athena
-
-Para consultar S3 Tables com serviços analíticos da AWS, a integração com `AWS Glue Data Catalog` é importante.
-
-A AWS permite integrar o catálogo do S3 Tables com o `Glue Data Catalog`. Quando essa integração é habilitada, é criado um catálogo federado chamado `s3tablescatalog`, que ajuda a expor os table buckets para consulta.
-
-Com isso, serviços como `Amazon Athena` podem consultar essas tabelas.
-
-Exemplo de fluxo:
-
-```text
-S3 Table Bucket -> Glue Data Catalog -> Athena
-```
-
-Para a prova, guarde:
-
-```text
-S3 Tables + Glue Data Catalog + Athena = consulta SQL em tabelas Iceberg no S3
-```
-
----
-
-## Exemplo prático
-
-Imagine um time de dados criando uma camada analítica no S3.
-
-Antes, eles poderiam manter arquivos Parquet assim:
-
-```text
-s3://empresa-datalake/curated/vendas/ano=2026/mes=06/
-```
-
-Com `S3 Tables`, eles podem criar uma tabela Iceberg gerenciada:
-
-```text
-Table bucket: empresa-analytics
-Namespace: vendas
-Tabela: pedidos
-```
-
-Essa tabela pode ser consultada pelo Athena e mantida com menos esforço operacional.
-
-```mermaid
-flowchart LR
-    A[Dados de origem] --> B[AWS Glue ou Spark]
-    B --> C[S3 Table Bucket]
-    C --> D[Tabela Apache Iceberg]
-    D --> E[Glue Data Catalog]
-    E --> F[Amazon Athena]
-```
 
 ---
 
@@ -243,38 +171,6 @@ O S3 comum continua sendo base para muitos tipos de dado.
 
 ---
 
-## S3 Tables vs Iceberg manual no S3
-
-Também dá para usar `Apache Iceberg` em cima de buckets S3 comuns, com Spark, Athena ou outros motores.
-
-A diferença é que, nesse modelo, parte da manutenção fica mais sob responsabilidade do time.
-
-Com `S3 Tables`, a AWS entrega uma experiência mais gerenciada para tabelas Iceberg.
-
-Resumo:
-
-```text
-Iceberg manual no S3 -> mais controle, mais operação
-S3 Tables -> Iceberg gerenciado no S3
-```
-
----
-
-## Como aparece em Engenharia de Dados
-
-`S3 Tables` aparece em cenários como:
-
-* lakehouse;
-* tabelas analíticas no S3;
-* uso de `Apache Iceberg`;
-* consultas com `Athena`;
-* integração com `Glue Data Catalog`;
-* redução de manutenção de tabelas;
-* workloads com Spark, Trino ou engines compatíveis com Iceberg.
-
-Em vez de pensar só em arquivos no S3, você passa a pensar em tabelas com metadados e manutenção.
-
----
 
 ## Pegadinhas para a prova
 
@@ -285,7 +181,6 @@ Em vez de pensar só em arquivos no S3, você passa a pensar em tabelas com meta
 * Tabela é um dataset estruturado com dados e metadados.
 * S3 Tables ajuda em cenários de lakehouse.
 * Manutenção automática reduz trabalho com compactação e snapshots.
-* Integração com `Glue Data Catalog` ajuda na consulta com serviços como `Athena`.
 * S3 Tables não substitui S3 comum para todos os tipos de arquivo.
 * Para dados não tabulares, bucket S3 comum continua fazendo sentido.
 
@@ -302,17 +197,6 @@ Use `S3 Tables` quando:
 * quer reduzir manutenção manual de tabelas;
 * precisa de melhor controle de metadados, snapshots e evolução.
 
----
-
-## Quando talvez não precise
-
-Talvez não seja necessário quando:
-
-* você só precisa armazenar arquivos simples;
-* o dado não é tabular;
-* o uso é backup, log bruto ou landing zone simples;
-* uma organização por prefixo em bucket comum já resolve;
-* você não precisa de recursos de tabela Iceberg.
 
 ---
 

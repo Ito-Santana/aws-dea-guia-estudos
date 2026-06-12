@@ -207,7 +207,7 @@ A parte de permissão é importante porque o S3 precisa conseguir ler o objeto n
 
 Com versionamento habilitado, quando você deleta um objeto, o S3 pode criar um `delete marker`.
 
-Em replicação, esse detalhe pode virar pegadinha.
+Em replicação, esse detalhe pode virar ponto de atenção.
 
 De forma simples:
 
@@ -223,7 +223,7 @@ Para a prova, não precisa decorar todos os detalhes finos. O importante é lemb
 
 ---
 
-## Pegadinhas para a prova
+## Atenção para a prova
 
 * `SRR` replica na mesma região.
 * `CRR` replica entre regiões diferentes.

@@ -175,7 +175,7 @@ Uma regra comum:
 
 ---
 
-## Pegadinhas para a prova
+## Atenção para a prova
 
 * Lifecycle é configurado por bucket.
 * Uma regra pode usar prefixo, tags e tamanho do objeto.

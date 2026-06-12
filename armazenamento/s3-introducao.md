@@ -303,7 +303,7 @@ Esse nome é inválido porque usa letra maiúscula e underscore.
 
 ---
 
-## Pegadinhas para a prova
+## Atenção para a prova
 
 * S3 é armazenamento de objetos, não armazenamento em bloco.
 * Bucket é o contêiner.

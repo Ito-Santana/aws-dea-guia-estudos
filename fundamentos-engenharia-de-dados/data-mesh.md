@@ -70,7 +70,7 @@ flowchart LR
     F --> G[Amazon Athena]
 ```
 
-## Pegadinhas para a prova
+## Atenção para a prova
 
 - data mesh não é data lake;
 - data mesh não é um serviço da AWS;

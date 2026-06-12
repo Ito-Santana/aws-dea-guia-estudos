@@ -17,7 +17,7 @@ O conteúdo do site deve:
 - conectar os assuntos com engenharia de dados na AWS;
 - focar no que ajuda de verdade na `DEA-C01`;
 - usar exemplos práticos;
-- destacar pegadinhas de prova;
+- destacar pontos de atenção para a prova;
 - evitar propaganda da AWS e frases vazias.
 
 ## Estrutura esperada para páginas
@@ -28,7 +28,7 @@ Sempre que fizer sentido, usar algo próximo de:
 - `Por que isso importa em Engenharia de Dados?`
 - `Como aparece na AWS`
 - `Exemplo prático`
-- `Pegadinhas para a prova`
+- `Atenção para a prova`
 - `Quando usar`
 - `Quando não usar`
 - `Comparação com conceitos parecidos`

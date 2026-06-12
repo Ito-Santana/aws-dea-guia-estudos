@@ -261,9 +261,9 @@ Fontes -> S3 data lake -> Redshift Spectrum -> Redshift/BI
 
 ---
 
-## Pegadinhas para a prova
+## Atenção para a prova
 
-Algumas pegadinhas importantes:
+Alguns pontos de atenção importantes:
 
 * data lake não é sinônimo de dado bagunçado;
 * dado bagunçado no lake é falta de governança, não característica obrigatória;

@@ -262,7 +262,7 @@ A AWS possui documentação específica para replicação de objetos criptografa
 
 ---
 
-## Pegadinhas para a prova
+## Atenção para a prova
 
 * `SSE-S3` é gerenciado pelo próprio S3.
 * `SSE-KMS` usa chaves do `AWS KMS`.

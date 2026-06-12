@@ -304,7 +304,7 @@ Versionamento ajuda muito, mas não substitui uma estratégia completa de backup
 
 ---
 
-## Pegadinhas para a prova
+## Atenção para a prova
 
 * Versionamento é configurado no bucket.
 * Bucket novo começa com versionamento desabilitado.

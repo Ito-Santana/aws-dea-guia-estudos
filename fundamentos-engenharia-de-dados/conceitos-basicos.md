@@ -137,7 +137,7 @@ flowchart LR
     H --> I[Amazon Athena]
 ```
 
-## Pegadinhas para a prova
+## Atenção para a prova
 
 - `CSV` é simples, mas continua sendo dado estruturado.
 - `JSON` e `XML` são semiestruturados, não não estruturados.

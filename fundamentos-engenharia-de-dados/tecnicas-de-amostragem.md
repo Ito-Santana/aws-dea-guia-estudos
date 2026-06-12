@@ -132,7 +132,7 @@ flowchart LR
 
 ---
 
-## Pegadinhas para a prova
+## Atenção para a prova
 
 * Amostra rápida não significa amostra representativa.
 * Amostragem aleatória pode perder grupos pequenos.

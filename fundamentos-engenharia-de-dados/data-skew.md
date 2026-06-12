@@ -201,7 +201,7 @@ A lógica é parecida com o join: quando uma chave concentra dados demais, uma t
 
 ---
 
-## Pegadinhas para a prova
+## Atenção para a prova
 
 Para a DEA-C01, o mais importante é reconhecer o cenário.
 
@@ -210,7 +210,7 @@ Data skew não significa simplesmente “dataset grande”.
 Um dataset grande pode rodar bem se estiver bem distribuído.
 Um dataset menor pode rodar mal se quase tudo estiver concentrado em uma chave.
 
-Algumas pegadinhas:
+Alguns pontos de atenção:
 
 * aumentar o cluster nem sempre resolve;
 * skew costuma aparecer em joins e agregações;

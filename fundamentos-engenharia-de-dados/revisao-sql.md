@@ -209,7 +209,7 @@ Mesmo em questões de arquitetura, entender SQL ajuda a interpretar o que está 
 
 ---
 
-## Pegadinhas para prova
+## Atenção para a prova
 
 * `WHERE` filtra antes do agrupamento.
 * `HAVING` filtra depois do agrupamento.

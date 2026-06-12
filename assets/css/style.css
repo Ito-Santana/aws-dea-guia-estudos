@@ -9,6 +9,8 @@
   --line-strong: #cbd7e4;
   --accent: #1f5eff;
   --accent-strong: #184dcc;
+  --accent-soft: rgba(31, 94, 255, 0.08);
+  --warning-soft: rgba(255, 153, 0, 0.12);
   --sidebar-bg: #f7f9fc;
   --code-bg: #f3f6fb;
   --shadow: 0 10px 24px rgba(15, 23, 42, 0.05);
@@ -228,18 +230,19 @@ a:hover {
 
 .docs-shell {
   display: grid;
-  grid-template-columns: 248px minmax(0, 1fr) 220px;
-  gap: 22px;
+  grid-template-columns: 264px minmax(0, 920px) 224px;
+  justify-content: center;
+  gap: 26px;
   align-items: start;
 }
 
 .docs-sidebar {
   position: sticky;
   top: 84px;
-  padding: 14px 12px;
+  padding: 16px 12px;
   background: var(--sidebar-bg);
   border: 1px solid var(--line);
-  border-radius: 10px;
+  border-radius: 8px;
   max-height: calc(100vh - 108px);
   overflow-y: auto;
   overscroll-behavior: contain;
@@ -251,16 +254,16 @@ a:hover {
 }
 
 .content-panel {
-  padding: 34px 36px;
+  padding: 38px 42px;
   background: var(--panel);
   border: 1px solid var(--line);
-  border-radius: 10px;
+  border-radius: 8px;
   box-shadow: none;
 }
 
 .sidebar-section,
 .sidebar-group {
-  margin-bottom: 16px;
+  margin-bottom: 18px;
 }
 
 .sidebar-summary {
@@ -272,7 +275,7 @@ a:hover {
   color: var(--muted);
   font-size: 0.75rem;
   font-weight: 700;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.07em;
   text-transform: uppercase;
   padding: 2px 0 10px;
 }
@@ -286,6 +289,7 @@ a:hover {
   color: var(--muted);
   font-size: 0.9rem;
   line-height: 1;
+  margin-left: 8px;
 }
 
 .collapsible-group[open] > .sidebar-summary::after {
@@ -319,7 +323,7 @@ a:hover {
 .sidebar-link {
   display: block;
   border-left: 3px solid transparent;
-  padding: 6px 9px 6px 11px;
+  padding: 7px 9px 7px 11px;
   color: var(--text);
   border-radius: 6px;
   font-size: 0.88rem;
@@ -329,13 +333,13 @@ a:hover {
 .sidebar-home:hover,
 .sidebar-link:hover {
   text-decoration: none;
-  background: rgba(31, 94, 255, 0.07);
+  background: var(--accent-soft);
 }
 
 .sidebar-home.is-active,
 .sidebar-link.is-active {
   border-left-color: var(--brand-smile);
-  background: rgba(31, 94, 255, 0.07);
+  background: var(--accent-soft);
   color: var(--accent-strong);
   font-weight: 600;
 }
@@ -407,6 +411,7 @@ a:hover {
   text-decoration: none;
   border-color: var(--line-strong);
   background: #eef4fb;
+  transform: translateY(-1px);
 }
 
 .page-nav-link.next {
@@ -439,6 +444,32 @@ a:hover {
   background:
     linear-gradient(90deg, rgba(255, 153, 0, 0.11), transparent 38%),
     linear-gradient(180deg, var(--panel-soft), var(--panel));
+}
+
+.page-kicker {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0 0 12px;
+  padding: 5px 9px;
+  width: fit-content;
+  border: 1px solid rgba(255, 153, 0, 0.34);
+  border-radius: 999px;
+  background: var(--warning-soft);
+  color: var(--accent-strong);
+  font-size: 0.72rem;
+  font-weight: 800;
+  line-height: 1;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.page-kicker::before {
+  content: "";
+  width: 7px;
+  height: 7px;
+  border-radius: 999px;
+  background: var(--brand-smile);
 }
 
 .author-hero-photo {
@@ -526,6 +557,57 @@ a:hover {
   gap: 18px;
 }
 
+.guide-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+  margin: 16px 0 28px;
+}
+
+.guide-tile {
+  display: flex;
+  flex-direction: column;
+  min-height: 150px;
+  padding: 16px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--panel-soft);
+  color: var(--text);
+}
+
+.guide-tile:hover {
+  text-decoration: none;
+  border-color: var(--line-strong);
+  background: linear-gradient(180deg, var(--panel-soft), var(--panel));
+  transform: translateY(-1px);
+}
+
+.guide-tile.is-empty {
+  color: var(--muted);
+  border-style: dashed;
+}
+
+.guide-tile-kicker {
+  color: var(--brand-smile);
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.guide-tile strong {
+  display: block;
+  margin: 8px 0 6px;
+  font-size: 1.04rem;
+  line-height: 1.25;
+}
+
+.guide-tile span:last-child {
+  color: var(--muted);
+  font-size: 0.9rem;
+  line-height: 1.45;
+}
+
 .card.span-6,
 .card.span-4 {
   grid-column: auto;
@@ -535,7 +617,7 @@ a:hover {
 .content-panel h2,
 .content-panel h3 {
   line-height: 1.25;
-  letter-spacing: -0.02em;
+  letter-spacing: 0;
 }
 
 .content-panel h1 {
@@ -544,9 +626,9 @@ a:hover {
 }
 
 .content-panel h2 {
-  margin-top: 34px;
-  padding-top: 22px;
-  border-top: 1px solid var(--line);
+  margin-top: 38px;
+  padding-top: 24px;
+  border-top: 1px solid rgba(125, 145, 166, 0.24);
   font-size: 1.35rem;
 }
 
@@ -577,6 +659,42 @@ a:hover {
   background: var(--panel-soft);
   border-radius: 8px;
   overflow: hidden;
+}
+
+.study-callout {
+  margin: 30px 0;
+  padding: 20px 22px;
+  border: 1px solid var(--line);
+  border-left: 4px solid var(--brand-smile);
+  border-radius: 8px;
+  background: var(--panel-soft);
+}
+
+.study-callout h2 {
+  margin: 0 0 12px;
+  padding: 0;
+  border: 0;
+  font-size: 1.12rem;
+}
+
+.study-callout p:last-child,
+.study-callout ul:last-child,
+.study-callout ol:last-child {
+  margin-bottom: 0;
+}
+
+.exam-callout {
+  background:
+    linear-gradient(90deg, rgba(255, 153, 0, 0.12), transparent 58%),
+    var(--panel-soft);
+}
+
+.checklist-callout {
+  border-left-color: var(--accent);
+}
+
+.summary-callout {
+  border-left-color: var(--line-strong);
 }
 
 .content-panel th,
@@ -638,6 +756,8 @@ a:hover {
     --line-strong: #3a5065;
     --accent: #8ab9ff;
     --accent-strong: #bed8ff;
+    --accent-soft: rgba(138, 185, 255, 0.11);
+    --warning-soft: rgba(255, 153, 0, 0.1);
     --sidebar-bg: #131d27;
     --code-bg: #111a24;
     --shadow: 0 18px 36px rgba(0, 0, 0, 0.22);
@@ -688,6 +808,8 @@ a:hover {
   --line-strong: #3a5065;
   --accent: #8ab9ff;
   --accent-strong: #bed8ff;
+  --accent-soft: rgba(138, 185, 255, 0.11);
+  --warning-soft: rgba(255, 153, 0, 0.1);
   --sidebar-bg: #131d27;
   --code-bg: #111a24;
   --shadow: 0 18px 36px rgba(0, 0, 0, 0.22);
@@ -750,6 +872,10 @@ a:hover {
     grid-template-columns: 1fr;
   }
 
+  .guide-grid {
+    grid-template-columns: 1fr;
+  }
+
   .hero h1,
   .content-panel h1 {
     font-size: 1.8rem;
@@ -757,7 +883,7 @@ a:hover {
 
   .content-panel {
     padding: 22px 18px;
-    border-radius: 18px;
+    border-radius: 8px;
   }
 
   .author-hero {

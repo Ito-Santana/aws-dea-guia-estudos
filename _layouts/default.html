@@ -79,6 +79,15 @@
             </div>
           </details>
 
+          <details class="sidebar-group collapsible-group" {% if page.url contains '/database/' %}open{% endif %}>
+            <summary class="sidebar-summary">Banco de Dados</summary>
+            <div class="sidebar-links">
+              <a class="sidebar-link{% if page.url == '/database/' %} is-active{% endif %}" href="{{ '/database/' | relative_url }}">Guia de banco de dados</a>
+              <p class="sidebar-subtitle">Amazon DynamoDB</p>
+              <a class="sidebar-link{% if page.url == '/database/dynamodb-introducao.html' %} is-active{% endif %}" href="{{ '/database/dynamodb-introducao.html' | relative_url }}">DynamoDB - Introdução</a>
+            </div>
+          </details>
+
           {% if site.repository_url %}
             <section class="sidebar-group sidebar-repo">
               <p class="sidebar-label">Projeto</p>
@@ -89,6 +98,19 @@
 
         <div class="docs-main">
           <div class="content-panel">
+            {% assign page_section = '' %}
+            {% if page.url contains '/fundamentos-engenharia-de-dados/' %}
+              {% assign page_section = 'Fundamentos' %}
+            {% elsif page.url contains '/armazenamento/' %}
+              {% assign page_section = 'Armazenamento' %}
+            {% elsif page.url contains '/database/' %}
+              {% assign page_section = 'Banco de Dados' %}
+            {% endif %}
+
+            {% if page_section != '' %}
+              <p class="page-kicker">{{ page_section }}</p>
+            {% endif %}
+
             {{ content }}
 
             {% assign prev_url = '' %}
@@ -208,6 +230,16 @@
               {% when '/armazenamento/aws-backup.html' %}
                 {% assign prev_url = '/armazenamento/efs.html' %}
                 {% assign prev_title = 'Amazon EFS - Conceitos' %}
+                {% assign next_url = '/database/' %}
+                {% assign next_title = 'Guia de banco de dados' %}
+              {% when '/database/' %}
+                {% assign prev_url = '/armazenamento/aws-backup.html' %}
+                {% assign prev_title = 'AWS Backup - Conceitos' %}
+                {% assign next_url = '/database/dynamodb-introducao.html' %}
+                {% assign next_title = 'DynamoDB - Introdução' %}
+              {% when '/database/dynamodb-introducao.html' %}
+                {% assign prev_url = '/database/' %}
+                {% assign prev_title = 'Guia de banco de dados' %}
               {% endcase %}
 
             {% if prev_url != '' or next_url != '' %}
@@ -322,6 +354,36 @@
         });
       };
 
+      const enhanceStudySections = () => {
+        const sectionTypes = [
+          { test: /^aten[cç][aã]o para (a )?prova$/i, className: "study-callout exam-callout" },
+          { test: /^checklist para (a )?prova$/i, className: "study-callout checklist-callout" },
+          { test: /^resumo/i, className: "study-callout summary-callout" }
+        ];
+
+        document.querySelectorAll(".content-panel h2").forEach((heading) => {
+          const text = (heading.textContent || "").trim();
+          const match = sectionTypes.find((sectionType) => sectionType.test.test(text));
+          if (!match || heading.closest(".study-callout")) return;
+
+          const wrapper = document.createElement("section");
+          wrapper.className = match.className;
+          heading.before(wrapper);
+          wrapper.appendChild(heading);
+
+          let next = wrapper.nextSibling;
+          while (next) {
+            const current = next;
+            next = next.nextSibling;
+            if (current.nodeType === Node.ELEMENT_NODE && current.matches("h2, .page-nav")) {
+              break;
+            }
+            wrapper.appendChild(current);
+          }
+        });
+      };
+
+      enhanceStudySections();
       buildPageToc();
 
       document.querySelectorAll("pre code.language-mermaid").forEach((codeBlock) => {

@@ -36,26 +36,38 @@ Em vez de deixar o estudo espalhado em PDF, rascunho e anotação isolada, a ide
 
 ## Guias disponíveis
 
-### Fundamentos de Engenharia de Dados
-
-- [Abrir guia de fundamentos](fundamentos-engenharia-de-dados/)
-
-### Armazenamento
-
-- [Abrir guia de armazenamento](armazenamento/)
-
-1. [S3 - Introdução](armazenamento/s3-introducao.html)
-2. [S3 - Segurança](armazenamento/s3-segurança.html)
-3. [S3 - Versionamento](armazenamento/s3-versionamento.html)
-4. [S3 - Replicação](armazenamento/s3-replicação.html)
-5. [S3 - Tipos de Armazenamento](armazenamento/s3-tipos-de-armazenamento.html)
-6. [S3 - Lifecycle](armazenamento/s3-lifecycle.html)
-7. [S3 - Criptografia de Objetos](armazenamento/s3-criptografia-de-objetos.html)
-8. [S3 - Access Points](armazenamento/s3-access-points.html)
-9. [S3 Tables](armazenamento/s3-tables.html)
-10. [Amazon EBS - Conceitos](armazenamento/ebs.html)
-11. [Amazon EFS - Conceitos](armazenamento/efs.html)
-12. [AWS Backup - Conceitos](armazenamento/aws-backup.html)
+<div class="guide-grid">
+  <a class="guide-tile" href="fundamentos-engenharia-de-dados/">
+    <span class="guide-tile-kicker">Base</span>
+    <strong>Fundamentos de Engenharia de Dados</strong>
+    <span>Conceitos, arquitetura, ETL, tipos de dados, validação e revisão SQL.</span>
+  </a>
+  <a class="guide-tile" href="armazenamento/">
+    <span class="guide-tile-kicker">Storage</span>
+    <strong>Armazenamento</strong>
+    <span>S3, classes de armazenamento, segurança, lifecycle, EBS, EFS e backup.</span>
+  </a>
+  <a class="guide-tile" href="database/">
+    <span class="guide-tile-kicker">Banco</span>
+    <strong>Banco de Dados</strong>
+    <span>DynamoDB e outros serviços de banco relevantes para pipelines de dados.</span>
+  </a>
+  <div class="guide-tile is-empty">
+    <span class="guide-tile-kicker">Próxima</span>
+    <strong>Processamento</strong>
+    <span>Glue, EMR, batch, streaming e transformação de dados.</span>
+  </div>
+  <div class="guide-tile is-empty">
+    <span class="guide-tile-kicker">Próxima</span>
+    <strong>Analytics</strong>
+    <span>Athena, Redshift, Spectrum, formatos colunares e custo de consulta.</span>
+  </div>
+  <div class="guide-tile is-empty">
+    <span class="guide-tile-kicker">Próxima</span>
+    <strong>Segurança e Governança</strong>
+    <span>IAM, KMS, Lake Formation, auditoria e controle de acesso em dados.</span>
+  </div>
+</div>
 
 ## Perfil do material
 

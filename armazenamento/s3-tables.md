@@ -172,7 +172,7 @@ O S3 comum continua sendo base para muitos tipos de dado.
 ---
 
 
-## Pegadinhas para a prova
+## Atenção para a prova
 
 * `S3 Tables` não é a mesma coisa que bucket S3 comum.
 * `S3 Tables` usa `Apache Iceberg`.

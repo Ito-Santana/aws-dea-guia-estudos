@@ -351,7 +351,7 @@ Fonte de dados -> S3 bruto -> Glue -> Parquet no S3 -> Athena
 
 ---
 
-## Pegadinhas para a prova
+## Atenção para a prova
 
 * Fonte de dados e formato de dados não são a mesma coisa.
 * `S3` é armazenamento, não formato.

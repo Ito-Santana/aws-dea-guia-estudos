@@ -385,7 +385,7 @@ Evite `ACL` em novos desenhos, a menos que a questão deixe claro que é um cen�
 
 ---
 
-## Pegadinhas para a prova
+## Atenção para a prova
 
 * S3 é privado por padrão.
 * `Deny` explícito sempre vence `Allow`.

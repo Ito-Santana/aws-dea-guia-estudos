@@ -233,46 +233,6 @@ S3 Express One Zone = alta performance, baixa latência, uma AZ
 
 ---
 
-## Exemplo prático em data lake
-
-Imagine um data lake no `S3`.
-
-Uma estratégia comum poderia ser:
-
-```text
-dados recentes e muito acessados -> S3 Standard
-dados com acesso imprevisível -> S3 Intelligent-Tiering
-dados antigos pouco acessados -> S3 Standard-IA
-arquivos históricos -> S3 Glacier Flexible Retrieval
-retenção de longo prazo -> S3 Glacier Deep Archive
-```
-
-```mermaid
-flowchart LR
-    A[Dados recentes] --> B[S3 Standard]
-    C[Acesso imprevisivel] --> D[S3 Intelligent-Tiering]
-    E[Dados antigos] --> F[S3 Standard-IA]
-    G[Arquivo historico] --> H[S3 Glacier Flexible Retrieval]
-    I[Retencao longa] --> J[S3 Glacier Deep Archive]
-```
-
----
-
-## Pegadinhas para a prova
-
-* `S3 Standard` é para acesso frequente.
-* `S3 Intelligent-Tiering` é bom quando o padrão de acesso é desconhecido.
-* `S3 Standard-IA` é pouco acesso com recuperação rápida.
-* `S3 One Zone-IA` usa uma única AZ e é melhor para dados recriáveis.
-* Classes Glacier são para arquivamento.
-* `Glacier Instant Retrieval` tem acesso imediato.
-* `Glacier Flexible Retrieval` pode exigir restore antes do acesso.
-* `Glacier Deep Archive` é para retenção longa e recuperação mais lenta.
-* Classes mais baratas para armazenar podem cobrar mais para recuperar.
-* `Lifecycle` ajuda a mover dados entre classes automaticamente.
-* Não escolha classe só pelo menor custo de armazenamento; pense também em acesso e recuperação.
-
----
 
 ## Resumo rápido
 

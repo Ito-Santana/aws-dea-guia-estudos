@@ -5,5 +5,3 @@ description: Guia sobre Amazon S3 Access Points para a certificação AWS DEA-C0
 ---
 
 # S3 - Access Points
-
-Conteúdo em construção.

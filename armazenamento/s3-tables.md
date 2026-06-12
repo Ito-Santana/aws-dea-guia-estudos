@@ -5,5 +5,3 @@ description: Guia sobre Amazon S3 Tables para a certificação AWS DEA-C01
 ---
 
 # S3 Tables
-
-Conteúdo em construção.

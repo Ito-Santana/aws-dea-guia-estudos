@@ -5,5 +5,3 @@ description: Guia sobre classes de armazenamento do Amazon S3 para a certificaç
 ---
 
 # S3 - Tipos de Armazenamento
-
-Conteúdo em construção.

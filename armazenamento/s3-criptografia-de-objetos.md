@@ -5,5 +5,3 @@ description: Guia sobre criptografia de objetos no Amazon S3 para a certificaç�
 ---
 
 # S3 - Criptografia de Objetos
-
-Conteúdo em construção.

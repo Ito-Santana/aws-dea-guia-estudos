@@ -5,5 +5,3 @@ description: Guia sobre replicação no Amazon S3 para a certificação AWS DEA-
 ---
 
 # S3 - Replicação
-
-Conteúdo em construção.

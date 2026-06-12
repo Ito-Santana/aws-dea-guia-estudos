@@ -220,8 +220,6 @@ S3 Express One Zone = alta performance, baixa latência, uma AZ
 
 ## Comparação rápida
 
-## Comparação rápida
-
 | Classe | Melhor uso | Atenção para a prova |
 | --- | --- | --- |
 | `S3 Standard` | Dados acessados com frequência | Alta disponibilidade e baixa latência para dados ativos |
@@ -232,6 +230,7 @@ S3 Express One Zone = alta performance, baixa latência, uma AZ
 | `S3 Glacier Flexible Retrieval` | Arquivo raro que pode esperar restore | Pode exigir restore; recuperação leva de minutos a horas |
 | `S3 Glacier Deep Archive` | Arquivo de longo prazo e menor custo | Menor custo para retenção longa, mas recuperação é mais lenta |
 | `S3 Express One Zone` | Alta performance em uma única AZ | Baixa latência e alto desempenho, mas em uma única AZ |
+
 ---
 
 ## Exemplo prático em data lake

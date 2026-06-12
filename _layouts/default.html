@@ -85,6 +85,8 @@
               <a class="sidebar-link{% if page.url == '/database/' %} is-active{% endif %}" href="{{ '/database/' | relative_url }}">Guia de banco de dados</a>
               <p class="sidebar-subtitle">Amazon DynamoDB</p>
               <a class="sidebar-link{% if page.url == '/database/dynamodb-introducao.html' %} is-active{% endif %}" href="{{ '/database/dynamodb-introducao.html' | relative_url }}">DynamoDB - Introdução</a>
+              <a class="sidebar-link{% if page.url == '/database/dynamodb-apis.html' %} is-active{% endif %}" href="{{ '/database/dynamodb-apis.html' | relative_url }}">DynamoDB - APIs de Dados</a>
+              <a class="sidebar-link{% if page.url == '/database/dynamodb-modos-de-capacidade.html' %} is-active{% endif %}" href="{{ '/database/dynamodb-modos-de-capacidade.html' | relative_url }}">DynamoDB - Modos de Capacidade</a>
             </div>
           </details>
 
@@ -240,6 +242,16 @@
               {% when '/database/dynamodb-introducao.html' %}
                 {% assign prev_url = '/database/' %}
                 {% assign prev_title = 'Guia de banco de dados' %}
+                {% assign next_url = '/database/dynamodb-apis.html' %}
+                {% assign next_title = 'DynamoDB - APIs de Dados' %}
+              {% when '/database/dynamodb-apis.html' %}
+                {% assign prev_url = '/database/dynamodb-introducao.html' %}
+                {% assign prev_title = 'DynamoDB - Introdução' %}
+                {% assign next_url = '/database/dynamodb-modos-de-capacidade.html' %}
+                {% assign next_title = 'DynamoDB - Modos de Capacidade' %}
+              {% when '/database/dynamodb-modos-de-capacidade.html' %}
+                {% assign prev_url = '/database/dynamodb-apis.html' %}
+                {% assign prev_title = 'DynamoDB - APIs de Dados' %}
               {% endcase %}
 
             {% if prev_url != '' or next_url != '' %}

@@ -17,6 +17,7 @@ Se você quer a visão geral do site inteiro, volta para a [página inicial](/).
 ## Guias disponíveis
 
 1. [S3 - Introdução](./s3-introducao.html)
+2. [S3 - Segurança](./s3-segurança.html)
 
 ## Próximos tópicos recomendados
 
@@ -25,7 +26,6 @@ Se você quer a visão geral do site inteiro, volta para a [página inicial](/).
 - S3 storage classes
 - prefixos e particionamento no S3
 - criptografia com SSE-S3, SSE-KMS e SSE-C
-- políticas de acesso e bucket policies
 
 ## Como estudar esta seção
 

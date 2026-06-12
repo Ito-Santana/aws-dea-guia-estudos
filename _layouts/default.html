@@ -63,6 +63,7 @@
             <div class="sidebar-links">
               <a class="sidebar-link{% if page.url == '/armazenamento/' %} is-active{% endif %}" href="{{ '/armazenamento/' | relative_url }}">Guia de armazenamento</a>
               <a class="sidebar-link{% if page.url == '/armazenamento/s3-introducao.html' %} is-active{% endif %}" href="{{ '/armazenamento/s3-introducao.html' | relative_url }}">S3 - Introdução</a>
+              <a class="sidebar-link{% if page.url == '/armazenamento/s3-segurança.html' %} is-active{% endif %}" href="{{ '/armazenamento/s3-segurança.html' | relative_url }}">S3 - Segurança</a>
             </div>
           </details>
 
@@ -140,6 +141,11 @@
               {% when '/armazenamento/s3-introducao.html' %}
                 {% assign prev_url = '/armazenamento/' %}
                 {% assign prev_title = 'Guia de armazenamento' %}
+                {% assign next_url = '/armazenamento/s3-segurança.html' %}
+                {% assign next_title = 'S3 - Segurança' %}
+              {% when '/armazenamento/s3-segurança.html' %}
+                {% assign prev_url = '/armazenamento/s3-introducao.html' %}
+                {% assign prev_title = 'S3 - Introdução' %}
               {% endcase %}
 
             {% if prev_url != '' or next_url != '' %}

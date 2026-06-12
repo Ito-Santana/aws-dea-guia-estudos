@@ -40,6 +40,17 @@ Sou **AWS Certified** e **Databricks Certified** e uso este espaço para estrutu
 ### Armazenamento
 
 - [S3 - Introdução](armazenamento/s3-introducao.md)
+- [S3 - Segurança](armazenamento/s3-segurança.md)
+- [S3 - Versionamento](armazenamento/s3-versionamento.md)
+- [S3 - Replicação](armazenamento/s3-replicação.md)
+- [S3 - Tipos de Armazenamento](armazenamento/s3-tipos-de-armazenamento.md)
+- [S3 - Lifecycle](armazenamento/s3-lifecycle.md)
+- [S3 - Criptografia de Objetos](armazenamento/s3-criptografia-de-objetos.md)
+- [S3 - Access Points](armazenamento/s3-access-points.md)
+- [S3 Tables](armazenamento/s3-tables.md)
+- [Amazon EBS - Conceitos](armazenamento/ebs.md)
+- [Amazon EFS - Conceitos](armazenamento/efs.md)
+- [AWS Backup - Conceitos](armazenamento/aws-backup.md)
 
 ## Navegação no site
 

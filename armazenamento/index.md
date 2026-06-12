@@ -25,13 +25,16 @@ Se você quer a visão geral do site inteiro, volta para a [página inicial](/).
 7. [S3 - Criptografia de Objetos](./s3-criptografia-de-objetos.html)
 8. [S3 - Access Points](./s3-access-points.html)
 9. [S3 Tables](./s3-tables.html)
+10. [Amazon EBS - Conceitos](./ebs.html)
+11. [Amazon EFS - Conceitos](./efs.html)
+12. [AWS Backup - Conceitos](./aws-backup.html)
 
 ## Próximos tópicos recomendados
 
-- S3 lifecycle
-- S3 storage classes
-- prefixos e particionamento no S3
-- criptografia com SSE-S3, SSE-KMS e SSE-C
+- AWS Backup com planos, vaults e retenção
+- snapshots do EBS e restauração
+- EFS lifecycle management
+- comparação entre S3, EBS e EFS
 
 ## Como estudar esta seção
 

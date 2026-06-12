@@ -53,6 +53,9 @@ Em vez de deixar o estudo espalhado em PDF, rascunho e anotação isolada, a ide
 7. [S3 - Criptografia de Objetos](armazenamento/s3-criptografia-de-objetos.html)
 8. [S3 - Access Points](armazenamento/s3-access-points.html)
 9. [S3 Tables](armazenamento/s3-tables.html)
+10. [Amazon EBS - Conceitos](armazenamento/ebs.html)
+11. [Amazon EFS - Conceitos](armazenamento/efs.html)
+12. [AWS Backup - Conceitos](armazenamento/aws-backup.html)
 
 ## Perfil do material
 

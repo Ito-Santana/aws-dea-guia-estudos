@@ -72,6 +72,10 @@
               <a class="sidebar-link{% if page.url == '/armazenamento/s3-criptografia-de-objetos.html' %} is-active{% endif %}" href="{{ '/armazenamento/s3-criptografia-de-objetos.html' | relative_url }}">S3 - Criptografia de Objetos</a>
               <a class="sidebar-link{% if page.url == '/armazenamento/s3-access-points.html' %} is-active{% endif %}" href="{{ '/armazenamento/s3-access-points.html' | relative_url }}">S3 - Access Points</a>
               <a class="sidebar-link{% if page.url == '/armazenamento/s3-tables.html' %} is-active{% endif %}" href="{{ '/armazenamento/s3-tables.html' | relative_url }}">S3 Tables</a>
+              <p class="sidebar-subtitle">Bloco, arquivos e backup</p>
+              <a class="sidebar-link{% if page.url == '/armazenamento/ebs.html' %} is-active{% endif %}" href="{{ '/armazenamento/ebs.html' | relative_url }}">Amazon EBS - Conceitos</a>
+              <a class="sidebar-link{% if page.url == '/armazenamento/efs.html' %} is-active{% endif %}" href="{{ '/armazenamento/efs.html' | relative_url }}">Amazon EFS - Conceitos</a>
+              <a class="sidebar-link{% if page.url == '/armazenamento/aws-backup.html' %} is-active{% endif %}" href="{{ '/armazenamento/aws-backup.html' | relative_url }}">AWS Backup - Conceitos</a>
             </div>
           </details>
 
@@ -189,6 +193,21 @@
               {% when '/armazenamento/s3-tables.html' %}
                 {% assign prev_url = '/armazenamento/s3-access-points.html' %}
                 {% assign prev_title = 'S3 - Access Points' %}
+                {% assign next_url = '/armazenamento/ebs.html' %}
+                {% assign next_title = 'Amazon EBS - Conceitos' %}
+              {% when '/armazenamento/ebs.html' %}
+                {% assign prev_url = '/armazenamento/s3-tables.html' %}
+                {% assign prev_title = 'S3 Tables' %}
+                {% assign next_url = '/armazenamento/efs.html' %}
+                {% assign next_title = 'Amazon EFS - Conceitos' %}
+              {% when '/armazenamento/efs.html' %}
+                {% assign prev_url = '/armazenamento/ebs.html' %}
+                {% assign prev_title = 'Amazon EBS - Conceitos' %}
+                {% assign next_url = '/armazenamento/aws-backup.html' %}
+                {% assign next_title = 'AWS Backup - Conceitos' %}
+              {% when '/armazenamento/aws-backup.html' %}
+                {% assign prev_url = '/armazenamento/efs.html' %}
+                {% assign prev_title = 'Amazon EFS - Conceitos' %}
               {% endcase %}
 
             {% if prev_url != '' or next_url != '' %}

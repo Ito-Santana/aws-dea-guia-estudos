@@ -18,10 +18,10 @@ Se você quer a visão geral do site inteiro, volta para a [página inicial](/).
 
 1. [S3 - Introdução](./s3-introducao.html)
 2. [S3 - Segurança](./s3-segurança.html)
+3. [S3 - Versionamento](./s3-versionamento.html)
 
 ## Próximos tópicos recomendados
 
-- S3 versioning
 - S3 lifecycle
 - S3 storage classes
 - prefixos e particionamento no S3

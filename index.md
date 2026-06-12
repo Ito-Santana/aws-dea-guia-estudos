@@ -44,6 +44,16 @@ Em vez de deixar o estudo espalhado em PDF, rascunho e anotação isolada, a ide
 
 - [Abrir guia de armazenamento](armazenamento/)
 
+1. [S3 - Introdução](armazenamento/s3-introducao.html)
+2. [S3 - Segurança](armazenamento/s3-segurança.html)
+3. [S3 - Versionamento](armazenamento/s3-versionamento.html)
+4. [S3 - Replicação](armazenamento/s3-replicação.html)
+5. [S3 - Tipos de Armazenamento](armazenamento/s3-tipos-de-armazenamento.html)
+6. [S3 - Lifecycle](armazenamento/s3-lifecycle.html)
+7. [S3 - Criptografia de Objetos](armazenamento/s3-criptografia-de-objetos.html)
+8. [S3 - Access Points](armazenamento/s3-access-points.html)
+9. [S3 Tables](armazenamento/s3-tables.html)
+
 ## Perfil do material
 
 Este guia foi pensado para ficar:

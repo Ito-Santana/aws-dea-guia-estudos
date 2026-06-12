@@ -19,6 +19,12 @@ Se você quer a visão geral do site inteiro, volta para a [página inicial](/).
 1. [S3 - Introdução](./s3-introducao.html)
 2. [S3 - Segurança](./s3-segurança.html)
 3. [S3 - Versionamento](./s3-versionamento.html)
+4. [S3 - Replicação](./s3-replicação.html)
+5. [S3 - Tipos de Armazenamento](./s3-tipos-de-armazenamento.html)
+6. [S3 - Lifecycle](./s3-lifecycle.html)
+7. [S3 - Criptografia de Objetos](./s3-criptografia-de-objetos.html)
+8. [S3 - Access Points](./s3-access-points.html)
+9. [S3 Tables](./s3-tables.html)
 
 ## Próximos tópicos recomendados
 

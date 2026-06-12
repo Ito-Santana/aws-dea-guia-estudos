@@ -65,6 +65,12 @@
               <a class="sidebar-link{% if page.url == '/armazenamento/s3-introducao.html' %} is-active{% endif %}" href="{{ '/armazenamento/s3-introducao.html' | relative_url }}">S3 - Introdução</a>
               <a class="sidebar-link{% if page.url == '/armazenamento/s3-segurança.html' %} is-active{% endif %}" href="{{ '/armazenamento/s3-segurança.html' | relative_url }}">S3 - Segurança</a>
               <a class="sidebar-link{% if page.url == '/armazenamento/s3-versionamento.html' %} is-active{% endif %}" href="{{ '/armazenamento/s3-versionamento.html' | relative_url }}">S3 - Versionamento</a>
+              <a class="sidebar-link{% if page.url == '/armazenamento/s3-replicação.html' %} is-active{% endif %}" href="{{ '/armazenamento/s3-replicação.html' | relative_url }}">S3 - Replicação</a>
+              <a class="sidebar-link{% if page.url == '/armazenamento/s3-tipos-de-armazenamento.html' %} is-active{% endif %}" href="{{ '/armazenamento/s3-tipos-de-armazenamento.html' | relative_url }}">S3 - Tipos de Armazenamento</a>
+              <a class="sidebar-link{% if page.url == '/armazenamento/s3-lifecycle.html' %} is-active{% endif %}" href="{{ '/armazenamento/s3-lifecycle.html' | relative_url }}">S3 - Lifecycle</a>
+              <a class="sidebar-link{% if page.url == '/armazenamento/s3-criptografia-de-objetos.html' %} is-active{% endif %}" href="{{ '/armazenamento/s3-criptografia-de-objetos.html' | relative_url }}">S3 - Criptografia de Objetos</a>
+              <a class="sidebar-link{% if page.url == '/armazenamento/s3-access-points.html' %} is-active{% endif %}" href="{{ '/armazenamento/s3-access-points.html' | relative_url }}">S3 - Access Points</a>
+              <a class="sidebar-link{% if page.url == '/armazenamento/s3-tables.html' %} is-active{% endif %}" href="{{ '/armazenamento/s3-tables.html' | relative_url }}">S3 Tables</a>
             </div>
           </details>
 
@@ -152,6 +158,36 @@
               {% when '/armazenamento/s3-versionamento.html' %}
                 {% assign prev_url = '/armazenamento/s3-segurança.html' %}
                 {% assign prev_title = 'S3 - Segurança' %}
+                {% assign next_url = '/armazenamento/s3-replicação.html' %}
+                {% assign next_title = 'S3 - Replicação' %}
+              {% when '/armazenamento/s3-replicação.html' %}
+                {% assign prev_url = '/armazenamento/s3-versionamento.html' %}
+                {% assign prev_title = 'S3 - Versionamento' %}
+                {% assign next_url = '/armazenamento/s3-tipos-de-armazenamento.html' %}
+                {% assign next_title = 'S3 - Tipos de Armazenamento' %}
+              {% when '/armazenamento/s3-tipos-de-armazenamento.html' %}
+                {% assign prev_url = '/armazenamento/s3-replicação.html' %}
+                {% assign prev_title = 'S3 - Replicação' %}
+                {% assign next_url = '/armazenamento/s3-lifecycle.html' %}
+                {% assign next_title = 'S3 - Lifecycle' %}
+              {% when '/armazenamento/s3-lifecycle.html' %}
+                {% assign prev_url = '/armazenamento/s3-tipos-de-armazenamento.html' %}
+                {% assign prev_title = 'S3 - Tipos de Armazenamento' %}
+                {% assign next_url = '/armazenamento/s3-criptografia-de-objetos.html' %}
+                {% assign next_title = 'S3 - Criptografia de Objetos' %}
+              {% when '/armazenamento/s3-criptografia-de-objetos.html' %}
+                {% assign prev_url = '/armazenamento/s3-lifecycle.html' %}
+                {% assign prev_title = 'S3 - Lifecycle' %}
+                {% assign next_url = '/armazenamento/s3-access-points.html' %}
+                {% assign next_title = 'S3 - Access Points' %}
+              {% when '/armazenamento/s3-access-points.html' %}
+                {% assign prev_url = '/armazenamento/s3-criptografia-de-objetos.html' %}
+                {% assign prev_title = 'S3 - Criptografia de Objetos' %}
+                {% assign next_url = '/armazenamento/s3-tables.html' %}
+                {% assign next_title = 'S3 Tables' %}
+              {% when '/armazenamento/s3-tables.html' %}
+                {% assign prev_url = '/armazenamento/s3-access-points.html' %}
+                {% assign prev_title = 'S3 - Access Points' %}
               {% endcase %}
 
             {% if prev_url != '' or next_url != '' %}

@@ -10,7 +10,7 @@ Este site reúne meu guia de estudos para a certificação `AWS Certified Data E
 <section class="author-hero">
   <img class="author-hero-photo" src="https://github.com/Ito-Santana.png?size=320" alt="Foto de Ítalo Santana">
   <div class="author-hero-copy">
-    <p class="author-hero-kicker">Feito por Ítalo Santana</p>
+    <p class="author-hero-kicker">Ítalo S. Santana</p>
     <h2>Uma trilha de estudo para a AWS DEA-C01, organizada em formato de documentação</h2>
     <p>Sou <strong>AWS Certified</strong> e <strong>Databricks Certified</strong>. Criei este projeto para consolidar meus estudos, estruturar uma trilha de preparação para a prova e manter uma base técnica limpa sobre os temas que venho aprofundando.</p>
     <p><a href="https://www.linkedin.com/in/italo-santana-26bb94255/" target="_blank" rel="noreferrer">LinkedIn</a> · <a href="https://github.com/Ito-Santana" target="_blank" rel="noreferrer">GitHub</a></p>
@@ -69,46 +69,6 @@ Em vez de deixar o estudo espalhado em PDF, rascunho e anotação isolada, a ide
   </div>
 </div>
 
-## Perfil do material
-
-Este guia foi pensado para ficar:
-
-- técnico, mas legível;
-- direto ao ponto;
-- útil para revisão rápida;
-- organizado como trilha de estudo;
-- próximo de cenários reais da AWS;
-- alinhado ao contexto de engenharia de dados.
-
-## Próximas trilhas sugeridas
-
-### Armazenamento
-
-- S3 versioning
-- S3 lifecycle
-- S3 storage classes
-- particionamento no S3
-
-### Processamento
-
-- AWS Glue jobs
-- Glue Crawlers vs Data Catalog
-- EMR quando usar
-- batch vs streaming
-
-### Analytics
-
-- Athena
-- Redshift
-- Redshift Spectrum
-- formatos colunares e custo de leitura
-
-### Segurança e governança
-
-- IAM para pipelines de dados
-- KMS no lake
-- Lake Formation
-- trilha de auditoria com CloudTrail e CloudWatch
 
 ## Links importantes
 

@@ -19,6 +19,11 @@ Se voce quer a visao geral do site inteiro, volta para a [pagina inicial](/).
 1. [DynamoDB - Introdução](./dynamodb-introducao.html)
 2. [DynamoDB - Modos de Capacidade](./dynamodb-modos-de-capacidade.html)
 3. [DynamoDB - APIs de Dados](./dynamodb-apis.html)
+4. [DynamoDB - Índices](./dynamodb-indices.html)
+5. [DynamoDB - DAX](./dynamodb-accelerator-dax.html)
+6. [DynamoDB - Streams](./dynamodb-streams.html)
+7. [DynamoDB - TTL](./dynamodb-ttl.html)
+8. [DynamoDB - Segurança](./dynamodb-seguranca.html)
 
 ## Outras trilhas
 

@@ -87,6 +87,11 @@
               <a class="sidebar-link{% if page.url == '/database/dynamodb-introducao.html' %} is-active{% endif %}" href="{{ '/database/dynamodb-introducao.html' | relative_url }}">DynamoDB - Introdução</a>
               <a class="sidebar-link{% if page.url == '/database/dynamodb-modos-de-capacidade.html' %} is-active{% endif %}" href="{{ '/database/dynamodb-modos-de-capacidade.html' | relative_url }}">DynamoDB - Modos de Capacidade</a>
               <a class="sidebar-link{% if page.url == '/database/dynamodb-apis.html' %} is-active{% endif %}" href="{{ '/database/dynamodb-apis.html' | relative_url }}">DynamoDB - APIs de Dados</a>
+              <a class="sidebar-link{% if page.url == '/database/dynamodb-indices.html' %} is-active{% endif %}" href="{{ '/database/dynamodb-indices.html' | relative_url }}">DynamoDB - Índices</a>
+              <a class="sidebar-link{% if page.url == '/database/dynamodb-accelerator-dax.html' %} is-active{% endif %}" href="{{ '/database/dynamodb-accelerator-dax.html' | relative_url }}">DynamoDB - DAX</a>
+              <a class="sidebar-link{% if page.url == '/database/dynamodb-streams.html' %} is-active{% endif %}" href="{{ '/database/dynamodb-streams.html' | relative_url }}">DynamoDB - Streams</a>
+              <a class="sidebar-link{% if page.url == '/database/dynamodb-ttl.html' %} is-active{% endif %}" href="{{ '/database/dynamodb-ttl.html' | relative_url }}">DynamoDB - TTL</a>
+              <a class="sidebar-link{% if page.url == '/database/dynamodb-seguranca.html' %} is-active{% endif %}" href="{{ '/database/dynamodb-seguranca.html' | relative_url }}">DynamoDB - Segurança</a>
             </div>
           </details>
 
@@ -252,6 +257,31 @@
               {% when '/database/dynamodb-apis.html' %}
                 {% assign prev_url = '/database/dynamodb-modos-de-capacidade.html' %}
                 {% assign prev_title = 'DynamoDB - Modos de Capacidade' %}
+                {% assign next_url = '/database/dynamodb-indices.html' %}
+                {% assign next_title = 'DynamoDB - Índices' %}
+              {% when '/database/dynamodb-indices.html' %}
+                {% assign prev_url = '/database/dynamodb-apis.html' %}
+                {% assign prev_title = 'DynamoDB - APIs de Dados' %}
+                {% assign next_url = '/database/dynamodb-accelerator-dax.html' %}
+                {% assign next_title = 'DynamoDB - DAX' %}
+              {% when '/database/dynamodb-accelerator-dax.html' %}
+                {% assign prev_url = '/database/dynamodb-indices.html' %}
+                {% assign prev_title = 'DynamoDB - Índices' %}
+                {% assign next_url = '/database/dynamodb-streams.html' %}
+                {% assign next_title = 'DynamoDB - Streams' %}
+              {% when '/database/dynamodb-streams.html' %}
+                {% assign prev_url = '/database/dynamodb-accelerator-dax.html' %}
+                {% assign prev_title = 'DynamoDB - DAX' %}
+                {% assign next_url = '/database/dynamodb-ttl.html' %}
+                {% assign next_title = 'DynamoDB - TTL' %}
+              {% when '/database/dynamodb-ttl.html' %}
+                {% assign prev_url = '/database/dynamodb-streams.html' %}
+                {% assign prev_title = 'DynamoDB - Streams' %}
+                {% assign next_url = '/database/dynamodb-seguranca.html' %}
+                {% assign next_title = 'DynamoDB - Segurança' %}
+              {% when '/database/dynamodb-seguranca.html' %}
+                {% assign prev_url = '/database/dynamodb-ttl.html' %}
+                {% assign prev_title = 'DynamoDB - TTL' %}
               {% endcase %}
 
             {% if prev_url != '' or next_url != '' %}
